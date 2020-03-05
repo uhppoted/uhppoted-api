@@ -1,8 +1,6 @@
-## v0.5.1x
+## v0.6.0x
 
-** RELEASED **
-
-1. Restructured into standalone Go modules and git submodules
+## IN PROGRESS
 
 ## TODO
 
