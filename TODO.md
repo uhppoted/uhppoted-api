@@ -1,12 +1,12 @@
 ## v0.5.1x
 
-** IN PROGRESS **
+** RELEASED **
 
-1. Restructure for Go modules and git submodules
+1. Restructured into standalone Go modules and git submodules
 
 ## TODO
 
-### uhppoted
+### uhppoted-api
 - [ ] websocket + GraphQL (?)
 - [ ] IFTTT
 - [ ] Braid (?)
