@@ -80,8 +80,7 @@ func (h *Help) usage() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s <command> [options]\n", h.service)
 	fmt.Println()
-	fmt.Println("  Defaults to 'run'.")
-	fmt.Println()
+
 	fmt.Println("  Commands:")
 	fmt.Printf("    help          Displays this message. For help on a specific command use '%s help <command>'\n", h.service)
 
@@ -90,13 +89,18 @@ func (h *Help) usage() {
 	}
 
 	fmt.Println()
-	fmt.Println(" 'run' options:")
 
-	h.run.FlagSet().VisitAll(func(f *flag.Flag) {
-		fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
-	})
+	if h.run != nil {
+		fmt.Println("  Defaults to 'run'.")
+		fmt.Println()
+		fmt.Println(" 'run' options:")
 
-	fmt.Println()
+		h.run.FlagSet().VisitAll(func(f *flag.Flag) {
+			fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
+		})
+
+		fmt.Println()
+	}
 }
 
 func (h *Help) helpCommands() {
