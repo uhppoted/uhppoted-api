@@ -152,23 +152,23 @@ func TestUnmarshal(t *testing.T) {
 			t.Errorf("Expected 'device.address' %s for ID '%v', got:'%v'", &address, 405419896, d.Address)
 		}
 
-		if len(d.Door) != 4 {
-			t.Errorf("Expected 4 entries for 'device.door' %s for ID '%v', got:%v", &address, 405419896, len(d.Door))
+		if len(d.Doors) != 4 {
+			t.Errorf("Expected 4 entries for 'device.door' %s for ID '%v', got:%v", &address, 405419896, len(d.Doors))
 		} else {
-			if d.Door[0] != "Front Door" {
-				t.Errorf("Expected 'device.door[0]' %s for ID '%v', got:'%s'", "Front Door", 405419896, d.Door[0])
+			if d.Doors[0] != "Front Door" {
+				t.Errorf("Expected 'device.door[0]' %s for ID '%v', got:'%s'", "Front Door", 405419896, d.Doors[0])
 			}
 
-			if d.Door[1] != "Side Door" {
-				t.Errorf("Expected 'device.door[1]' %s for ID '%v', got:'%s'", "Side Door", 405419896, d.Door[1])
+			if d.Doors[1] != "Side Door" {
+				t.Errorf("Expected 'device.door[1]' %s for ID '%v', got:'%s'", "Side Door", 405419896, d.Doors[1])
 			}
 
-			if d.Door[2] != "Garage" {
-				t.Errorf("Expected 'device.door[2]' %s for ID '%v', got:'%s'", "Garage", 405419896, d.Door[2])
+			if d.Doors[2] != "Garage" {
+				t.Errorf("Expected 'device.door[2]' %s for ID '%v', got:'%s'", "Garage", 405419896, d.Doors[2])
 			}
 
-			if d.Door[3] != "Workshop" {
-				t.Errorf("Expected 'device.door[3]' %s for ID '%v', got:'%s'", "Workshop", 405419896, d.Door[3])
+			if d.Doors[3] != "Workshop" {
+				t.Errorf("Expected 'device.door[3]' %s for ID '%v', got:'%s'", "Workshop", 405419896, d.Doors[3])
 			}
 		}
 	}

@@ -22,7 +22,7 @@ type DeviceMap map[uint32]*Device
 type Device struct {
 	Address  *net.UDPAddr
 	Rollover uint32
-	Door     []string
+	Doors    []string
 }
 
 type kv struct {
@@ -273,7 +273,7 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 		for id, device := range f {
 			fmt.Fprintf(&s, "UTO311-L0x.%d.address = %s\n", id, device.Address)
 			fmt.Fprintf(&s, "UTO311-L0x.%d.rollover = %d\n", id, device.Rollover)
-			for d, door := range device.Door {
+			for d, door := range device.Doors {
 				fmt.Fprintf(&s, "UTO311-L0x.%d.door.%d = %s\n", id, d+1, door)
 			}
 			fmt.Fprintf(&s, "\n")
@@ -306,7 +306,7 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 			d, ok := (*f)[uint32(id)]
 			if !ok || d == nil {
 				d = &Device{
-					Door:     make([]string, 4),
+					Doors:    make([]string, 4),
 					Rollover: ROLLOVER,
 				}
 
@@ -337,16 +337,16 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 				}
 
 			case "door.1":
-				d.Door[0] = value
+				d.Doors[0] = value
 
 			case "door.2":
-				d.Door[1] = value
+				d.Doors[1] = value
 
 			case "door.3":
-				d.Door[2] = value
+				d.Doors[2] = value
 
 			case "door.4":
-				d.Door[3] = value
+				d.Doors[3] = value
 			}
 		}
 	}
