@@ -34,5 +34,5 @@ coverage: build
 release: test vet
 
 debug: build
-	go test ./... -run TestParseTSV
+	go test ./... -run TestParseTSVWithMultipleDevices
 

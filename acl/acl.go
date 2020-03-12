@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type ACL map[uint32]map[uint32]*types.Card
+type ACL map[uint32]map[uint32]types.Card
 
 type index struct {
 	cardnumber int
@@ -23,7 +23,7 @@ type index struct {
 func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 	acl := make(ACL)
 	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]*types.Card)
+		acl[device.DeviceID] = make(map[uint32]types.Card)
 	}
 
 	r := csv.NewReader(f)
@@ -54,13 +54,13 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 			return nil, fmt.Errorf("Error parsing TSV - line %d: %w\n", line, err)
 		}
 
-		for id, card := range *cards {
+		for id, card := range cards {
 			if acl[id] != nil {
-				if acl[id][card.CardNumber] != nil {
+				if _, ok := acl[id][card.CardNumber]; ok {
 					return nil, fmt.Errorf("Duplicate card number (%v)\n", card.CardNumber)
 				}
 
-				acl[id][card.CardNumber] = &card
+				acl[id][card.CardNumber] = card
 			}
 		}
 	}
@@ -130,7 +130,7 @@ func parseHeader(header []string, devices []*uhppote.Device) (*index, error) {
 	return &index, nil
 }
 
-func parseRecord(record []string, index *index) (*map[uint32]types.Card, error) {
+func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 	cards := make(map[uint32]types.Card, 0)
 
 	for k, v := range index.doors {
@@ -162,7 +162,7 @@ func parseRecord(record []string, index *index) (*map[uint32]types.Card, error) 
 		}
 	}
 
-	return &cards, nil
+	return cards, nil
 }
 
 func getCardNumber(record []string, index *index) (uint32, error) {
