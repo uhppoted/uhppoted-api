@@ -16,9 +16,9 @@ const tsv = `Card Number	From	To	Workshop	Side Door	Front Door	Garage
 `
 
 const tsv2 = `Card Number	From	To	D1	D2	D3	D4	Workshop	Side Door	Front Door	Garage
-65537	2020-01-02	2020-10-31	Y	Y	Y	N	N	N	Y	N
-65538	2020-02-03	2020-11-30	Y	Y	Y	N	Y	N	Y	N
-65539	2020-03-04	2020-12-31	Y	Y	Y	N	N	N	N	N
+65537	2020-01-02	2020-10-31	Y	Y	N	Y	N	N	Y	N
+65538	2020-02-03	2020-11-30	Y	N	Y	Y	Y	N	Y	N
+65539	2020-03-04	2020-12-31	N	Y	Y	Y	N	N	N	N
 `
 
 func TestParseTSV(t *testing.T) {
@@ -83,9 +83,9 @@ func TestParseTSVWithMultipleDevices(t *testing.T) {
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, true, true, false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, true, true, false}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{true, true, true, false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, true, false, true}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, true, true}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, true, true, true}},
 		},
 	}
 
