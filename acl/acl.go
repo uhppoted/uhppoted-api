@@ -3,6 +3,7 @@ package acl
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"io"
@@ -61,6 +62,33 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 				}
 
 				acl[id][card.CardNumber] = card
+			}
+		}
+	}
+
+	return acl, nil
+}
+
+func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
+	acl := make(ACL)
+	for _, device := range devices {
+		acl[device.DeviceID] = make(map[uint32]types.Card)
+	}
+
+	for _, device := range devices {
+		N, err := u.GetCardsN(device.DeviceID)
+		if err != nil {
+			return acl, err
+		}
+
+		for index := uint32(0); index < N; index++ {
+			card, err := u.GetCardByIndexN(device.DeviceID, index+1)
+			if err != nil {
+				return nil, err
+			}
+
+			if card != nil {
+				acl[device.DeviceID][card.CardNumber] = card.Clone()
 			}
 		}
 	}
