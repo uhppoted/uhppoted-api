@@ -1,72 +1,26 @@
 package acl
 
 import (
-	"encoding/csv"
-	"fmt"
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"io"
-	"strconv"
-	"strings"
-	"time"
+	"reflect"
 )
 
 type ACL map[uint32]map[uint32]types.Card
+
+type Diff struct {
+	Unchanged []types.Card
+	Updated   []types.Card
+	Added     []types.Card
+	Deleted   []types.Card
+}
 
 type index struct {
 	cardnumber int
 	from       int
 	to         int
 	doors      map[uint32][]int
-}
-
-func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
-	acl := make(ACL)
-	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]types.Card)
-	}
-
-	r := csv.NewReader(f)
-	r.Comma = '\t'
-
-	header, err := r.Read()
-	if err != nil {
-		return nil, err
-	}
-
-	index, err := parseHeader(header, devices)
-	if err != nil {
-		return nil, err
-	}
-
-	line := 0
-	for {
-		record, err := r.Read()
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return nil, err
-		}
-
-		line += 1
-		cards, err := parseRecord(record, index)
-		if err != nil {
-			return nil, fmt.Errorf("Error parsing TSV - line %d: %w\n", line, err)
-		}
-
-		for id, card := range cards {
-			if acl[id] != nil {
-				if _, ok := acl[id][card.CardNumber]; ok {
-					return nil, fmt.Errorf("Duplicate card number (%v)\n", card.CardNumber)
-				}
-
-				acl[id][card.CardNumber] = card
-			}
-		}
-	}
-
-	return acl, nil
 }
 
 func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
@@ -96,163 +50,60 @@ func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 	return acl, nil
 }
 
-func parseHeader(header []string, devices []*uhppote.Device) (*index, error) {
-	columns := make(map[string]int)
+func Compare(src, dst ACL) (map[uint32]Diff, error) {
+	m := map[uint32]Diff{}
 
-	index := index{
-		cardnumber: 0,
-		from:       0,
-		to:         0,
-		doors:      make(map[uint32][]int),
+	for k, _ := range src {
+		m[k] = Diff{}
 	}
 
-	for _, d := range devices {
-		index.doors[d.DeviceID] = make([]int, 4)
+	for k, _ := range dst {
+		m[k] = Diff{}
 	}
 
-	for c, field := range header {
-		key := clean(field)
-		ix := c + 1
-
-		if columns[key] != 0 {
-			return nil, fmt.Errorf("Duplicate column name '%s'", field)
-		}
-
-		columns[key] = ix
+	for k, _ := range m {
+		p := src[k]
+		q := dst[k]
+		m[k] = compare(p, q)
 	}
 
-	index.cardnumber = columns["cardnumber"]
-	index.from = columns["from"]
-	index.to = columns["to"]
+	return m, nil
+}
 
-	for _, device := range devices {
-		for i, door := range device.Doors {
-			if d := clean(door); d != "" {
-				index.doors[device.DeviceID][i] = columns[d]
+func compare(p, q map[uint32]types.Card) Diff {
+	cards := map[uint32]struct{}{}
+
+	for k, _ := range p {
+		cards[k] = struct{}{}
+	}
+
+	for k, _ := range q {
+		cards[k] = struct{}{}
+	}
+
+	diff := Diff{
+		Unchanged: []types.Card{},
+		Added:     []types.Card{},
+		Updated:   []types.Card{},
+		Deleted:   []types.Card{},
+	}
+
+	for k, _ := range cards {
+		u, hasu := p[k]
+		v, hasv := q[k]
+
+		if hasu && hasv {
+			if reflect.DeepEqual(u, v) {
+				diff.Unchanged = append(diff.Unchanged, u)
+			} else {
+				diff.Updated = append(diff.Updated, v)
 			}
+		} else if !hasu && hasv {
+			diff.Added = append(diff.Added, v)
+		} else if hasu && !hasv {
+			diff.Deleted = append(diff.Deleted, u)
 		}
 	}
 
-	if index.cardnumber == 0 {
-		return nil, fmt.Errorf("Missing 'Card Number' column")
-	}
-
-	if index.from == 0 {
-		return nil, fmt.Errorf("Missing 'From' column")
-	}
-
-	if index.to == 0 {
-		return nil, fmt.Errorf("Missing 'To' column")
-	}
-
-	for _, device := range devices {
-		for i, door := range device.Doors {
-			if d := clean(door); d != "" {
-				if index.doors[device.DeviceID][i] == 0 {
-					return nil, fmt.Errorf("Missing column for door '%s'", door)
-				}
-			}
-		}
-	}
-
-	return &index, nil
-}
-
-func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
-	cards := make(map[uint32]types.Card, 0)
-
-	for k, v := range index.doors {
-		cardno, err := getCardNumber(record, index)
-		if err != nil {
-			return nil, err
-		}
-
-		from, err := getFromDate(record, index)
-		if err != nil {
-			return nil, err
-		}
-
-		to, err := getToDate(record, index)
-		if err != nil {
-			return nil, err
-		}
-
-		doors, err := getDoors(record, v)
-		if err != nil {
-			return nil, err
-		}
-
-		cards[k] = types.Card{
-			CardNumber: cardno,
-			From:       *from,
-			To:         *to,
-			Doors:      doors,
-		}
-	}
-
-	return cards, nil
-}
-
-func getCardNumber(record []string, index *index) (uint32, error) {
-	f := get(record, index.cardnumber)
-	cardnumber, err := strconv.ParseUint(f, 10, 32)
-	if err != nil {
-		return 0, fmt.Errorf("Invalid card number '%s' (%w)", f, err)
-	}
-
-	return uint32(cardnumber), nil
-}
-
-func getFromDate(record []string, index *index) (*types.Date, error) {
-	f := get(record, index.from)
-	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid 'from' date '%s' (%w)", f, err)
-	}
-
-	from := types.Date(date)
-
-	return &from, nil
-}
-
-func getToDate(record []string, index *index) (*types.Date, error) {
-	f := get(record, index.to)
-	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid 'to' date '%s' (%w)", f, err)
-	}
-
-	to := types.Date(date)
-
-	return &to, nil
-}
-
-func getDoors(record []string, v []int) ([]bool, error) {
-	doors := make([]bool, 4)
-
-	for i, d := range v {
-		if d == 0 {
-			doors[i] = false
-			continue
-		}
-
-		switch get(record, d) {
-		case "Y":
-			doors[i] = true
-		case "N":
-			doors[i] = false
-		default:
-			return doors, fmt.Errorf("Expected 'Y/N' for door: '%s'", record[d])
-		}
-	}
-
-	return doors, nil
-}
-
-func get(record []string, ix int) string {
-	return strings.TrimSpace(record[ix-1])
-}
-
-func clean(s string) string {
-	return strings.ReplaceAll(strings.ToLower(s), " ", "")
+	return diff
 }
