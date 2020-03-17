@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"fmt"
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
@@ -30,24 +31,98 @@ func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 	}
 
 	for _, device := range devices {
-		N, err := u.GetCardsN(device.DeviceID)
+		cards, err := getACL(u, device.DeviceID)
 		if err != nil {
-			return acl, err
+			return acl, nil
 		}
 
-		for index := uint32(0); index < N; index++ {
-			card, err := u.GetCardByIndexN(device.DeviceID, index+1)
-			if err != nil {
-				return nil, err
-			}
-
-			if card != nil {
-				acl[device.DeviceID][card.CardNumber] = card.Clone()
-			}
-		}
+		acl[device.DeviceID] = cards
 	}
 
 	return acl, nil
+}
+
+func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
+	cards := map[uint32]types.Card{}
+
+	N, err := u.GetCardsN(deviceID)
+	if err != nil {
+		return cards, err
+	}
+
+	for index := uint32(0); index < N; index++ {
+		card, err := u.GetCardByIndexN(deviceID, index+1)
+		if err != nil {
+			return nil, err
+		}
+
+		if card != nil {
+			cards[card.CardNumber] = card.Clone()
+		}
+	}
+
+	return cards, nil
+}
+
+func PutACL(u device.IDevice, acl ACL) error {
+	for id, cards := range acl {
+		err := putACL(u, id, cards)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) error {
+	current, err := getACL(u, deviceID)
+	if err != nil {
+		return err
+	}
+
+	diff := compare(current, cards)
+	updated := []types.Card{}
+	added := []types.Card{}
+	deleted := []types.Card{}
+	failed := []types.Card{}
+
+	for _, card := range diff.Updated {
+		if ok, err := u.PutCardN(deviceID, card); err != nil {
+			return err
+		} else if !ok {
+			failed = append(failed, card)
+		} else {
+			updated = append(updated, card)
+		}
+	}
+
+	for _, card := range diff.Added {
+		if ok, err := u.PutCardN(deviceID, card); err != nil {
+			return err
+		} else if !ok {
+			failed = append(failed, card)
+		} else {
+			added = append(added, card)
+		}
+	}
+
+	for _, card := range diff.Deleted {
+		if ok, err := u.DeleteCardN(deviceID, card); err != nil {
+			return err
+		} else if !ok {
+			failed = append(failed, card)
+		} else {
+			deleted = append(deleted, card)
+		}
+	}
+
+	fmt.Printf(">> UPDATED: %+v\n", updated)
+	fmt.Printf(">> FAILED:  %+v\n", failed)
+	fmt.Printf(">> ADDED:   %+v\n", added)
+	fmt.Printf(">> DELETED: %+v\n", deleted)
+
+	return nil
 }
 
 func Compare(src, dst ACL) (map[uint32]Diff, error) {

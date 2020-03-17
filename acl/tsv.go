@@ -157,7 +157,7 @@ func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 }
 
 func getCardNumber(record []string, index *index) (uint32, error) {
-	f := get(record, index.cardnumber)
+	f := field(record, index.cardnumber)
 	cardnumber, err := strconv.ParseUint(f, 10, 32)
 	if err != nil {
 		return 0, fmt.Errorf("Invalid card number '%s' (%w)", f, err)
@@ -167,7 +167,7 @@ func getCardNumber(record []string, index *index) (uint32, error) {
 }
 
 func getFromDate(record []string, index *index) (*types.Date, error) {
-	f := get(record, index.from)
+	f := field(record, index.from)
 	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid 'from' date '%s' (%w)", f, err)
@@ -179,7 +179,7 @@ func getFromDate(record []string, index *index) (*types.Date, error) {
 }
 
 func getToDate(record []string, index *index) (*types.Date, error) {
-	f := get(record, index.to)
+	f := field(record, index.to)
 	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid 'to' date '%s' (%w)", f, err)
@@ -199,7 +199,7 @@ func getDoors(record []string, v []int) ([]bool, error) {
 			continue
 		}
 
-		switch get(record, d) {
+		switch field(record, d) {
 		case "Y":
 			doors[i] = true
 		case "N":
@@ -212,7 +212,7 @@ func getDoors(record []string, v []int) ([]bool, error) {
 	return doors, nil
 }
 
-func get(record []string, ix int) string {
+func field(record []string, ix int) string {
 	return strings.TrimSpace(record[ix-1])
 }
 
