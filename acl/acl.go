@@ -1,11 +1,11 @@
 package acl
 
 import (
-	"fmt"
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
+	"sort"
 )
 
 type ACL map[uint32]map[uint32]types.Card
@@ -33,7 +33,7 @@ func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 	for _, device := range devices {
 		cards, err := getACL(u, device.DeviceID)
 		if err != nil {
-			return acl, nil
+			return acl, err
 		}
 
 		acl[device.DeviceID] = cards
@@ -117,11 +117,6 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) erro
 		}
 	}
 
-	fmt.Printf(">> UPDATED: %+v\n", updated)
-	fmt.Printf(">> FAILED:  %+v\n", failed)
-	fmt.Printf(">> ADDED:   %+v\n", added)
-	fmt.Printf(">> DELETED: %+v\n", deleted)
-
 	return nil
 }
 
@@ -178,6 +173,14 @@ func compare(p, q map[uint32]types.Card) Diff {
 		} else if hasu && !hasv {
 			diff.Deleted = append(diff.Deleted, u)
 		}
+	}
+
+	for _, list := range [][]types.Card{
+		diff.Unchanged,
+		diff.Added,
+		diff.Updated,
+		diff.Deleted} {
+		sort.Slice(list, func(i, j int) bool { return list[i].CardNumber < list[j].CardNumber })
 	}
 
 	return diff
