@@ -74,6 +74,9 @@ func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
 
 func PutACL(u device.IDevice, acl ACL) (map[uint32]Report, error) {
 	report := map[uint32]Report{}
+	for id, _ := range acl {
+		report[id] = Report{}
+	}
 
 	for id, cards := range acl {
 		rpt, err := putACL(u, id, cards)
