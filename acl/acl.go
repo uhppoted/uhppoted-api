@@ -17,6 +17,14 @@ type Diff struct {
 	Deleted   []types.Card
 }
 
+type Report struct {
+	Unchanged int
+	Updated   int
+	Added     int
+	Deleted   int
+	Failed    int
+}
+
 type index struct {
 	cardnumber int
 	from       int
@@ -64,60 +72,62 @@ func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
 	return cards, nil
 }
 
-func PutACL(u device.IDevice, acl ACL) error {
+func PutACL(u device.IDevice, acl ACL) (map[uint32]Report, error) {
+	report := map[uint32]Report{}
+
 	for id, cards := range acl {
-		err := putACL(u, id, cards)
+		rpt, err := putACL(u, id, cards)
+		report[id] = rpt
 		if err != nil {
-			return err
+			return report, err
 		}
 	}
 
-	return nil
+	return report, nil
 }
 
-func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) error {
+func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (Report, error) {
+	report := Report{}
 	current, err := getACL(u, deviceID)
 	if err != nil {
-		return err
+		return report, err
 	}
 
 	diff := compare(current, cards)
-	updated := []types.Card{}
-	added := []types.Card{}
-	deleted := []types.Card{}
-	failed := []types.Card{}
+
+	report.Unchanged = len(diff.Unchanged)
 
 	for _, card := range diff.Updated {
 		if ok, err := u.PutCardN(deviceID, card); err != nil {
-			return err
+			return report, err
 		} else if !ok {
-			failed = append(failed, card)
+			report.Failed++
 		} else {
-			updated = append(updated, card)
+			report.Updated++
 		}
 	}
 
 	for _, card := range diff.Added {
 		if ok, err := u.PutCardN(deviceID, card); err != nil {
-			return err
+			return report, err
 		} else if !ok {
-			failed = append(failed, card)
+			report.Failed++
 		} else {
-			added = append(added, card)
+			report.Added++
 		}
 	}
 
 	for _, card := range diff.Deleted {
 		if ok, err := u.DeleteCardN(deviceID, card); err != nil {
-			return err
+			return report, err
 		} else if !ok {
-			failed = append(failed, card)
+			report.Failed++
 		} else {
-			deleted = append(deleted, card)
+			report.Deleted++
 		}
 	}
 
-	return nil
+	return report, nil
 }
 
 func Compare(src, dst ACL) (map[uint32]Diff, error) {
