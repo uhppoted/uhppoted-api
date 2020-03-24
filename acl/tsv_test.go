@@ -120,3 +120,40 @@ func TestParseTSVWithMultipleDevices(t *testing.T) {
 		}
 	}
 }
+
+// TODO test with different to/from dates on different devices
+func TestMakeTSV(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		},
+	}
+
+	expected := `Card Number	From	To	Front Door	Side Door	Garage	Workshop
+65537	2020-01-02	2020-10-31	Y	N	N	N
+65538	2020-02-03	2020-11-30	Y	N	N	Y
+65539	2020-03-04	2020-12-31	N	N	N	N
+`
+
+	d := uhppote.Device{
+		DeviceID: 12345,
+		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+	}
+
+	devices := []*uhppote.Device{&d}
+
+	var w strings.Builder
+
+	err := MakeTSV(acl, devices, &w)
+	if err != nil {
+		t.Fatalf("Unexpected error creating TSV: %v", err)
+	}
+
+	s := w.String()
+	if s != expected {
+		t.Errorf("Returned incorrect TSV - expected:\n%v\ngot:\n%v\n", expected, s)
+	}
+
+}

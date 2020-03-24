@@ -32,6 +32,13 @@ type index struct {
 	doors      map[uint32][]int
 }
 
+type card struct {
+	cardnumber uint32
+	from       types.Date
+	to         types.Date
+	doors      []bool
+}
+
 func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 	acl := make(ACL)
 	for _, device := range devices {

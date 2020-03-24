@@ -6,6 +6,7 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"io"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -57,6 +58,93 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 	}
 
 	return acl, nil
+}
+
+func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
+	w := csv.NewWriter(f)
+	w.Comma = '\t'
+
+	header, err := makeHeader(devices)
+	if err != nil {
+		return err
+	}
+
+	err = w.Write(header)
+	if err != nil {
+		return err
+	}
+
+	index := map[string]int{}
+	for i, h := range header {
+		if i > 2 {
+			index[clean(h)] = i - 2
+		}
+	}
+
+	// TODO different to/from dates on different devices ?
+	cards := map[uint32]card{}
+	for id, v := range acl {
+		jndex := []int{0, 0, 0, 0}
+		for _, d := range devices {
+			if d.DeviceID == id {
+				for i, door := range d.Doors {
+					jndex[i] = index[clean(door)]
+				}
+			}
+		}
+
+		for cardno, c := range v {
+			record, ok := cards[cardno]
+			if !ok {
+				record = card{
+					cardnumber: c.CardNumber,
+					from:       c.From,
+					to:         c.To,
+					doors:      make([]bool, 4),
+				}
+			}
+
+			for i, d := range c.Doors {
+				ix := jndex[i]
+				record.doors[ix-1] = d
+			}
+
+			cards[cardno] = record
+		}
+	}
+
+	keys := []uint32{}
+	for k, _ := range cards {
+		keys = append(keys, k)
+	}
+
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+
+	for _, k := range keys {
+		c := cards[k]
+		record := []string{
+			fmt.Sprintf("%v", c.cardnumber),
+			fmt.Sprintf("%s", c.from),
+			fmt.Sprintf("%s", c.to),
+		}
+
+		for _, d := range c.doors {
+			if d {
+				record = append(record, "Y")
+			} else {
+				record = append(record, "N")
+			}
+		}
+
+		err := w.Write(record)
+		if err != nil {
+			return err
+		}
+	}
+
+	w.Flush()
+
+	return nil
 }
 
 func parseHeader(header []string, devices []*uhppote.Device) (*index, error) {
@@ -154,6 +242,31 @@ func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 	}
 
 	return cards, nil
+}
+
+func makeHeader(devices []*uhppote.Device) ([]string, error) {
+	keys := []uint32{}
+	for _, d := range devices {
+		keys = append(keys, d.DeviceID)
+	}
+
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+
+	header := []string{
+		"Card Number",
+		"From",
+		"To",
+	}
+
+	for _, id := range keys {
+		for _, d := range devices {
+			if d.DeviceID == id {
+				header = append(header, d.Doors...)
+			}
+		}
+	}
+
+	return header, nil
 }
 
 func getCardNumber(record []string, index *index) (uint32, error) {
