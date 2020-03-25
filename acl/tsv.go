@@ -81,16 +81,16 @@ func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
 		}
 	}
 
-	// TODO different to/from dates on different devices ?
 	cards := map[uint32]card{}
-	for id, v := range acl {
+	for _, d := range devices {
+		v, ok := acl[d.DeviceID]
+		if !ok {
+			return fmt.Errorf("ACL missing for device %v", d.DeviceID)
+		}
+
 		jndex := []int{0, 0, 0, 0}
-		for _, d := range devices {
-			if d.DeviceID == id {
-				for i, door := range d.Doors {
-					jndex[i] = index[clean(door)]
-				}
-			}
+		for i, door := range d.Doors {
+			jndex[i] = index[clean(door)]
 		}
 
 		for cardno, c := range v {
@@ -100,13 +100,24 @@ func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
 					cardnumber: c.CardNumber,
 					from:       c.From,
 					to:         c.To,
-					doors:      make([]bool, 4),
+					doors:      make([]bool, len(index)),
 				}
 			}
 
-			for i, d := range c.Doors {
-				ix := jndex[i]
-				record.doors[ix-1] = d
+			if c.From.Before(record.from) {
+				record.from = c.From
+			}
+
+			if c.To.After(record.to) {
+				record.to = c.To
+			}
+
+			for i, door := range c.Doors {
+				if ix := jndex[i]; ix == 0 {
+					return fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i+1)
+				} else {
+					record.doors[ix-1] = door
+				}
 			}
 
 			cards[cardno] = record
