@@ -1,6 +1,4 @@
-## v0.6.0x
-
-## IN PROGRESS
+## v0.6.0
 
 ## TODO
 
