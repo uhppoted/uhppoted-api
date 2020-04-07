@@ -255,31 +255,6 @@ func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 	return cards, nil
 }
 
-func makeHeader(devices []*uhppote.Device) ([]string, error) {
-	keys := []uint32{}
-	for _, d := range devices {
-		keys = append(keys, d.DeviceID)
-	}
-
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
-
-	header := []string{
-		"Card Number",
-		"From",
-		"To",
-	}
-
-	for _, id := range keys {
-		for _, d := range devices {
-			if d.DeviceID == id {
-				header = append(header, d.Doors...)
-			}
-		}
-	}
-
-	return header, nil
-}
-
 func getCardNumber(record []string, index *index) (uint32, error) {
 	f := field(record, index.cardnumber)
 	cardnumber, err := strconv.ParseUint(f, 10, 32)
@@ -338,8 +313,4 @@ func getDoors(record []string, v []int) ([]bool, error) {
 
 func field(record []string, ix int) string {
 	return strings.TrimSpace(record[ix-1])
-}
-
-func clean(s string) string {
-	return strings.ReplaceAll(strings.ToLower(s), " ", "")
 }

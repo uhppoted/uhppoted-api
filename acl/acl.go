@@ -6,6 +6,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"sort"
+	"strings"
 )
 
 type ACL map[uint32]map[uint32]types.Card
@@ -204,4 +205,8 @@ func compare(p, q map[uint32]types.Card) Diff {
 	}
 
 	return diff
+}
+
+func clean(s string) string {
+	return strings.ReplaceAll(strings.ToLower(s), " ", "")
 }
