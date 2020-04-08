@@ -6,7 +6,6 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"io"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -61,94 +60,20 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 }
 
 func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
+	t, err := MakeTable(acl, devices)
+	if err != nil {
+		return err
+	}
+
 	w := csv.NewWriter(f)
 	w.Comma = '\t'
 
-	header, err := makeHeader(devices)
-	if err != nil {
+	if err := w.Write(t.header); err != nil {
 		return err
 	}
 
-	err = w.Write(header)
-	if err != nil {
-		return err
-	}
-
-	index := map[string]int{}
-	for i, h := range header {
-		if i > 2 {
-			index[clean(h)] = i - 2
-		}
-	}
-
-	cards := map[uint32]card{}
-	for _, d := range devices {
-		v, ok := acl[d.DeviceID]
-		if !ok {
-			return fmt.Errorf("ACL missing for device %v", d.DeviceID)
-		}
-
-		jndex := []int{0, 0, 0, 0}
-		for i, door := range d.Doors {
-			jndex[i] = index[clean(door)]
-		}
-
-		for cardno, c := range v {
-			record, ok := cards[cardno]
-			if !ok {
-				record = card{
-					cardnumber: c.CardNumber,
-					from:       c.From,
-					to:         c.To,
-					doors:      make([]bool, len(index)),
-				}
-			}
-
-			if c.From.Before(record.from) {
-				record.from = c.From
-			}
-
-			if c.To.After(record.to) {
-				record.to = c.To
-			}
-
-			for i, door := range c.Doors {
-				if ix := jndex[i]; ix == 0 {
-					return fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i+1)
-				} else {
-					record.doors[ix-1] = door
-				}
-			}
-
-			cards[cardno] = record
-		}
-	}
-
-	keys := []uint32{}
-	for k, _ := range cards {
-		keys = append(keys, k)
-	}
-
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
-
-	for _, k := range keys {
-		c := cards[k]
-		record := []string{
-			fmt.Sprintf("%v", c.cardnumber),
-			fmt.Sprintf("%s", c.from),
-			fmt.Sprintf("%s", c.to),
-		}
-
-		for _, d := range c.doors {
-			if d {
-				record = append(record, "Y")
-			} else {
-				record = append(record, "N")
-			}
-		}
-
-		err := w.Write(record)
-		if err != nil {
+	for _, r := range t.records {
+		if err := w.Write(r); err != nil {
 			return err
 		}
 	}
