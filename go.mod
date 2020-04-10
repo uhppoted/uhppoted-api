@@ -6,3 +6,7 @@ require (
 	github.com/uhppoted/uhppote-core v0.6.0
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae
 )
+
+replace (
+	github.com/uhppoted/uhppote-core => ../uhppote-core
+)

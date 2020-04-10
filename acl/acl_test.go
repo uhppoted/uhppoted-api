@@ -12,6 +12,7 @@ import (
 type mock struct {
 	getCards       func(uint32) (uint32, error)
 	getCardByIndex func(uint32, uint32) (*types.Card, error)
+	getCardByID    func(uint32, uint32) (*types.Card, error)
 	putCard        func(uint32, types.Card) (bool, error)
 	deleteCard     func(uint32, types.Card) (bool, error)
 }
@@ -22,6 +23,10 @@ func (m *mock) GetCardsN(deviceID uint32) (uint32, error) {
 
 func (m *mock) GetCardByIndexN(deviceID, index uint32) (*types.Card, error) {
 	return m.getCardByIndex(deviceID, index)
+}
+
+func (m *mock) GetCardByIdN(deviceID, cardID uint32) (*types.Card, error) {
+	return m.getCardByID(deviceID, cardID)
 }
 
 func (m *mock) PutCardN(deviceID uint32, card types.Card) (bool, error) {
