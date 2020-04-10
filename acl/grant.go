@@ -1,10 +1,10 @@
 package acl
 
 import (
+	"fmt"
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"fmt"
 	"strings"
 )
 
@@ -48,9 +48,20 @@ func Grant(u device.IDevice, devices []*uhppote.Device, cardID uint32, from, to 
 }
 
 func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date, doors []uint8) error {
+	if len(doors) == 0 {
+		return nil
+	}
+
 	card, err := u.GetCardByIdN(deviceID, cardID)
 	if err != nil {
 		return err
+	} else if card == nil {
+		card = &types.Card{
+			CardNumber: cardID,
+			From:       from,
+			To:         to,
+			Doors:      []bool{false, false, false, false},
+		}
 	}
 
 	if card.From.After(from) {
