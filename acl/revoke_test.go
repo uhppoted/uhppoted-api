@@ -7,10 +7,10 @@ import (
 	"testing"
 )
 
-func TestGrant(t *testing.T) {
+func TestRevoke(t *testing.T) {
 	expected := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-		types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, false, true, true}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
 		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 	}
 
@@ -23,7 +23,7 @@ func TestGrant(t *testing.T) {
 
 	cards := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, true, true}},
 		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 	}
 
@@ -50,9 +50,9 @@ func TestGrant(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, date("2020-01-01"), date("2020-12-31"), []string{"Garage"})
+	err := Revoke(&u, devices, 65538, []string{"Garage"})
 	if err != nil {
-		t.Fatalf("Unexpected error invoking 'grant': %v", err)
+		t.Fatalf("Unexpected error invoking 'revoke': %v", err)
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
@@ -60,7 +60,7 @@ func TestGrant(t *testing.T) {
 	}
 }
 
-func TestGrantWithAmbiguousDoors(t *testing.T) {
+func TestRevokeWithAmbiguousDoors(t *testing.T) {
 	devices := []*uhppote.Device{
 		&uhppote.Device{
 			DeviceID: 12345,
@@ -74,18 +74,17 @@ func TestGrantWithAmbiguousDoors(t *testing.T) {
 
 	u := mock{}
 
-	err := Grant(&u, devices, 65538, date("2020-01-01"), date("2020-12-31"), []string{"Garage"})
+	err := Revoke(&u, devices, 65538, []string{"Garage"})
 	if err == nil {
-		t.Fatalf("Expected error invoking 'grant', got '%v'", err)
+		t.Fatalf("Expected error invoking 'revoke', got '%v'", err)
 	}
 }
 
-func TestGrantWithNewCard(t *testing.T) {
+func TestRevokeWithNewCard(t *testing.T) {
 	expected := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
 		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
 		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-		types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{false, true, true, false}},
 	}
 
 	devices := []*uhppote.Device{
@@ -124,9 +123,9 @@ func TestGrantWithNewCard(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65536, date("2020-01-01"), date("2020-12-31"), []string{"Side Door", "Garage"})
+	err := Revoke(&u, devices, 65536, []string{"Side Door", "Garage"})
 	if err != nil {
-		t.Fatalf("Unexpected error invoking 'grant': %v", err)
+		t.Fatalf("Unexpected error invoking 'revoke': %v", err)
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
@@ -134,10 +133,10 @@ func TestGrantWithNewCard(t *testing.T) {
 	}
 }
 
-func TestGrantWithNarrowerDateRange(t *testing.T) {
+func TestRevokeWithNarrowerDateRange(t *testing.T) {
 	expected := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, true, true}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
 		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 	}
 
@@ -150,7 +149,7 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 
 	cards := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, true, true}},
 		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 	}
 
@@ -177,9 +176,9 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, date("2020-04-01"), date("2020-10-31"), []string{"Garage"})
+	err := Revoke(&u, devices, 65538, []string{"Garage"})
 	if err != nil {
-		t.Fatalf("Unexpected error invoking 'grant': %v", err)
+		t.Fatalf("Unexpected error invoking 'revoke': %v", err)
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
@@ -187,17 +186,17 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 	}
 }
 
-func TestGrantAcrossMultipleDevices(t *testing.T) {
+func TestRevokeAcrossMultipleDevices(t *testing.T) {
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
 			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, false, true, true}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
 			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{false, true, false, false}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, true}},
+			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, true}},
+			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: []bool{false, false, false, true}},
 		},
 	}
 
@@ -215,13 +214,13 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
 			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, true, true}},
 			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, true}},
+			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: []bool{false, true, false, true}},
+			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: []bool{false, false, false, true}},
 		},
 	}
 
@@ -248,9 +247,9 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, date("2020-01-01"), date("2020-12-31"), []string{"Garage", "D2"})
+	err := Revoke(&u, devices, 65538, []string{"Garage", "D2"})
 	if err != nil {
-		t.Fatalf("Unexpected error invoking 'grant': %v", err)
+		t.Fatalf("Unexpected error invoking 'revoke': %v", err)
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
