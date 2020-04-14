@@ -3,7 +3,6 @@ package acl
 import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/device"
-	//	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"strings"
 )
@@ -12,6 +11,13 @@ func Revoke(u device.IDevice, devices []*uhppote.Device, cardID uint32, doors []
 	m, err := mapDoorsToDevices(devices, doors)
 	if err != nil {
 		return err
+	}
+
+	for _, dd := range doors {
+		door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
+		if _, ok := m[door]; !ok {
+			return fmt.Errorf("Door '%v' is not defined in the device configuration", dd)
+		}
 	}
 
 	for _, d := range devices {

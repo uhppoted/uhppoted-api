@@ -14,6 +14,13 @@ func Grant(u device.IDevice, devices []*uhppote.Device, cardID uint32, from, to 
 		return err
 	}
 
+	for _, dd := range doors {
+		door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
+		if _, ok := m[door]; !ok {
+			return fmt.Errorf("Door '%v' is not defined in the device configuration", dd)
+		}
+	}
+
 	for _, d := range devices {
 		list := []uint8{}
 
