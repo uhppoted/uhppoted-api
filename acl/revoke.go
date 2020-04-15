@@ -4,16 +4,26 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"reflect"
 	"strings"
 )
 
 func Revoke(u device.IDevice, devices []*uhppote.Device, cardID uint32, doors []string) error {
-	m, err := mapDoorsToDevices(devices, doors)
+	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err
 	}
 
-	for _, dd := range doors {
+	list := []string{}
+	if reflect.DeepEqual(doors, []string{"ALL"}) {
+		for k, _ := range m {
+			list = append(list, k)
+		}
+	} else {
+		list = append(list, doors...)
+	}
+
+	for _, dd := range list {
 		door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 		if _, ok := m[door]; !ok {
 			return fmt.Errorf("Door '%v' is not defined in the device configuration", dd)
@@ -21,16 +31,16 @@ func Revoke(u device.IDevice, devices []*uhppote.Device, cardID uint32, doors []
 	}
 
 	for _, d := range devices {
-		list := []uint8{}
+		l := []uint8{}
 
-		for _, dd := range doors {
+		for _, dd := range list {
 			door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 			if e, ok := m[door]; ok && e.deviceID == d.DeviceID {
-				list = append(list, e.door)
+				l = append(l, e.door)
 			}
 		}
 
-		if err := revoke(u, d.DeviceID, cardID, list); err != nil {
+		if err := revoke(u, d.DeviceID, cardID, l); err != nil {
 			return err
 		}
 	}

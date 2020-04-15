@@ -217,7 +217,7 @@ func clean(s string) string {
 	return strings.ReplaceAll(strings.ToLower(s), " ", "")
 }
 
-func mapDoorsToDevices(devices []*uhppote.Device, doors []string) (doormap, error) {
+func mapDeviceDoors(devices []*uhppote.Device) (doormap, error) {
 	m := doormap{}
 
 	for _, d := range devices {
