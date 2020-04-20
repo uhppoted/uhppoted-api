@@ -164,6 +164,23 @@ func (c *Config) Load(path string) error {
 	return nil
 }
 
+func (c *Config) Validate() error {
+	doors := make(map[string]bool)
+	for _, device := range c.Devices {
+		for _, door := range device.Doors {
+			d := strings.ReplaceAll(strings.ToLower(door), " ", "")
+
+			if doors[d] {
+				return fmt.Errorf("Door '%s' is defined more than once in configuration", door)
+			}
+
+			doors[d] = true
+		}
+	}
+
+	return nil
+}
+
 func (c *Config) Read(r io.Reader) error {
 	bytes, err := ioutil.ReadAll(r)
 	if err != nil {
