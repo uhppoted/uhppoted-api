@@ -5,6 +5,9 @@ import (
 	"path/filepath"
 )
 
+// DefaultConfig is the default file path for the uhppoted configuration file
+var DefaultConfig = filepath.Join(workdir(), "uhppoted.conf")
+
 var mqttBrokerCertificate string = filepath.Join(workdir(), "mqtt", "broker.cert")
 var mqttClientCertificate string = filepath.Join(workdir(), "mqtt", "client.cert")
 var mqttClientKey string = filepath.Join(workdir(), "mqtt", "client.key")

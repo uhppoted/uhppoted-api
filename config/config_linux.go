@@ -1,14 +1,19 @@
 package config
 
-const mqttBrokerCertificate string = "/etc/uhppoted/mqtt/broker.cert"
-const mqttClientCertificate string = "/etc/uhppoted/mqtt/client.cert"
-const mqttClientKey string = "/etc/uhppoted/mqtt/client.key"
-const users string = "/etc/uhppoted/mqtt.permissions.users"
-const groups string = "/etc/uhppoted/mqtt.permissions.groups"
-const hotpSecrets string = "/etc/uhppoted/mqtt.hotp.secrets"
-const rsaKeyDir string = "/etc/uhppoted/mqtt/rsa"
+const (
+	// DefaultConfig is the default file path for the uhppoted configuration file
+	DefaultConfig = "/etc/uhppoted/uhppoted.conf"
 
-const eventIDs string = "/var/uhppoted/mqtt.events.retrieved"
-const hotpCounters string = "/var/uhppoted/mqtt.hotp.counters"
-const nonceServer string = "/var/uhppoted/mqtt.nonce"
-const nonceClients string = "/var/uhppoted/mqtt.nonce.counters"
+	mqttBrokerCertificate string = "/etc/uhppoted/mqtt/broker.cert"
+	mqttClientCertificate string = "/etc/uhppoted/mqtt/client.cert"
+	mqttClientKey         string = "/etc/uhppoted/mqtt/client.key"
+	users                 string = "/etc/uhppoted/mqtt.permissions.users"
+	groups                string = "/etc/uhppoted/mqtt.permissions.groups"
+	hotpSecrets           string = "/etc/uhppoted/mqtt.hotp.secrets"
+	rsaKeyDir             string = "/etc/uhppoted/mqtt/rsa"
+
+	eventIDs     string = "/var/uhppoted/mqtt.events.retrieved"
+	hotpCounters string = "/var/uhppoted/mqtt.hotp.counters"
+	nonceServer  string = "/var/uhppoted/mqtt.nonce"
+	nonceClients string = "/var/uhppoted/mqtt.nonce.counters"
+)
