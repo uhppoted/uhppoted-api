@@ -8,7 +8,11 @@ abstracts the device level functionality provided by *uhppote-core* to provide t
 
 ## Releases
 
-- v0.5.1: Initial release following restructuring into standalone Go *modules* and *git submodules*
+| *Version* | *Description*                                                                             |
+| --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.1    | Added support for `uhppote-cli` ACL functions                                             |
+| v0.6.0    | Added support for `uhppoted-acl-s3` ACL functions                                         |
+| v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
 
 ### Building from source
 
