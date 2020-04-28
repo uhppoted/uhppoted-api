@@ -68,11 +68,11 @@ func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
 	w := csv.NewWriter(f)
 	w.Comma = '\t'
 
-	if err := w.Write(t.header); err != nil {
+	if err := w.Write(t.Header); err != nil {
 		return err
 	}
 
-	for _, r := range t.records {
+	for _, r := range t.Records {
 		if err := w.Write(r); err != nil {
 			return err
 		}

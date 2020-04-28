@@ -2,16 +2,49 @@ package acl
 
 import (
 	"fmt"
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"sort"
 )
 
-type table struct {
-	header  []string
-	records [][]string
+type Table struct {
+	Header  []string
+	Records [][]string
 }
 
-func MakeTable(acl ACL, devices []*uhppote.Device) (*table, error) {
+func ParseTable(table Table, devices []*uhppote.Device) (*ACL, error) {
+	acl := make(ACL)
+	for _, device := range devices {
+		acl[device.DeviceID] = make(map[uint32]types.Card)
+	}
+
+	index, err := parseHeader(table.Header, devices)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, record := range table.Records {
+		row := i + 1
+		cards, err := parseRecord(record, index)
+		if err != nil {
+			return nil, fmt.Errorf("Error parsing table - row %d: %w\n", row, err)
+		}
+
+		for id, card := range cards {
+			if acl[id] != nil {
+				if _, ok := acl[id][card.CardNumber]; ok {
+					return nil, fmt.Errorf("Duplicate card number (%v)\n", card.CardNumber)
+				}
+
+				acl[id][card.CardNumber] = card
+			}
+		}
+	}
+
+	return &acl, nil
+}
+
+func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 	header, err := makeHeader(devices)
 	if err != nil {
 		return nil, err
@@ -94,9 +127,9 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*table, error) {
 		records = append(records, record)
 	}
 
-	rs := table{
-		header:  header,
-		records: records,
+	rs := Table{
+		Header:  header,
+		Records: records,
 	}
 
 	return &rs, nil

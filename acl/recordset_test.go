@@ -7,6 +7,93 @@ import (
 	"testing"
 )
 
+func TestParseTable(t *testing.T) {
+	expected := ACL{
+		12345: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		},
+	}
+
+	table := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
+		Records: [][]string{
+			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N"},
+			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y"},
+			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N"},
+		},
+	}
+
+	devices := []*uhppote.Device{
+		&uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	list, err := ParseTable(table, devices)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if list == nil {
+		t.Fatalf("ParseTable returned invalid result: %v", list)
+	}
+
+	if !reflect.DeepEqual(*list, expected) {
+		t.Errorf("Returned incorrect ACL - expected:\n%+v\ngot:\n%+v\n", expected, *list)
+	}
+}
+
+func TestParseTableWithMultipleDevices(t *testing.T) {
+	expected := ACL{
+		12345: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		},
+		54321: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, true, false, true}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, true, true}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, true, true, true}},
+		},
+	}
+
+	table := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
+		Records: [][]string{
+			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N", "Y", "Y", "N", "Y"},
+			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y", "Y", "N", "Y", "Y"},
+			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N", "N", "Y", "Y", "Y"},
+		},
+	}
+
+	devices := []*uhppote.Device{
+		&uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+		&uhppote.Device{
+			DeviceID: 54321,
+			Doors:    []string{"D1", "D2", "D3", "D4"},
+		},
+	}
+
+	list, err := ParseTable(table, devices)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if list == nil {
+		t.Fatalf("ParseTable returned invalid result: %v", list)
+	}
+
+	if !reflect.DeepEqual(*list, expected) {
+		t.Errorf("Returned incorrect ACL - expected:\n%+v\ngot:\n%+v\n", expected, *list)
+	}
+}
+
 func TestMakeTable(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
@@ -16,9 +103,9 @@ func TestMakeTable(t *testing.T) {
 		},
 	}
 
-	expected := table{
-		header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
-		records: [][]string{
+	expected := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
+		Records: [][]string{
 			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N"},
 			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y"},
 			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N"},
@@ -60,9 +147,9 @@ func TestMakeTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	expected := table{
-		header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
-		records: [][]string{
+	expected := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
+		Records: [][]string{
 			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N", "Y", "Y", "N", "Y"},
 			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y", "Y", "N", "Y", "Y"},
 			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N", "N", "Y", "Y", "Y"},
@@ -134,9 +221,9 @@ func TestMakeRecordsetWithMismatchedDates(t *testing.T) {
 		},
 	}
 
-	expected := table{
-		header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
-		records: [][]string{
+	expected := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
+		Records: [][]string{
 			[]string{"65537", "2020-01-01", "2020-12-31", "Y", "N", "N", "N", "Y", "Y", "N", "Y"},
 			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y", "Y", "N", "Y", "Y"},
 			[]string{"65539", "2020-01-03", "2020-12-31", "N", "N", "N", "N", "N", "Y", "Y", "Y"},
@@ -183,9 +270,9 @@ func TestMakeTableWithMismatchedCards(t *testing.T) {
 		},
 	}
 
-	expected := table{
-		header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
-		records: [][]string{
+	expected := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "D1", "D2", "D3", "D4"},
+		Records: [][]string{
 			[]string{"65536", "2020-01-01", "2020-12-31", "Y", "N", "Y", "N", "N", "N", "N", "N"},
 			[]string{"65537", "2020-01-01", "2020-12-31", "Y", "N", "N", "N", "Y", "Y", "N", "Y"},
 			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y", "Y", "N", "Y", "Y"},
