@@ -256,6 +256,16 @@ func clean(s string) string {
 	return strings.ReplaceAll(strings.ToLower(s), " ", "")
 }
 
+func noAccess(c types.Card) bool {
+	for _, d := range c.Doors {
+		if d {
+			return false
+		}
+	}
+
+	return true
+}
+
 func mapDeviceDoors(devices []*uhppote.Device) (doormap, error) {
 	m := doormap{}
 

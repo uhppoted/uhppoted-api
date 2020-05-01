@@ -399,3 +399,52 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
 	}
 }
+
+func TestGrantWithNoCurrentPermissions(t *testing.T) {
+	expected := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-04-01"), To: date("2020-10-31"), Doors: []bool{false, false, true, false}},
+	}
+
+	devices := []*uhppote.Device{
+		&uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+	}
+
+	u := mock{
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
+			for _, c := range cards {
+				if c.CardNumber == cardID {
+					return &c, nil
+				}
+			}
+			return nil, nil
+		},
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+	}
+
+	err := Grant(&u, devices, 65537, date("2020-04-01"), date("2020-10-31"), []string{"Garage"})
+	if err != nil {
+		t.Fatalf("Unexpected error invoking 'grant': %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+}
