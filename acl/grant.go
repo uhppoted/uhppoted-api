@@ -15,16 +15,17 @@ func Grant(u device.IDevice, devices []*uhppote.Device, cardID uint32, from, to 
 		return err
 	}
 
-	list := []string{}
 	if reflect.DeepEqual(doors, []string{"ALL"}) {
-		for k, _ := range m {
-			list = append(list, k)
+		for _, d := range devices {
+			if err := grantAll(u, d.DeviceID, cardID, from, to); err != nil {
+				return err
+			}
 		}
-	} else {
-		list = append(list, doors...)
+
+		return nil
 	}
 
-	for _, dd := range list {
+	for _, dd := range doors {
 		door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 		if _, ok := m[door]; !ok {
 			return fmt.Errorf("Door '%v' is not defined in the device configuration", dd)
@@ -34,7 +35,7 @@ func Grant(u device.IDevice, devices []*uhppote.Device, cardID uint32, from, to 
 	for _, d := range devices {
 		l := []uint8{}
 
-		for _, dd := range list {
+		for _, dd := range doors {
 			door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 			if e, ok := m[door]; ok && e.deviceID == d.DeviceID {
 				l = append(l, e.door)
@@ -66,16 +67,40 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 		}
 	}
 
-	if noAccess(*card) || card.From.After(from) {
+	revoked := true
+	for _, d := range card.Doors {
+		if d {
+			revoked = false
+		}
+	}
+
+	if revoked || card.From.After(from) {
 		card.From = from
 	}
 
-	if noAccess(*card) || card.To.Before(to) {
+	if revoked || card.To.Before(to) {
 		card.To = to
 	}
 
 	for _, d := range doors {
 		card.Doors[d-1] = true
+	}
+
+	if ok, err := u.PutCardN(deviceID, *card); err != nil {
+		return err
+	} else if !ok {
+		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
+	}
+
+	return nil
+}
+
+func grantAll(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date) error {
+	card := &types.Card{
+		CardNumber: cardID,
+		From:       from,
+		To:         to,
+		Doors:      []bool{true, true, true, true},
 	}
 
 	if ok, err := u.PutCardN(deviceID, *card); err != nil {

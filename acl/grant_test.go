@@ -262,12 +262,12 @@ func TestGrantALL(t *testing.T) {
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
 			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, true, true, true}},
+			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-10-31"), Doors: []bool{true, true, true, true}},
 			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 		},
 		54321: []types.Card{
 			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, true, true, true}},
+			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-10-31"), Doors: []bool{true, true, true, true}},
 			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 		},
 	}
@@ -286,7 +286,7 @@ func TestGrantALL(t *testing.T) {
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
 			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, false, false, true}},
 			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
 		},
 		54321: []types.Card{
@@ -319,7 +319,7 @@ func TestGrantALL(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, date("2020-01-01"), date("2020-12-31"), []string{"ALL"})
+	err := Grant(&u, devices, 65538, date("2020-03-02"), date("2020-10-31"), []string{"ALL"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant ALL': %v", err)
 	}

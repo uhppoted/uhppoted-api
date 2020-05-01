@@ -34,6 +34,6 @@ coverage: build
 release: test vet
 
 debug: build
-	go test ./... -run TestPutACLWithNoCurrentPermissions
+	go test ./... -run TestGrantALL
 
 
