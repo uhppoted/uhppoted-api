@@ -177,3 +177,70 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 		t.Errorf("Returned report does not match expected:\n    expected:%+v\n    got:     %+v", report, rpt)
 	}
 }
+
+func TestPutACLWithNoCurrentPermissions(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-10-31"), Doors: []bool{false, false, true, false}},
+		},
+	}
+
+	expected := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-10-31"), Doors: []bool{false, false, true, false}},
+	}
+
+	report := map[uint32]Report{
+		12345: Report{Unchanged: 0, Updated: 1, Added: 0, Deleted: 0, Failed: 0},
+	}
+
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+	}
+
+	u := mock{
+		getCards: func(deviceID uint32) (uint32, error) {
+			return uint32(len(cards)), nil
+		},
+		getCardByIndex: func(deviceID, index uint32) (*types.Card, error) {
+			if int(index) < 0 || int(index) > len(cards) {
+				return nil, nil
+			}
+			return &cards[index-1], nil
+		},
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards = append(cards[:ix], cards[ix+1:]...)
+					return true, nil
+				}
+			}
+
+			return false, nil
+		},
+	}
+
+	rpt, err := PutACL(&u, acl)
+	if err != nil {
+		t.Fatalf("Unexpected error putting ACL: %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+
+	if !reflect.DeepEqual(rpt, report) {
+		t.Errorf("Returned report does not match expected:\n    expected:%+v\n    got:     %+v", report, rpt)
+	}
+}
