@@ -30,9 +30,9 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 		record, err := u.Uhppote.GetCardByIndex(device, index+1)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
-		}
-
+		} else if record != nil {
 		cards = append(cards, record.CardNumber)
+	}
 	}
 
 	response := GetCardsResponse{
@@ -96,7 +96,7 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 	}
 
 	if card == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("Error retrieving card %v from %v", card.CardNumber, device))
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("Error retrieving card %v from %v", request.CardNumber, device))
 	}
 
 	response := GetCardResponse{
@@ -126,6 +126,7 @@ func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 	card := request.Card
 
 	authorised, err := u.Uhppote.PutCard(device, card)
+	fmt.Printf(">> DEBUG: %v %v %v\n", card, authorised, err)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, device, err))
 	}
