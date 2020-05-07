@@ -28,7 +28,7 @@ type GetEventRequest struct {
 
 type GetEventResponse struct {
 	DeviceID DeviceID `json:"device-id"`
-	Event    event    `json:"event"`
+	Event    Event    `json:"event"`
 }
 
 type DateRange struct {
@@ -91,7 +91,7 @@ func (index EventIndex) decrement(rollover uint32) EventIndex {
 	return EventIndex(ix)
 }
 
-type event struct {
+type Event struct {
 	Index      uint32         `json:"event-id"`
 	Type       uint8          `json:"event-type"`
 	Granted    bool           `json:"access-granted"`
@@ -135,6 +135,8 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 	// but not necessarily true e.g. if the start/end interval includes a significant device time change.
 	var first *types.Event
 	var last *types.Event
+	var dates *DateRange
+	var events *EventRange
 
 	if start != nil || end != nil {
 		index := EventIndex(l.Index)
@@ -160,21 +162,23 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 
 			index = index.decrement(rollover)
 		}
-	}
 
-	dates := (*DateRange)(nil)
-	if start != nil || end != nil {
 		dates = &DateRange{
 			Start: start,
 			End:   end,
 		}
-	}
 
-	events := (*EventRange)(nil)
-	if first != nil && last != nil {
+		if first != nil && last != nil {
+			events = &EventRange{
+				First: first.Index,
+				Last:  last.Index,
+			}
+		}
+
+	} else {
 		events = &EventRange{
-			First: first.Index,
-			Last:  last.Index,
+			First: f.Index,
+			Last:  l.Index,
 		}
 	}
 
@@ -222,7 +226,7 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 
 	response := GetEventResponse{
 		DeviceID: DeviceID(record.SerialNumber),
-		Event: event{
+		Event: Event{
 			Index:      record.Index,
 			Type:       record.Type,
 			Granted:    record.Granted,

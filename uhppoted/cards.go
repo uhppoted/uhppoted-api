@@ -31,8 +31,8 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 		} else if record != nil {
-		cards = append(cards, record.CardNumber)
-	}
+			cards = append(cards, record.CardNumber)
+		}
 	}
 
 	response := GetCardsResponse{
