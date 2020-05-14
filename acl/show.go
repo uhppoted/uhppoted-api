@@ -25,8 +25,8 @@ func GetCard(u device.IDevice, devices []*uhppote.Device, cardID uint32) (map[st
 					for _, v := range lookup {
 						if v.deviceID == device.DeviceID && v.door == ix {
 							acl[v.name] = DateRange{
-								From: card.From,
-								To:   card.To,
+								From: *card.From,
+								To:   *card.To,
 							}
 						}
 					}

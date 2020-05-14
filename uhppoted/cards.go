@@ -126,7 +126,6 @@ func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 	card := request.Card
 
 	authorised, err := u.Uhppote.PutCard(device, card)
-	fmt.Printf(">> DEBUG: %v %v %v\n", card, authorised, err)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, device, err))
 	}

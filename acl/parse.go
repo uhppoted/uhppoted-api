@@ -131,8 +131,8 @@ func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 
 		cards[k] = types.Card{
 			CardNumber: cardno,
-			From:       *from,
-			To:         *to,
+			From:       from,
+			To:         to,
 			Doors:      doors,
 		}
 	}

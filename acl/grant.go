@@ -61,8 +61,8 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 	} else if card == nil {
 		card = &types.Card{
 			CardNumber: cardID,
-			From:       from,
-			To:         to,
+			From:       &from,
+			To:         &to,
 			Doors:      []bool{false, false, false, false},
 		}
 	}
@@ -75,11 +75,11 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 	}
 
 	if revoked || card.From.After(from) {
-		card.From = from
+		card.From = &from
 	}
 
 	if revoked || card.To.Before(to) {
-		card.To = to
+		card.To = &to
 	}
 
 	for _, d := range doors {
@@ -98,8 +98,8 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 func grantAll(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date) error {
 	card := &types.Card{
 		CardNumber: cardID,
-		From:       from,
-		To:         to,
+		From:       &from,
+		To:         &to,
 		Doors:      []bool{true, true, true, true},
 	}
 

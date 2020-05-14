@@ -74,18 +74,18 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 			if !ok {
 				record = card{
 					cardnumber: c.CardNumber,
-					from:       c.From,
-					to:         c.To,
+					from:       *c.From,
+					to:         *c.To,
 					doors:      make([]bool, len(index)),
 				}
 			}
 
 			if c.From.Before(record.from) {
-				record.from = c.From
+				record.from = *c.From
 			}
 
 			if c.To.After(record.to) {
-				record.to = c.To
+				record.to = *c.To
 			}
 
 			for i, door := range c.Doors {
