@@ -34,9 +34,10 @@ func (m *mock) DeleteCardN(deviceID uint32, card types.Card) (bool, error) {
 	return m.deleteCard(deviceID, card)
 }
 
-var date = func(s string) types.Date {
+var date = func(s string) *types.Date {
 	d, _ := time.ParseInLocation("2006-01-02", s, time.Local)
-	return types.Date(d)
+	p := types.Date(d)
+	return &p
 }
 
 var deviceA = uhppote.Device{
