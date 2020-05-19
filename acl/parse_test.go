@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"testing"
@@ -112,6 +113,8 @@ func TestParseHeaderWithMissingColumn(t *testing.T) {
 func TestParseHeaderWithInvalidColumn(t *testing.T) {
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D3X", "D4"}
 
+	expected := fmt.Errorf("No configured door matches 'D3X'")
+
 	devices := []*uhppote.Device{
 		&uhppote.Device{
 			DeviceID: 12345,
@@ -126,5 +129,7 @@ func TestParseHeaderWithInvalidColumn(t *testing.T) {
 	ix, err := parseHeader(header, devices)
 	if err == nil {
 		t.Fatalf("Expected error parsing header with invalid column: %+v", *ix)
+	} else if err.Error() != expected.Error() {
+		t.Errorf("Incorrect error message\n   expected: %v\n   got:      %v", expected, err)
 	}
 }
