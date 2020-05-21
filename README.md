@@ -10,6 +10,7 @@ abstracts the device level functionality provided by *uhppote-core* to provide t
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.2    | Added support for `uhppoted-rest` ACL API                                                 |
 | v0.6.1    | Added support for `uhppote-cli` ACL functions                                             |
 | v0.6.0    | Added support for `uhppoted-acl-s3` ACL functions                                         |
 | v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
@@ -18,15 +19,12 @@ abstracts the device level functionality provided by *uhppote-core* to provide t
 
 #### Dependencies
 
-| *Dependency*                          | *Description*                                          |
-| ------------------------------------- | ------------------------------------------------------ |
-| [com.github/uhppoted/uhppote-core][1] | Device level API implementation                        |
-| golang.org/x/sys/windows              | Support for Windows services                           |
-| golang.org/x/lint/golint              | Additional *lint* check for release builds             |
+| *Dependency*                                             | *Description*                                          |
+| -------------------------------------------------------- | ------------------------------------------------------ |
+| [uhppote-core][https://github.com/uhppoted/uhppote-core] | Device level API implementation                        |
+| golang.org/x/sys/windows                                 | Support for Windows services                           |
+| golang.org/x/lint/golint                               | Additional *lint* check for release builds             |
 
 ## uhppote-api
-
-
-[1]: https://github.com/uhppoted/uhppote-core
 
 
