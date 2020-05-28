@@ -40,6 +40,9 @@ const pretty = `# SYSTEM{{range .system}}
 # MQTT{{range .mqtt}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
+# AWS{{range .aws}}
+{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+
 # OPEN API{{range .openapi}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
@@ -69,6 +72,9 @@ const dump = `# SYSTEM{{range .system}}
 # MQTT{{range .mqtt}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
+# AWS{{range .aws}}
+{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+
 # OPEN API{{range .openapi}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
@@ -94,6 +100,7 @@ type Config struct {
 	Devices DeviceMap `conf:"/^UT0311-L0x\\.([0-9]+)\\.(.*)/"`
 	REST    `conf:"rest"`
 	MQTT    `conf:"mqtt"`
+	AWS     `conf:"aws"`
 	OpenAPI `conf:"openapi"`
 }
 
@@ -124,6 +131,7 @@ func NewConfig() *Config {
 		},
 		REST:    *NewREST(),
 		MQTT:    *NewMQTT(),
+		AWS:     *NewAWS(),
 		OpenAPI: *NewOpenAPI(),
 		Devices: make(DeviceMap, 0),
 	}
@@ -196,6 +204,7 @@ func (c *Config) Write(w io.Writer) error {
 		"system":  listify("", &defc.System),
 		"rest":    listify("rest.", &defc.REST),
 		"mqtt":    listify("mqtt.", &defc.MQTT),
+		"aws":     listify("aws.", &defc.AWS),
 		"openapi": listify("openapi.", &defc.OpenAPI),
 	}
 
@@ -203,6 +212,7 @@ func (c *Config) Write(w io.Writer) error {
 		"system":  listify("", &c.System),
 		"rest":    listify("rest.", &c.REST),
 		"mqtt":    listify("mqtt.", &c.MQTT),
+		"aws":     listify("aws.", &c.AWS),
 		"openapi": listify("openapi.", &c.OpenAPI),
 		"devices": c.Devices,
 	}

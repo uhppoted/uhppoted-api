@@ -31,6 +31,9 @@ mqtt.topic.replies = /uiop
 mqtt.topic.events = ./asdf
 mqtt.topic.system = sys
 
+# AWS
+aws.region = us-west-2
+
 # DEVICES
 UT0311-L0x.405419896.address = 192.168.1.100:60000
 UT0311-L0x.405419896.door.1 = Front Door
@@ -58,6 +61,11 @@ func TestDefaultConfig(t *testing.T) {
 				ClientID: "twystd-uhppoted-mqttd",
 			},
 		},
+
+		AWS: AWS{
+			Credentials: nil,
+			Region:      "us-east-1",
+		},
 	}
 
 	config := NewConfig()
@@ -68,6 +76,10 @@ func TestDefaultConfig(t *testing.T) {
 
 	if config.MQTT.Connection.ClientID != expected.MQTT.Connection.ClientID {
 		t.Errorf("Expected mqtt.connection.client.ID: '%v', got: '%v'", expected.MQTT.Connection.ClientID, config.MQTT.Connection.ClientID)
+	}
+
+	if !reflect.DeepEqual(config.AWS, expected.AWS) {
+		t.Errorf("Incorrect AWS default configuration:\nexpected:%+v,\ngot:     %+v", expected.AWS, config.AWS)
 	}
 }
 
@@ -101,6 +113,11 @@ func TestUnmarshal(t *testing.T) {
 				Events:   "./asdf",
 				System:   "sys",
 			},
+		},
+
+		AWS: AWS{
+			Credentials: nil,
+			Region:      "us-west-2",
 		},
 	}
 
@@ -137,6 +154,10 @@ func TestUnmarshal(t *testing.T) {
 
 	if config.Topics.Resolve(config.Topics.System) != "twystd-qwerty/sys" {
 		t.Errorf("Expected 'mqtt::topic.system' %v, got:%v", "twystd-qwerty/sys", config.Topics.Resolve(config.Topics.System))
+	}
+
+	if !reflect.DeepEqual(config.AWS, expected.AWS) {
+		t.Errorf("Incorrect AWS configuration:\nexpected:%+v,\ngot:     %+v", expected.AWS, config.AWS)
 	}
 
 	if d, _ := config.Devices[405419896]; d == nil {
