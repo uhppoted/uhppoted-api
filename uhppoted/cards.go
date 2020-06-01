@@ -30,7 +30,9 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 		record, err := u.Uhppote.GetCardByIndex(device, index+1)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
-		} else if record != nil {
+		}
+
+		if record != nil {
 			cards = append(cards, record.CardNumber)
 		}
 	}

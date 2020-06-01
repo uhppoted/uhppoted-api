@@ -32,15 +32,19 @@ func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
 		return cards, err
 	}
 
-	for index := uint32(0); index < N; index++ {
-		card, err := u.GetCardByIndexN(deviceID, index+1)
+	var index uint32 = 1
+	for count := 0; count < int(N); {
+		card, err := u.GetCardByIndexN(deviceID, index)
 		if err != nil {
 			return nil, err
 		}
 
 		if card != nil {
 			cards[card.CardNumber] = card.Clone()
+			count++
 		}
+
+		index++
 	}
 
 	return cards, nil
