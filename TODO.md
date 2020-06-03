@@ -2,6 +2,8 @@
 
 ## IN PROGRESS
 
+- [x] Rework AWS credentials to use SDK
+
 ## TODO
 
 ### uhppoted-api
