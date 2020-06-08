@@ -63,7 +63,8 @@ func TestDefaultConfig(t *testing.T) {
 		},
 
 		AWS: AWS{
-			Credentials: nil,
+			Credentials: "",
+			Profile:     "default",
 			Region:      "us-east-1",
 		},
 	}
@@ -116,7 +117,8 @@ func TestUnmarshal(t *testing.T) {
 		},
 
 		AWS: AWS{
-			Credentials: nil,
+			Credentials: "",
+			Profile:     "default",
 			Region:      "us-west-2",
 		},
 	}
