@@ -3,11 +3,8 @@ module github.com/uhppoted/uhppoted-api
 go 1.14
 
 require (
-	github.com/aws/aws-sdk-go v1.31.7
 	github.com/uhppoted/uhppote-core v0.6.2
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae
 )
 
-replace (
-    github.com/uhppoted/uhppote-core => ../uhppote-core
-)
+replace github.com/uhppoted/uhppote-core => ../uhppote-core
