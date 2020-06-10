@@ -4,7 +4,7 @@ import ()
 
 type AWS struct {
 	Credentials string `conf:"credentials"`
-	Profile     string `conf:"profil"`
+	Profile     string `conf:"profile"`
 	Region      string `conf:"region"`
 }
 

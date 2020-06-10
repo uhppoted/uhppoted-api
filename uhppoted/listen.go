@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"io/ioutil"
 	"log"
 	"os"
@@ -83,7 +82,7 @@ func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHa
 	if index, ok := received.retrieved[deviceID]; ok {
 		u.info("listen", fmt.Sprintf("Fetching unretrieved events for device ID %v", deviceID))
 
-		event, err := uhppote.GetEvent(u.Uhppote, deviceID, 0xffffffff)
+		event, err := u.Uhppote.GetEvent(deviceID, 0xffffffff)
 		if err != nil {
 			u.warn("listen", fmt.Errorf("Unable to retrieve events for device ID %v (%w)", deviceID, err))
 			return
@@ -198,7 +197,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 		}
 	}
 
-	first, err := uhppote.GetEvent(u.Uhppote, deviceID, 0)
+	first, err := u.Uhppote.GetEvent(deviceID, 0)
 	if err != nil {
 		u.warn("listen", fmt.Errorf("Failed to retrieve 'first' event for device %d (%w)", deviceID, err))
 		return
@@ -207,7 +206,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 		return
 	}
 
-	last, err := uhppote.GetEvent(u.Uhppote, deviceID, 0xffffffff)
+	last, err := u.Uhppote.GetEvent(deviceID, 0xffffffff)
 	if err != nil {
 		u.warn("listen", fmt.Errorf("Failed to retrieve 'last' event for device %d (%w)", deviceID, err))
 		return
@@ -242,7 +241,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 			return
 		}
 
-		record, err := uhppote.GetEvent(u.Uhppote, deviceID, uint32(index))
+		record, err := u.Uhppote.GetEvent(deviceID, uint32(index))
 		if err != nil {
 			u.warn("listen", fmt.Errorf("Failed to retrieve event for device %d, ID %d (%w)", deviceID, index, err))
 		} else if record == nil {

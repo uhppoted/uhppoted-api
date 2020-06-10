@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"time"
 )
 
@@ -117,12 +116,12 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 		}
 	}
 
-	f, err := uhppote.GetEvent(u.Uhppote, device, 0)
+	f, err := u.Uhppote.GetEvent(device, 0)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, err))
 	}
 
-	l, err := uhppote.GetEvent(u.Uhppote, device, 0xffffffff)
+	l, err := u.Uhppote.GetEvent(device, 0xffffffff)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, err))
 	}
@@ -154,7 +153,7 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 		if start != nil || end != nil {
 			index := EventIndex(l.Index)
 			for {
-				record, err := uhppote.GetEvent(u.Uhppote, device, uint32(index))
+				record, err := u.Uhppote.GetEvent(device, uint32(index))
 				if err != nil {
 					return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event for index %v from %v (%w)", index, device, err))
 				}
@@ -225,7 +224,7 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 	device := uint32(request.DeviceID)
 	eventID := request.EventID
 
-	record, err := uhppote.GetEvent(u.Uhppote, device, eventID)
+	record, err := u.Uhppote.GetEvent(device, eventID)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event for ID %v from %v (%w)", eventID, device, err))
 	}

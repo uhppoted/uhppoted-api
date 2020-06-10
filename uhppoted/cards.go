@@ -3,6 +3,7 @@ package uhppoted
 import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 type GetCardsRequest struct {
@@ -19,26 +20,31 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	device := uint32(request.DeviceID)
 
-	N, err := u.Uhppote.GetCards(device)
+	N, err := u.Uhppote.GetCardsN(device)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 	}
 
 	cards := make([]uint32, 0)
 
-	for index := uint32(0); index < N.Records; index++ {
-		record, err := u.Uhppote.GetCardByIndex(device, index+1)
+	var index uint32 = 1
+	var records = int(N)
+	for count := 0; count < records; {
+		record, err := uhppote.GetCardByIndex(u.Uhppote, device, index)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 		}
 
 		if record != nil {
 			cards = append(cards, record.CardNumber)
+			count++
 		}
+
+		index++
 	}
 
 	response := GetCardsResponse{
-		DeviceID: DeviceID(N.SerialNumber),
+		DeviceID: DeviceID(device),
 		Cards:    cards,
 	}
 
@@ -92,7 +98,7 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 	device := uint32(request.DeviceID)
 	cardID := request.CardNumber
 
-	card, err := u.Uhppote.GetCardByID(device, cardID)
+	card, err := u.Uhppote.GetCardByIdN(device, cardID)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving card %v from %v (%w)", card.CardNumber, device, err))
 	}
