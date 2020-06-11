@@ -10,6 +10,7 @@ abstracts the device level functionality provided by *uhppote-core* to provide t
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.3    | Added support for `uhppoted-mqtt` ACL API                                                 |
 | v0.6.2    | Added support for `uhppoted-rest` ACL API                                                 |
 | v0.6.1    | Added support for `uhppote-cli` ACL functions                                             |
 | v0.6.0    | Added support for `uhppoted-acl-s3` ACL functions                                         |
@@ -23,7 +24,7 @@ abstracts the device level functionality provided by *uhppote-core* to provide t
 | -------------------------------------------------------- | ------------------------------------------------------ |
 | [uhppote-core][https://github.com/uhppoted/uhppote-core] | Device level API implementation                        |
 | golang.org/x/sys/windows                                 | Support for Windows services                           |
-| golang.org/x/lint/golint                               | Additional *lint* check for release builds             |
+| golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 
 ## uhppote-api
 
