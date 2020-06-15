@@ -32,7 +32,7 @@ func TestParseTable(t *testing.T) {
 		},
 	}
 
-	list, err := ParseTable(table, devices)
+	list, err := ParseTable(&table, devices)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
 	}
@@ -80,7 +80,7 @@ func TestParseTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	list, err := ParseTable(table, devices)
+	list, err := ParseTable(&table, devices)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
 	}

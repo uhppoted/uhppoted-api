@@ -12,7 +12,7 @@ type Table struct {
 	Records [][]string
 }
 
-func ParseTable(table Table, devices []*uhppote.Device) (*ACL, error) {
+func ParseTable(table *Table, devices []*uhppote.Device) (*ACL, error) {
 	acl := make(ACL)
 	for _, device := range devices {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
