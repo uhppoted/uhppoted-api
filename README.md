@@ -1,3 +1,5 @@
+![Go](https://github.com/uhppoted/uhppoted-api/workflows/Go/badge.svg)
+
 # uhppoted-api
 
 High level Go API for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand controller boards. 
