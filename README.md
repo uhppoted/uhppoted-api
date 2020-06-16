@@ -24,7 +24,7 @@ abstracts the device level functionality provided by *uhppote-core* to provide t
 
 | *Dependency*                                             | *Description*                                          |
 | -------------------------------------------------------- | ------------------------------------------------------ |
-| [uhppote-core][https://github.com/uhppoted/uhppote-core] | Device level API implementation                        |
+| [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
 | golang.org/x/sys/windows                                 | Support for Windows services                           |
 | golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 
