@@ -1,4 +1,4 @@
-![Go](https://github.com/uhppoted/uhppoted-api/workflows/Go/badge.svg)
+![build](https://github.com/uhppoted/uhppoted-api/workflows/build/badge.svg)
 
 # uhppoted-api
 
