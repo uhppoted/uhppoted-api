@@ -65,7 +65,80 @@ func TestPutACL(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl)
+	rpt, err := PutACL(&u, acl, false)
+	if err != nil {
+		t.Fatalf("Unexpected error putting ACL: %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+
+	if !reflect.DeepEqual(rpt, report) {
+		t.Errorf("Returned report does not match expected:\n    expected:%+v\n    got:     %+v", report, rpt)
+	}
+}
+
+func TestPutACLDryRun(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{true, false, true, false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		},
+	}
+
+	expected := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+	}
+
+	report := map[uint32]Report{
+		12345: Report{Unchanged: 1, Updated: 1, Added: 1, Deleted: 1, Failed: 0},
+	}
+
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+	}
+
+	u := mock{
+		getCards: func(deviceID uint32) (uint32, error) {
+			return uint32(len(cards)), nil
+		},
+		getCardByIndex: func(deviceID, index uint32) (*types.Card, error) {
+			if int(index) < 0 || int(index) > len(cards) {
+				return nil, nil
+			}
+			return &cards[index-1], nil
+		},
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards = append(cards[:ix], cards[ix+1:]...)
+					return true, nil
+				}
+			}
+
+			return false, nil
+		},
+	}
+
+	rpt, err := PutACL(&u, acl, true)
 	if err != nil {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -164,7 +237,7 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl)
+	rpt, err := PutACL(&u, acl, false)
 	if err != nil {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -231,7 +304,7 @@ func TestPutACLWithNoCurrentPermissions(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl)
+	rpt, err := PutACL(&u, acl, false)
 	if err != nil {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
