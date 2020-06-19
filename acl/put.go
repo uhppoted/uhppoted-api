@@ -12,7 +12,7 @@ func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, error) {
 	}
 
 	for id, cards := range acl {
-		var rpt Report
+		var rpt *Report
 		var err error
 
 		if dryrun {
@@ -21,7 +21,10 @@ func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, error) {
 			rpt, err = putACL(u, id, cards)
 		}
 
-		report[id] = rpt
+		if rpt != nil {
+			report[id] = *rpt
+		}
+
 		if err != nil {
 			return report, err
 		}
@@ -30,72 +33,95 @@ func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, error) {
 	return report, nil
 }
 
-func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (Report, error) {
-	report := Report{}
+func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
-		return report, err
+		return nil, err
 	}
 
 	diff := compare(current, cards)
 
-	report.Unchanged = len(diff.Unchanged)
+	report := Report{
+		Unchanged: []uint32{},
+		Updated:   []uint32{},
+		Added:     []uint32{},
+		Deleted:   []uint32{},
+		Failed:    []uint32{},
+		Errors:    []error{},
+	}
+
+	for _, card := range diff.Unchanged {
+		report.Unchanged = append(report.Unchanged, card.CardNumber)
+	}
 
 	for _, card := range diff.Updated {
 		if ok, err := u.PutCardN(deviceID, card); err != nil {
-			return report, err
+			report.Failed = append(report.Failed, card.CardNumber)
+			report.Errors = append(report.Errors, err)
 		} else if !ok {
-			report.Failed++
+			report.Failed = append(report.Failed, card.CardNumber)
 		} else {
-			report.Updated++
+			report.Updated = append(report.Updated, card.CardNumber)
 		}
 	}
 
 	for _, card := range diff.Added {
 		if ok, err := u.PutCardN(deviceID, card); err != nil {
-			return report, err
+			report.Failed = append(report.Failed, card.CardNumber)
+			report.Errors = append(report.Errors, err)
 		} else if !ok {
-			report.Failed++
+			report.Failed = append(report.Failed, card.CardNumber)
 		} else {
-			report.Added++
+			report.Added = append(report.Added, card.CardNumber)
 		}
 	}
 
 	for _, card := range diff.Deleted {
 		if ok, err := u.DeleteCardN(deviceID, card); err != nil {
-			return report, err
+			report.Failed = append(report.Failed, card.CardNumber)
+			report.Errors = append(report.Errors, err)
 		} else if !ok {
-			report.Failed++
+			report.Failed = append(report.Failed, card.CardNumber)
 		} else {
-			report.Deleted++
+			report.Deleted = append(report.Deleted, card.CardNumber)
 		}
 	}
 
-	return report, nil
+	return &report, nil
 }
 
-func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (Report, error) {
-	report := Report{}
+func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
-		return report, err
+		return nil, err
 	}
 
 	diff := compare(current, cards)
 
-	report.Unchanged = len(diff.Unchanged)
-
-	for _, _ = range diff.Updated {
-		report.Updated++
+	report := Report{
+		Unchanged: []uint32{},
+		Updated:   []uint32{},
+		Added:     []uint32{},
+		Deleted:   []uint32{},
+		Failed:    []uint32{},
+		Errors:    []error{},
 	}
 
-	for _, _ = range diff.Added {
-		report.Added++
+	for _, card := range diff.Unchanged {
+		report.Unchanged = append(report.Unchanged, card.CardNumber)
 	}
 
-	for _, _ = range diff.Deleted {
-		report.Deleted++
+	for _, card := range diff.Updated {
+		report.Updated = append(report.Updated, card.CardNumber)
 	}
 
-	return report, nil
+	for _, card := range diff.Added {
+		report.Added = append(report.Added, card.CardNumber)
+	}
+
+	for _, card := range diff.Deleted {
+		report.Deleted = append(report.Deleted, card.CardNumber)
+	}
+
+	return &report, nil
 }

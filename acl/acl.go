@@ -17,11 +17,12 @@ type Diff struct {
 }
 
 type Report struct {
-	Unchanged int
-	Updated   int
-	Added     int
-	Deleted   int
-	Failed    int
+	Unchanged []uint32
+	Updated   []uint32
+	Added     []uint32
+	Deleted   []uint32
+	Failed    []uint32
+	Errors    []error
 }
 
 type DateRange struct {
