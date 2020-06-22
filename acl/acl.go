@@ -16,15 +16,6 @@ type Diff struct {
 	Deleted   []types.Card
 }
 
-type Report struct {
-	Unchanged []uint32
-	Updated   []uint32
-	Added     []uint32
-	Deleted   []uint32
-	Failed    []uint32
-	Errors    []error
-}
-
 type DateRange struct {
 	From types.Date
 	To   types.Date

@@ -47,6 +47,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 		Added:     []uint32{},
 		Deleted:   []uint32{},
 		Failed:    []uint32{},
+		Errored:   []uint32{},
 		Errors:    []error{},
 	}
 
@@ -56,7 +57,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 
 	for _, card := range diff.Updated {
 		if ok, err := u.PutCardN(deviceID, card); err != nil {
-			report.Failed = append(report.Failed, card.CardNumber)
+			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else if !ok {
 			report.Failed = append(report.Failed, card.CardNumber)
@@ -67,7 +68,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 
 	for _, card := range diff.Added {
 		if ok, err := u.PutCardN(deviceID, card); err != nil {
-			report.Failed = append(report.Failed, card.CardNumber)
+			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else if !ok {
 			report.Failed = append(report.Failed, card.CardNumber)
@@ -78,7 +79,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 
 	for _, card := range diff.Deleted {
 		if ok, err := u.DeleteCardN(deviceID, card); err != nil {
-			report.Failed = append(report.Failed, card.CardNumber)
+			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else if !ok {
 			report.Failed = append(report.Failed, card.CardNumber)
@@ -104,6 +105,7 @@ func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) 
 		Added:     []uint32{},
 		Deleted:   []uint32{},
 		Failed:    []uint32{},
+		Errored:   []uint32{},
 		Errors:    []error{},
 	}
 

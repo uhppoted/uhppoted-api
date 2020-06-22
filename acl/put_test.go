@@ -30,6 +30,7 @@ func TestPutACL(t *testing.T) {
 			Added:     []uint32{65536},
 			Deleted:   []uint32{65539},
 			Failed:    []uint32{},
+			Errored:   []uint32{},
 			Errors:    []error{},
 		},
 	}
@@ -110,6 +111,7 @@ func TestPutACLDryRun(t *testing.T) {
 			Added:     []uint32{65536},
 			Deleted:   []uint32{65539},
 			Failed:    []uint32{},
+			Errored:   []uint32{},
 			Errors:    []error{},
 		},
 	}
@@ -204,6 +206,7 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 			Added:     []uint32{65536},
 			Deleted:   []uint32{65539},
 			Failed:    []uint32{},
+			Errored:   []uint32{},
 			Errors:    []error{},
 		},
 
@@ -213,6 +216,7 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 			Added:     []uint32{},
 			Deleted:   []uint32{65539},
 			Failed:    []uint32{},
+			Errored:   []uint32{},
 			Errors:    []error{},
 		},
 	}
@@ -304,6 +308,7 @@ func TestPutACLWithFailures(t *testing.T) {
 			Added:     []uint32{65536},
 			Deleted:   []uint32{65539},
 			Failed:    []uint32{65538},
+			Errored:   []uint32{},
 			Errors:    []error{},
 		},
 	}
@@ -387,7 +392,8 @@ func TestPutACLWithErrors(t *testing.T) {
 			Updated:   []uint32{},
 			Added:     []uint32{65536},
 			Deleted:   []uint32{65539},
-			Failed:    []uint32{65538},
+			Failed:    []uint32{},
+			Errored:   []uint32{65538},
 			Errors:    []error{fmt.Errorf("Mysterious error updating card %v", 65538)},
 		},
 	}
@@ -468,6 +474,7 @@ func TestPutACLWithNoCurrentPermissions(t *testing.T) {
 			Added:     []uint32{},
 			Deleted:   []uint32{},
 			Failed:    []uint32{},
+			Errored:   []uint32{},
 			Errors:    []error{},
 		},
 	}
