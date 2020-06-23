@@ -14,13 +14,14 @@ type Report struct {
 	Errors    []error
 }
 
-type ReportSummary map[uint32]struct {
-	Unchanged int `json:"unchanged"`
-	Updated   int `json:"updated"`
-	Added     int `json:"added"`
-	Deleted   int `json:"deleted"`
-	Failed    int `json:"failed"`
-	Errored   int `json:"errored"`
+type ReportSummary []struct {
+	DeviceID  uint32 `json:"device-id"`
+	Unchanged int    `json:"unchanged"`
+	Updated   int    `json:"updated"`
+	Added     int    `json:"added"`
+	Deleted   int    `json:"deleted"`
+	Failed    int    `json:"failed"`
+	Errored   int    `json:"errored"`
 }
 
 type ConsolidatedReport struct {
@@ -32,24 +33,39 @@ type ConsolidatedReport struct {
 	Errored   []uint32 `json:"errored"`
 }
 
+var usort = func(a []uint32) {
+	sort.Slice(a, func(i, j int) bool { return a[i] < a[j] })
+}
+
 func Summarize(report map[uint32]Report) ReportSummary {
+	list := []uint32{}
+	for k, _ := range report {
+		list = append(list, k)
+	}
+
+	usort(list)
+
 	summary := ReportSummary{}
 
-	for k, v := range report {
-		summary[k] = struct {
-			Unchanged int `json:"unchanged"`
-			Updated   int `json:"updated"`
-			Added     int `json:"added"`
-			Deleted   int `json:"deleted"`
-			Failed    int `json:"failed"`
-			Errored   int `json:"errored"`
-		}{
-			Unchanged: len(v.Unchanged),
-			Updated:   len(v.Updated),
-			Added:     len(v.Added),
-			Deleted:   len(v.Deleted),
-			Failed:    len(v.Failed),
-			Errored:   len(v.Errored),
+	for _, id := range list {
+		if v, ok := report[id]; ok {
+			summary = append(summary, struct {
+				DeviceID  uint32 `json:"device-id"`
+				Unchanged int    `json:"unchanged"`
+				Updated   int    `json:"updated"`
+				Added     int    `json:"added"`
+				Deleted   int    `json:"deleted"`
+				Failed    int    `json:"failed"`
+				Errored   int    `json:"errored"`
+			}{
+				DeviceID:  id,
+				Unchanged: len(v.Unchanged),
+				Updated:   len(v.Updated),
+				Added:     len(v.Added),
+				Deleted:   len(v.Deleted),
+				Failed:    len(v.Failed),
+				Errored:   len(v.Errored),
+			})
 		}
 	}
 
@@ -57,9 +73,6 @@ func Summarize(report map[uint32]Report) ReportSummary {
 }
 
 func Consolidate(report map[uint32]Report) ConsolidatedReport {
-
-	// ... consolidate report
-
 	consolidated := map[uint32]*struct {
 		updated bool
 		added   bool
@@ -133,15 +146,11 @@ func Consolidate(report map[uint32]Report) ConsolidatedReport {
 		}
 	}
 
-	f := func(a []uint32) {
-		sort.Slice(a, func(i, j int) bool { return a[i] < a[j] })
-	}
-
-	f(updated)
-	f(added)
-	f(deleted)
-	f(failed)
-	f(errored)
+	usort(updated)
+	usort(added)
+	usort(deleted)
+	usort(failed)
+	usort(errored)
 
 	return ConsolidatedReport{
 		Updated: updated,
