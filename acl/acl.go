@@ -41,6 +41,22 @@ type card struct {
 	doors      []bool
 }
 
+func (d *Diff) HasChanges() bool {
+	if len(d.Updated) > 0 {
+		return true
+	}
+
+	if len(d.Added) > 0 {
+		return true
+	}
+
+	if len(d.Deleted) > 0 {
+		return true
+	}
+
+	return false
+}
+
 func clean(s string) string {
 	return strings.ReplaceAll(strings.ToLower(s), " ", "")
 }
