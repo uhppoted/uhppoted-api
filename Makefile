@@ -38,6 +38,8 @@ build-all: test vet
 	env GOOS=darwin  GOARCH=amd64       go build ./...
 	env GOOS=windows GOARCH=amd64       go build ./...
 
+release: build-all
+
 debug: build
 	go test ./... -run TestGrantALL
 
