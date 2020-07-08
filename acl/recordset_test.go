@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
@@ -32,9 +33,13 @@ func TestParseTable(t *testing.T) {
 		},
 	}
 
-	list, err := ParseTable(&table, devices)
+	list, warnings, err := ParseTable(&table, devices, true)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if len(warnings) != 0 {
+		t.Errorf("Returned warnings - expected:\n%+v\ngot:\n%+v\n", 0, warnings)
 	}
 
 	if list == nil {
@@ -80,9 +85,13 @@ func TestParseTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	list, err := ParseTable(&table, devices)
+	list, warnings, err := ParseTable(&table, devices, true)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if len(warnings) != 0 {
+		t.Errorf("Returned warnings - expected:\n%+v\ngot:\n%+v\n", 0, warnings)
 	}
 
 	if list == nil {
@@ -91,6 +100,77 @@ func TestParseTableWithMultipleDevices(t *testing.T) {
 
 	if !reflect.DeepEqual(*list, expected) {
 		t.Errorf("Returned incorrect ACL - expected:\n%+v\ngot:\n%+v\n", expected, *list)
+	}
+}
+
+func TestParseTableWithDuplicateCardNumbers(t *testing.T) {
+	expected := ACL{
+		12345: map[uint32]types.Card{
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		},
+	}
+
+	errors := []error{
+		fmt.Errorf("Duplicate card number (%v)", 65537),
+	}
+
+	table := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
+		Records: [][]string{
+			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N"},
+			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y"},
+			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N"},
+			[]string{"65537", "2020-01-01", "2020-12-31", "Y", "N", "N", "Y"},
+		},
+	}
+
+	devices := []*uhppote.Device{
+		&uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	list, warnings, err := ParseTable(&table, devices, false)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if !reflect.DeepEqual(warnings, errors) {
+		t.Errorf("Returned unexpected warnings - expected:\n%+v\ngot:\n%+v\n", errors, warnings)
+	}
+
+	if list == nil {
+		t.Fatalf("ParseTable returned invalid result: %v", list)
+	}
+
+	if !reflect.DeepEqual(*list, expected) {
+		t.Errorf("Returned incorrect ACL - expected:\n%+v\ngot:\n%+v\n", expected, *list)
+	}
+}
+
+func TestParseTableWithDuplicateCardNumbersAndStrict(t *testing.T) {
+	table := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
+		Records: [][]string{
+			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N"},
+			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "Y"},
+			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N"},
+			[]string{"65537", "2020-01-01", "2020-12-31", "Y", "N", "N", "Y"},
+		},
+	}
+
+	devices := []*uhppote.Device{
+		&uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	_, _, err := ParseTable(&table, devices, true)
+	if err == nil {
+		t.Fatalf("Expected error parsing table with duplicate card numbers and 'strict', got %v", err)
 	}
 }
 

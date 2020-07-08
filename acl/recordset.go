@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"reflect"
 	"sort"
 )
 
@@ -12,7 +13,7 @@ type Table struct {
 	Records [][]string
 }
 
-func ParseTable(table *Table, devices []*uhppote.Device) (*ACL, error) {
+func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
@@ -20,20 +21,48 @@ func ParseTable(table *Table, devices []*uhppote.Device) (*ACL, error) {
 
 	index, err := parseHeader(table.Header, devices)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	for i, record := range table.Records {
-		row := i + 1
+	list := []map[uint32]types.Card{}
+	for row, record := range table.Records {
 		cards, err := parseRecord(record, index)
 		if err != nil {
-			return nil, fmt.Errorf("Error parsing table - row %d: %w\n", row, err)
+			return nil, nil, fmt.Errorf("Error parsing table - row %d: %w", row+1, err)
 		}
 
+		list = append(list, cards)
+	}
+
+	duplicates := map[uint32]int{}
+	for _, cards := range list {
+		for _, card := range cards {
+			count, _ := duplicates[card.CardNumber]
+			duplicates[card.CardNumber] = count + 1
+			break
+		}
+	}
+
+	warnings := []error{}
+	for _, cards := range list {
+	loop:
 		for id, card := range cards {
 			if acl[id] != nil {
-				if _, ok := acl[id][card.CardNumber]; ok {
-					return nil, fmt.Errorf("Duplicate card number (%v)\n", card.CardNumber)
+				if count, _ := duplicates[card.CardNumber]; count > 1 {
+					if strict {
+						return nil, nil, fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+					} else {
+						warning := fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+						for _, w := range warnings {
+							if reflect.DeepEqual(w, warning) {
+								continue loop
+							}
+						}
+
+						warnings = append(warnings, fmt.Errorf("Duplicate card number (%v)", card.CardNumber))
+					}
+
+					continue
 				}
 
 				acl[id][card.CardNumber] = card
@@ -41,7 +70,7 @@ func ParseTable(table *Table, devices []*uhppote.Device) (*ACL, error) {
 		}
 	}
 
-	return &acl, nil
+	return &acl, warnings, nil
 }
 
 func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
