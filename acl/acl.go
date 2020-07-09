@@ -9,13 +9,6 @@ import (
 
 type ACL map[uint32]map[uint32]types.Card
 
-type Diff struct {
-	Unchanged []types.Card
-	Updated   []types.Card
-	Added     []types.Card
-	Deleted   []types.Card
-}
-
 type DateRange struct {
 	From types.Date
 	To   types.Date
@@ -39,22 +32,6 @@ type card struct {
 	from       types.Date
 	to         types.Date
 	doors      []bool
-}
-
-func (d *Diff) HasChanges() bool {
-	if len(d.Updated) > 0 {
-		return true
-	}
-
-	if len(d.Added) > 0 {
-		return true
-	}
-
-	if len(d.Deleted) > 0 {
-		return true
-	}
-
-	return false
 }
 
 func clean(s string) string {
