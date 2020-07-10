@@ -3,12 +3,14 @@ package acl
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
+	"reflect"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"io"
 )
 
-func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
+func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
@@ -19,33 +21,62 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 
 	header, err := r.Read()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	index, err := parseHeader(header, devices)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	line := 0
+	list := []map[uint32]types.Card{}
 	for {
 		record, err := r.Read()
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		line += 1
 		cards, err := parseRecord(record, index)
 		if err != nil {
-			return nil, fmt.Errorf("Error parsing TSV - line %d: %w\n", line, err)
+			return nil, nil, fmt.Errorf("Error parsing TSV - line %d: %w\n", line, err)
 		}
 
+		list = append(list, cards)
+	}
+
+	duplicates := map[uint32]int{}
+	for _, cards := range list {
+		for _, card := range cards {
+			count, _ := duplicates[card.CardNumber]
+			duplicates[card.CardNumber] = count + 1
+			break
+		}
+	}
+
+	warnings := []error{}
+	for _, cards := range list {
+	loop:
 		for id, card := range cards {
 			if acl[id] != nil {
-				if _, ok := acl[id][card.CardNumber]; ok {
-					return nil, fmt.Errorf("Duplicate card number (%v)\n", card.CardNumber)
+				if count, _ := duplicates[card.CardNumber]; count > 1 {
+					if strict {
+						return nil, nil, fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+					} else {
+						warning := fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+						for _, w := range warnings {
+							if reflect.DeepEqual(w, warning) {
+								continue loop
+							}
+						}
+
+						warnings = append(warnings, fmt.Errorf("Duplicate card number (%v)", card.CardNumber))
+					}
+
+					continue
 				}
 
 				acl[id][card.CardNumber] = card
@@ -53,7 +84,7 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device) (ACL, error) {
 		}
 	}
 
-	return acl, nil
+	return acl, warnings, nil
 }
 
 func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
