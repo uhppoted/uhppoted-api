@@ -16,4 +16,6 @@ const (
 	hotpCounters string = "/var/uhppoted/mqtt.hotp.counters"
 	nonceServer  string = "/var/uhppoted/mqtt.nonce"
 	nonceClients string = "/var/uhppoted/mqtt.nonce.counters"
+
+	httpdAuthDB string = "/etc/uhppoted/httpd/auth.json"
 )

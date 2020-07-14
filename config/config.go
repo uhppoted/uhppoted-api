@@ -101,6 +101,7 @@ type Config struct {
 	REST    `conf:"rest"`
 	MQTT    `conf:"mqtt"`
 	AWS     `conf:"aws"`
+	HTTPD   `conf:"httpd"`
 	OpenAPI `conf:"openapi"`
 }
 
@@ -132,6 +133,7 @@ func NewConfig() *Config {
 		REST:    *NewREST(),
 		MQTT:    *NewMQTT(),
 		AWS:     *NewAWS(),
+		HTTPD:   *NewHTTPD(),
 		OpenAPI: *NewOpenAPI(),
 		Devices: make(DeviceMap, 0),
 	}

@@ -16,4 +16,6 @@ const (
 	hotpCounters string = "/usr/local/var/com.github.twystd.uhppoted/mqtt.hotp.counters"
 	nonceServer  string = "/usr/local/var/com.github.twystd.uhppoted/mqtt.nonce"
 	nonceClients string = "/usr/local/var/com.github.twystd.uhppoted/mqtt.nonce.counters"
+
+	httpdAuthDB string = "/usr/local/etc/com.github.twystd.uhppoted/httpd/auth.json"
 )

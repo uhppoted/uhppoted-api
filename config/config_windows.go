@@ -21,6 +21,8 @@ var hotpCounters string = filepath.Join(workdir(), "mqtt.hotp.counters")
 var nonceServer string = filepath.Join(workdir(), "mqtt.nonce")
 var nonceClients string = filepath.Join(workdir(), "mqtt.nonce.counters")
 
+var httpdAuthDB string = filepath.Join(workdir(), "httpd", "auth.json")
+
 func workdir() string {
 	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)
 	if err != nil {
