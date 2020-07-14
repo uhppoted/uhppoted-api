@@ -199,7 +199,7 @@ func TestMakeTable(t *testing.T) {
 
 	devices := []*uhppote.Device{&d}
 
-	rs, err := MakeTable(&acl, devices)
+	rs, err := MakeTable(acl, devices)
 	if err != nil {
 		t.Fatalf("Unexpected error creating table: %v", err)
 	}
@@ -247,7 +247,7 @@ func TestMakeTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	rs, err := MakeTable(&acl, devices)
+	rs, err := MakeTable(acl, devices)
 	if err != nil {
 		t.Fatalf("Unexpected error creating table: %v", err)
 	}
@@ -281,7 +281,7 @@ func TestMakeTableWithMissingACL(t *testing.T) {
 		},
 	}
 
-	_, err := MakeTable(&acl, devices)
+	_, err := MakeTable(acl, devices)
 	if err == nil {
 		t.Fatalf("Expected error creating table")
 	}
@@ -320,7 +320,7 @@ func TestMakeRecordsetWithMismatchedDates(t *testing.T) {
 		},
 	}
 
-	rs, err := MakeTable(&acl, devices)
+	rs, err := MakeTable(acl, devices)
 	if err != nil {
 		t.Fatalf("Unexpected error creating table: %v", err)
 	}
@@ -372,7 +372,7 @@ func TestMakeTableWithMismatchedCards(t *testing.T) {
 		},
 	}
 
-	rs, err := MakeTable(&acl, devices)
+	rs, err := MakeTable(acl, devices)
 	if err != nil {
 		t.Fatalf("Unexpected error creating table: %v", err)
 	}

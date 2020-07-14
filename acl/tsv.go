@@ -88,7 +88,7 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error
 }
 
 func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
-	t, err := MakeTable(&acl, devices)
+	t, err := MakeTable(acl, devices)
 	if err != nil {
 		return err
 	}
