@@ -73,7 +73,7 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 	return &acl, warnings, nil
 }
 
-func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
+func MakeTable(acl *ACL, devices []*uhppote.Device) (*Table, error) {
 	header, err := makeHeader(devices)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 
 	cards := map[uint32]card{}
 	for _, d := range devices {
-		v, ok := acl[d.DeviceID]
+		v, ok := (*acl)[d.DeviceID]
 		if !ok {
 			return nil, fmt.Errorf("ACL missing for device %v", d.DeviceID)
 		}

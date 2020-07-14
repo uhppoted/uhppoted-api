@@ -7,7 +7,7 @@ import (
 )
 
 func MakeFlatFile(acl ACL, devices []*uhppote.Device, f io.Writer) error {
-	t, err := MakeTable(acl, devices)
+	t, err := MakeTable(&acl, devices)
 	if err != nil {
 		return err
 	}
