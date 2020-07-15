@@ -213,7 +213,7 @@ func (c *Config) Write(w io.Writer) error {
 		"rest":    listify("rest.", &defc.REST),
 		"mqtt":    listify("mqtt.", &defc.MQTT),
 		"aws":     listify("aws.", &defc.AWS),
-		"httpd":    listify("httpd.", &defc.HTTPD),
+		"httpd":   listify("httpd.", &defc.HTTPD),
 		"openapi": listify("openapi.", &defc.OpenAPI),
 	}
 
@@ -222,7 +222,7 @@ func (c *Config) Write(w io.Writer) error {
 		"rest":    listify("rest.", &c.REST),
 		"mqtt":    listify("mqtt.", &c.MQTT),
 		"aws":     listify("aws.", &c.AWS),
-		"httpd":    listify("httpd.", &c.HTTPD),
+		"httpd":   listify("httpd.", &c.HTTPD),
 		"openapi": listify("openapi.", &c.OpenAPI),
 		"devices": c.Devices,
 	}
