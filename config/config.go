@@ -43,16 +43,19 @@ const pretty = `# SYSTEM{{range .system}}
 # AWS{{range .aws}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
+# HTTPD{{range .httpd}}
+{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+
 # OPEN API{{range .openapi}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
 # DEVICES{{range $id,$device := .devices}}
 UT0311-L0x.{{$id}}.address = {{$device.Address}}
 UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
-UT0311-L0x.{{$id}}.door.1 = {{index $device.Door 0}}
-UT0311-L0x.{{$id}}.door.2 = {{index $device.Door 1}}
-UT0311-L0x.{{$id}}.door.3 = {{index $device.Door 2}}
-UT0311-L0x.{{$id}}.door.4 = {{index $device.Door 3}}
+UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
+UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
+UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
+UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 {{else}}
 # Example configuration for UTO311-L04 with serial number 405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
@@ -75,16 +78,19 @@ const dump = `# SYSTEM{{range .system}}
 # AWS{{range .aws}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
+# HTTPD{{range .httpd}}
+{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+
 # OPEN API{{range .openapi}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
 # DEVICES{{range $id,$device := .devices}}
 UT0311-L0x.{{$id}}.address = {{$device.Address}}
 UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
-UT0311-L0x.{{$id}}.door.1 = {{index $device.Door 0}}
-UT0311-L0x.{{$id}}.door.2 = {{index $device.Door 1}}
-UT0311-L0x.{{$id}}.door.3 = {{index $device.Door 2}}
-UT0311-L0x.{{$id}}.door.4 = {{index $device.Door 3}}
+UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
+UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
+UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
+UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 {{else}}
 # Example configuration for UTO311-L04 with serial number 405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
@@ -207,6 +213,7 @@ func (c *Config) Write(w io.Writer) error {
 		"rest":    listify("rest.", &defc.REST),
 		"mqtt":    listify("mqtt.", &defc.MQTT),
 		"aws":     listify("aws.", &defc.AWS),
+		"httpd":    listify("httpd.", &defc.HTTPD),
 		"openapi": listify("openapi.", &defc.OpenAPI),
 	}
 
@@ -215,6 +222,7 @@ func (c *Config) Write(w io.Writer) error {
 		"rest":    listify("rest.", &c.REST),
 		"mqtt":    listify("mqtt.", &c.MQTT),
 		"aws":     listify("aws.", &c.AWS),
+		"httpd":    listify("httpd.", &c.HTTPD),
 		"openapi": listify("openapi.", &c.OpenAPI),
 		"devices": c.Devices,
 	}
