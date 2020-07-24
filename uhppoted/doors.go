@@ -183,3 +183,35 @@ func (u *UHPPOTED) SetDoorControl(request SetDoorControlRequest) (*SetDoorContro
 
 	return &response, nil
 }
+
+type OpenDoorRequest struct {
+	DeviceID DeviceID
+	Door     uint8
+}
+
+type OpenDoorResponse struct {
+	DeviceID DeviceID `json:"device-id"`
+	Door     uint8    `json:"door"`
+	Opened   bool     `json:"opened"`
+}
+
+func (u *UHPPOTED) OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error) {
+	u.debug("open-door", fmt.Sprintf("request  %+v", request))
+
+	device := uint32(request.DeviceID)
+	door := request.Door
+	result, err := u.Uhppote.OpenDoor(device, door)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error opening door %v on %v (%w)", door, device, err))
+	}
+
+	response := OpenDoorResponse{
+		DeviceID: DeviceID(result.SerialNumber),
+		Door:     door,
+		Opened:   result.Succeeded,
+	}
+
+	u.debug("open-door", fmt.Sprintf("response %+v", response))
+
+	return &response, nil
+}
