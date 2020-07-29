@@ -12,6 +12,8 @@ type REST struct {
 	CACertificateFile  string `conf:"tls.ca"`
 	CORSEnabled        bool   `conf:"CORS.enabled"`
 	AuthEnabled        bool   `conf:"auth.enabled"`
+	Users              string `conf:"auth.users"`
+	Groups             string `conf:"auth.groups"`
 }
 
 type OpenAPI struct {
@@ -30,6 +32,8 @@ func NewREST() *REST {
 		CACertificateFile:  "ca.cert",
 		CORSEnabled:        false,
 		AuthEnabled:        false,
+		Users:              restUsers,
+		Groups:             restGroups,
 	}
 }
 

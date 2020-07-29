@@ -8,11 +8,14 @@ import (
 // DefaultConfig is the default file path for the uhppoted configuration file
 var DefaultConfig = filepath.Join(workdir(), "uhppoted.conf")
 
+var restUsers string = filepath.Join(workdir(), "rest", "users")
+var restGroups string = filepath.Join(workdir(), "rest", "groups")
+
 var mqttBrokerCertificate string = filepath.Join(workdir(), "mqtt", "broker.cert")
 var mqttClientCertificate string = filepath.Join(workdir(), "mqtt", "client.cert")
 var mqttClientKey string = filepath.Join(workdir(), "mqtt", "client.key")
-var users string = filepath.Join(workdir(), "mqtt.permissions.users")
-var groups string = filepath.Join(workdir(), "mqtt.permissions.groups")
+var mqttUsers string = filepath.Join(workdir(), "mqtt.permissions.users")
+var mqttGroups string = filepath.Join(workdir(), "mqtt.permissions.groups")
 var hotpSecrets string = filepath.Join(workdir(), "mqtt.hotp.secrets")
 var rsaKeyDir string = filepath.Join(workdir(), "mqtt", "rsa")
 

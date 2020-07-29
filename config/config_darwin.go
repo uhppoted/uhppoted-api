@@ -4,11 +4,14 @@ const (
 	// DefaultConfig is the default file path for the uhppoted configuration file
 	DefaultConfig = "/usr/local/etc/com.github.twystd.uhppoted/uhppoted.conf"
 
+	restUsers  string = "/usr/local/etc/com.github.twystd.uhppoted/rest/users"
+	restGroups string = "/usr/local/etc/com.github.twystd.uhppoted/rest/groups"
+
 	mqttBrokerCertificate string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt/broker.cert"
 	mqttClientCertificate string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt/client.cert"
 	mqttClientKey         string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt/client.key"
-	users                 string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt.permissions.users"
-	groups                string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt.permissions.groups"
+	mqttUsers             string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt.permissions.users"
+	mqttGroups            string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt.permissions.groups"
 	hotpSecrets           string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt.hotp.secrets"
 	rsaKeyDir             string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt/rsa"
 

@@ -129,8 +129,8 @@ func NewMQTT() *MQTT {
 		},
 		Permissions: Permissions{
 			Enabled: false,
-			Users:   users,
-			Groups:  groups,
+			Users:   mqttUsers,
+			Groups:  mqttGroups,
 		},
 		EventIDs: eventIDs,
 	}
