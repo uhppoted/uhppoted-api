@@ -13,6 +13,14 @@ type Table struct {
 	Records [][]string
 }
 
+type DuplicateCardError struct {
+	CardNumber uint32
+}
+
+func (e *DuplicateCardError) Error() string {
+	return fmt.Sprintf("%-10v Duplicate card number", e.CardNumber)
+}
+
 func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
@@ -52,14 +60,14 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 					if strict {
 						return nil, nil, fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
 					} else {
-						warning := fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
-						for _, w := range warnings {
-							if reflect.DeepEqual(w, warning) {
+						warning := &DuplicateCardError{card.CardNumber}
+						for i := range warnings {
+							if reflect.DeepEqual(warnings[i], warning) {
 								continue loop
 							}
 						}
 
-						warnings = append(warnings, fmt.Errorf("Duplicate card number (%v)", card.CardNumber))
+						warnings = append(warnings, warning)
 					}
 
 					continue

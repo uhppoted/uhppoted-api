@@ -1,7 +1,6 @@
 package acl
 
 import (
-	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
@@ -112,7 +111,7 @@ func TestParseTableWithDuplicateCardNumbers(t *testing.T) {
 	}
 
 	errors := []error{
-		fmt.Errorf("Duplicate card number (%v)", 65537),
+		&DuplicateCardError{65537},
 	}
 
 	table := Table{

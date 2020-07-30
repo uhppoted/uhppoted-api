@@ -82,7 +82,7 @@ func Consolidate(report map[uint32]Report) ConsolidatedReport {
 	}{}
 
 	for _, r := range report {
-		lists := [][]uint32{r.Updated, r.Added, r.Deleted, r.Failed}
+		lists := [][]uint32{r.Updated, r.Added, r.Deleted, r.Failed, r.Errored}
 		for _, l := range lists {
 			for _, card := range l {
 				consolidated[card] = &struct {
