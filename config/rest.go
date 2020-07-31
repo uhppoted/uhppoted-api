@@ -14,6 +14,7 @@ type REST struct {
 	AuthEnabled        bool   `conf:"auth.enabled"`
 	Users              string `conf:"auth.users"`
 	Groups             string `conf:"auth.groups"`
+	HOTP               HOTP   `conf:"auth.hotp"`
 }
 
 type OpenAPI struct {
@@ -34,6 +35,10 @@ func NewREST() *REST {
 		AuthEnabled:        false,
 		Users:              restUsers,
 		Groups:             restGroups,
+		HOTP: HOTP{
+			Range:    8,
+			Counters: restHOTP,
+		},
 	}
 }
 

@@ -6,6 +6,7 @@ const (
 
 	restUsers  string = "/usr/local/etc/com.github.twystd.uhppoted/rest/users"
 	restGroups string = "/usr/local/etc/com.github.twystd.uhppoted/rest/groups"
+	restHOTP   string = "/usr/local/etc/com.github.twystd.uhppoted/rest/counters"
 
 	mqttBrokerCertificate string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt/broker.cert"
 	mqttClientCertificate string = "/usr/local/etc/com.github.twystd.uhppoted/mqtt/client.cert"

@@ -10,6 +10,7 @@ var DefaultConfig = filepath.Join(workdir(), "uhppoted.conf")
 
 var restUsers string = filepath.Join(workdir(), "rest", "users")
 var restGroups string = filepath.Join(workdir(), "rest", "groups")
+var restHOTP string = filepath.Join(workdir(), "rest", "counters")
 
 var mqttBrokerCertificate string = filepath.Join(workdir(), "mqtt", "broker.cert")
 var mqttClientCertificate string = filepath.Join(workdir(), "mqtt", "client.cert")

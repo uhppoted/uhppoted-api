@@ -6,6 +6,7 @@ const (
 
 	restUsers  string = "/etc/uhppoted/rest/users"
 	restGroups string = "/etc/uhppoted/rest/groups"
+	restHOTP   string = "/etc/uhppoted/rest/counters"
 
 	mqttBrokerCertificate string = "/etc/uhppoted/mqtt/broker.cert"
 	mqttClientCertificate string = "/etc/uhppoted/mqtt/client.cert"
