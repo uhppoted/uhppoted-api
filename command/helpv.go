@@ -1,6 +1,7 @@
 package uhppoted
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
@@ -78,7 +79,7 @@ func (h *HelpV) Execute(ctx context.Context, options ...interface{}) error {
 
 func (h *HelpV) usage() {
 	fmt.Println()
-	fmt.Printf("  Usage: %s <command> [options]\n", h.service)
+	fmt.Printf("  Usage: %s [options] <command> [parameters]\n", h.service)
 	fmt.Println()
 
 	fmt.Println("  Commands:")
@@ -86,6 +87,20 @@ func (h *HelpV) usage() {
 
 	for _, c := range h.cli {
 		fmt.Printf("    %-13s %s\n", c.FlagSet().Name(), c.Description())
+	}
+
+	var options bytes.Buffer
+	var count = 0
+
+	fmt.Fprintln(&options)
+	fmt.Fprintln(&options, "  Options:")
+	flag.VisitAll(func(f *flag.Flag) {
+		count++
+		fmt.Fprintf(&options, "    --%-13s %s\n", f.Name, f.Usage)
+	})
+
+	if count > 0 {
+		fmt.Printf(string(options.Bytes()))
 	}
 
 	fmt.Println()
