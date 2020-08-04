@@ -26,6 +26,9 @@ var nonceServer string = filepath.Join(workdir(), "mqtt.nonce")
 var nonceClients string = filepath.Join(workdir(), "mqtt.nonce.counters")
 
 var httpdAuthDB string = filepath.Join(workdir(), "httpd", "auth.json")
+var httpdCACertificate string = filepath.Join(workdir(), "httpd", "ca.cert")
+var httpdTLSCertificate string = filepath.Join(workdir(), "httpd", "uhppoted.cert")
+var httpdTLSKey string = filepath.Join(workdir(), "httpd", "uhppoted.key")
 
 func workdir() string {
 	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)

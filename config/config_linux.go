@@ -21,5 +21,8 @@ const (
 	nonceServer  string = "/var/uhppoted/mqtt.nonce"
 	nonceClients string = "/var/uhppoted/mqtt.nonce.counters"
 
-	httpdAuthDB string = "/etc/uhppoted/httpd/auth.json"
+	httpdAuthDB         string = "/etc/uhppoted/httpd/auth.json"
+	httpdCACertificate  string = "/etc/uhppoted/httpd/ca.cert"
+	httpdTLSCertificate string = "/etc/uhppoted/httpd/uhppoted.cert"
+	httpdTLSKey         string = "/etc/uhppoted/httpd/uhppoted.key"
 )

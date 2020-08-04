@@ -21,5 +21,8 @@ const (
 	nonceServer  string = "/usr/local/var/com.github.twystd.uhppoted/mqtt.nonce"
 	nonceClients string = "/usr/local/var/com.github.twystd.uhppoted/mqtt.nonce.counters"
 
-	httpdAuthDB string = "/usr/local/etc/com.github.twystd.uhppoted/httpd/auth.json"
+	httpdAuthDB         string = "/usr/local/etc/com.github.twystd.uhppoted/httpd/auth.json"
+	httpdCACertificate  string = "/usr/local/etc/com.github.twystd.uhppoted/httpd/ca.cert"
+	httpdTLSCertificate string = "/usr/local/etc/com.github.twystd.uhppoted/httpd/uhppoted.cert"
+	httpdTLSKey         string = "/usr/local/etc/com.github.twystd.uhppoted/httpd/uhppoted.key"
 )
