@@ -44,11 +44,18 @@ func (diff *SystemDiff) Consolidate() *ConsolidatedDiff {
 		for _, card := range d.Updated {
 			consolidated[card.CardNumber].updated = true
 		}
+	}
 
+	for _, d := range *diff {
 		for _, card := range d.Added {
-			consolidated[card.CardNumber].added = true
+			// A card that has been updated on one controller and added on another is regarded as 'updated on the system'
+			if !consolidated[card.CardNumber].updated {
+				consolidated[card.CardNumber].added = true
+			}
 		}
+	}
 
+	for _, d := range *diff {
 		for _, card := range d.Deleted {
 			consolidated[card.CardNumber].deleted = true
 		}
