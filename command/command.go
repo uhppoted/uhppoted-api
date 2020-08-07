@@ -19,7 +19,7 @@ type Command interface {
 type CommandV interface {
 	Name() string
 	FlagSet() *flag.FlagSet
-	Execute(context.Context, ...interface{}) error
+	Execute(...interface{}) error
 	Description() string
 	Usage() string
 	Help()

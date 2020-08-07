@@ -2,7 +2,6 @@ package uhppoted
 
 import (
 	"bytes"
-	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -50,7 +49,7 @@ func (h *HelpV) Help() {
 	}
 }
 
-func (h *HelpV) Execute(ctx context.Context, options ...interface{}) error {
+func (h *HelpV) Execute(args ...interface{}) error {
 	if len(os.Args) > 2 {
 		if os.Args[2] == "commands" {
 			h.helpCommands()
