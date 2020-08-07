@@ -12,7 +12,7 @@ var XML = `<?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>com.github.twystd.uhppoted</string>
+    <string>com.github.uhppoted</string>
     <key>Program</key>
     <string>/usr/local/bin/uhppoted</string>
     <key>WorkingDirectory</key>
@@ -27,9 +27,9 @@ var XML = `<?xml version="1.0" encoding="UTF-8"?>
     <key>RunAtLoad</key>
     <false/>
     <key>StandardOutPath</key>
-    <string>/usr/local/var/log/com.github.twystd.uhppoted.log</string>
+    <string>/usr/local/var/log/com.github.uhppoted.log</string>
     <key>StandardErrorPath</key>
-    <string>/usr/local/var/log/com.github.twystd.uhppoted.err</string>
+    <string>/usr/local/var/log/com.github.uhppoted.err</string>
     <key>Integer</key>
     <integer>6521</integer>
   </dict>
@@ -39,7 +39,7 @@ var XMLX = `<?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>com.github.twystd.uhppoted</string>
+    <string>com.github.uhppoted</string>
   </dict>
 </plist>`
 
@@ -55,14 +55,14 @@ func TestEncode(t *testing.T) {
 		StandardErrorPath string
 		Integer           int
 	}{
-		Label:             "com.github.twystd.uhppoted",
+		Label:             "com.github.uhppoted",
 		Program:           "/usr/local/bin/uhppoted",
 		WorkingDirectory:  "/usr/local/var/uhppoted",
 		ProgramArguments:  []string{"--debug", "--verbose"},
 		KeepAlive:         true,
 		RunAtLoad:         false,
-		StandardOutPath:   "/usr/local/var/log/com.github.twystd.uhppoted.log",
-		StandardErrorPath: "/usr/local/var/log/com.github.twystd.uhppoted.err",
+		StandardOutPath:   "/usr/local/var/log/com.github.uhppoted.log",
+		StandardErrorPath: "/usr/local/var/log/com.github.uhppoted.err",
 		Integer:           6521,
 	}
 
@@ -102,7 +102,7 @@ func TestDecode(t *testing.T) {
 		t.Fatalf("plist.Decode returned unexpected error: %v", err)
 	}
 
-	if p.Label != "com.github.twystd.uhppoted" {
+	if p.Label != "com.github.uhppoted" {
 		t.Errorf("plist.Decode returned unexpected string for 'Label' field: '%s'", p.Label)
 	}
 
@@ -126,11 +126,11 @@ func TestDecode(t *testing.T) {
 		t.Errorf("plist.Decode returned unexpected bool for 'RunAtLoad' field: '%v'", p.RunAtLoad)
 	}
 
-	if p.StandardOutPath != "/usr/local/var/log/com.github.twystd.uhppoted.log" {
+	if p.StandardOutPath != "/usr/local/var/log/com.github.uhppoted.log" {
 		t.Errorf("plist.Decode returned unexpected string for 'StandardOutPath' field: '%s'", p.StandardOutPath)
 	}
 
-	if p.StandardErrorPath != "/usr/local/var/log/com.github.twystd.uhppoted.err" {
+	if p.StandardErrorPath != "/usr/local/var/log/com.github.uhppoted.err" {
 		t.Errorf("plist.Decode returned unexpected string for 'StandardErrorPath' field: '%s'", p.StandardErrorPath)
 	}
 

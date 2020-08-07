@@ -26,7 +26,7 @@ mqtt.connection.password = pickme
 mqtt.connection.broker.certificate = mqtt-broker.cert
 mqtt.connection.client.certificate = mqtt-client.cert
 mqtt.connection.client.key = mqtt-client.key
-mqtt.topic.root = twystd-qwerty
+mqtt.topic.root = uhppoted-qwerty
 mqtt.topic.replies = /uiop
 mqtt.topic.events = ./asdf
 mqtt.topic.system = sys
@@ -58,7 +58,7 @@ func TestDefaultConfig(t *testing.T) {
 
 		MQTT: MQTT{
 			Connection: Connection{
-				ClientID: "twystd-uhppoted-mqttd",
+				ClientID: "uhppoted-mqttd",
 			},
 		},
 
@@ -108,7 +108,7 @@ func TestUnmarshal(t *testing.T) {
 			},
 
 			Topics: Topics{
-				Root:     "twystd-qwerty",
+				Root:     "uhppoted-qwerty",
 				Requests: "./requests",
 				Replies:  "/uiop",
 				Events:   "./asdf",
@@ -142,7 +142,7 @@ func TestUnmarshal(t *testing.T) {
 		t.Errorf("Incorrect 'mqtt.topics' configuration:\nexpected:%+v,\ngot:     %+v", expected.Topics, config.Topics)
 	}
 
-	if config.Topics.Resolve(config.Topics.Requests) != "twystd-qwerty/requests" {
+	if config.Topics.Resolve(config.Topics.Requests) != "uhppoted-qwerty/requests" {
 		t.Errorf("Expected 'mqtt::topic.requests' %v, got:%v", "wystd-qwerty/requests", config.Topics.Resolve(config.Topics.Requests))
 	}
 
@@ -150,12 +150,12 @@ func TestUnmarshal(t *testing.T) {
 		t.Errorf("Expected 'mqtt::topic.replies' %v, got:%v", "uiop", config.Topics.Resolve(config.Topics.Replies))
 	}
 
-	if config.Topics.Resolve(config.Topics.Events) != "twystd-qwerty/asdf" {
-		t.Errorf("Expected 'mqtt::topic.events' %v, got:%v", "twystd-qwerty/asdf", config.Topics.Resolve(config.Topics.Events))
+	if config.Topics.Resolve(config.Topics.Events) != "uhppoted-qwerty/asdf" {
+		t.Errorf("Expected 'mqtt::topic.events' %v, got:%v", "uhppoted-qwerty/asdf", config.Topics.Resolve(config.Topics.Events))
 	}
 
-	if config.Topics.Resolve(config.Topics.System) != "twystd-qwerty/sys" {
-		t.Errorf("Expected 'mqtt::topic.system' %v, got:%v", "twystd-qwerty/sys", config.Topics.Resolve(config.Topics.System))
+	if config.Topics.Resolve(config.Topics.System) != "uhppoted-qwerty/sys" {
+		t.Errorf("Expected 'mqtt::topic.system' %v, got:%v", "uhppoted-qwerty/sys", config.Topics.Resolve(config.Topics.System))
 	}
 
 	if !reflect.DeepEqual(config.AWS, expected.AWS) {

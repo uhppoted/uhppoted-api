@@ -86,16 +86,16 @@ func (t *Topics) Resolve(subtopic string) string {
 
 func NewMQTT() *MQTT {
 	return &MQTT{
-		ServerID: "twystd-uhppoted",
+		ServerID: "uhppoted",
 		Connection: Connection{
 			Broker:            "tcp://127.0.0.1:1883",
-			ClientID:          "twystd-uhppoted-mqttd",
+			ClientID:          "uhppoted-mqttd",
 			BrokerCertificate: mqttBrokerCertificate,
 			ClientCertificate: mqttClientCertificate,
 			ClientKey:         mqttClientKey,
 		},
 		Topics: Topics{
-			Root:     "twystd/uhppoted/gateway",
+			Root:     "uhppoted/gateway",
 			Requests: "./requests",
 			Replies:  "./replies",
 			Events:   "./events",
