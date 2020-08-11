@@ -105,9 +105,9 @@ func (h *HelpV) usage() {
 	fmt.Println()
 
 	if h.run != nil {
-		fmt.Println("  Defaults to 'run'.")
+		fmt.Printf("  Defaults to '%s'.\n", h.run.Name())
 		fmt.Println()
-		fmt.Println(" 'run' options:")
+		fmt.Printf("   '%s' options:\n", h.run.Name())
 
 		h.run.FlagSet().VisitAll(func(f *flag.Flag) {
 			fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
@@ -126,6 +126,9 @@ func (h *HelpV) helpCommands() {
 	}
 
 	fmt.Println()
-	fmt.Println("     Defaults to 'run'.")
-	fmt.Println()
+
+	if h.run != nil {
+		fmt.Printf("     Defaults to '%s'.\n", h.run.Name())
+		fmt.Println()
+	}
 }

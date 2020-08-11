@@ -59,7 +59,13 @@ func Parse(cli []Command, run Command, help Command) (Command, error) {
 
 func ParseV(cli []CommandV, run CommandV, help CommandV) (CommandV, error) {
 	var cmd CommandV = run
-	var args []string = flag.Args()
+	var args []string
+
+	if flag.Parsed() {
+		args = flag.Args()
+	} else {
+		args = os.Args[1:]
+	}
 
 	if len(args) > 0 {
 		if args[0] == help.Name() {
