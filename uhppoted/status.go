@@ -10,10 +10,10 @@ type Status struct {
 	EventType      byte           `json:"event-type"`
 	Granted        bool           `json:"access-granted"`
 	Door           byte           `json:"door"`
-	DoorOpened     bool           `json:"door-opened"`
-	UserID         uint32         `json:"user-id"`
+	Direction      uint8          `json:"direction"`
+	CardNumber     uint32         `json:"card-number"`
 	EventTimestamp types.DateTime `json:"event-timestamp"`
-	EventResult    byte           `json:"event-result"`
+	EventReason    uint8          `json:"event-reason"`
 	DoorState      []bool         `json:"door-states"`
 	DoorButton     []bool         `json:"door-buttons"`
 	SystemState    byte           `json:"system-state"`
@@ -50,10 +50,10 @@ func (u *UHPPOTED) GetStatus(request GetStatusRequest) (*GetStatusResponse, erro
 			EventType:      status.EventType,
 			Granted:        status.Granted,
 			Door:           status.Door,
-			DoorOpened:     status.DoorOpened,
-			UserID:         status.UserID,
+			Direction:      status.Direction,
+			CardNumber:     status.CardNumber,
 			EventTimestamp: status.EventTimestamp,
-			EventResult:    status.EventResult,
+			EventReason:    status.EventReason,
 			DoorState:      status.DoorState,
 			DoorButton:     status.DoorButton,
 			SystemState:    status.SystemState,

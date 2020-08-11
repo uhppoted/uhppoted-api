@@ -25,10 +25,10 @@ type ListenEvent struct {
 	Type       uint8          `json:"event-type"`
 	Granted    bool           `json:"access-granted"`
 	Door       uint8          `json:"door-id"`
-	DoorOpened bool           `json:"door-opened"`
-	UserID     uint32         `json:"user-id"`
+	Direction  uint8          `json:"direction"`
+	CardNumber uint32         `json:"card-number"`
 	Timestamp  types.DateTime `json:"timestamp"`
-	Result     uint8          `json:"event-result"`
+	Reason     uint8          `json:"event-reason"`
 }
 
 type EventMessage struct {
@@ -256,10 +256,10 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 					Type:       record.Type,
 					Granted:    record.Granted,
 					Door:       record.Door,
-					DoorOpened: record.DoorOpened,
-					UserID:     record.UserID,
+					Direction:  record.Direction,
+					CardNumber: record.CardNumber,
 					Timestamp:  record.Timestamp,
-					Result:     record.Result,
+					Reason:     record.Reason,
 				},
 			}
 
