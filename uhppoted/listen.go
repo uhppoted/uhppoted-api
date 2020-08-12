@@ -167,8 +167,8 @@ func (u *UHPPOTED) onEvent(e *types.Status, received *EventMap, handler EventHan
 	u.info("event", fmt.Sprintf("%+v", e))
 
 	deviceID := uint32(e.SerialNumber)
-	last := EventIndex(e.LastIndex)
-	first := EventIndex(e.LastIndex)
+	last := EventIndex(e.EventIndex)
+	first := EventIndex(e.EventIndex)
 
 	retrieved, ok := received.retrieved[deviceID]
 	if ok && retrieved != uint32(last) {
