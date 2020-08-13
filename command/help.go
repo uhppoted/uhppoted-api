@@ -1,43 +1,43 @@
 package uhppoted
 
 import (
-	"context"
+	"bytes"
 	"flag"
 	"fmt"
 	"os"
 )
 
-type Help struct {
+type HelpV struct {
 	service string
 	cli     []Command
 	run     Command
 }
 
-func NewHelp(service string, cli []Command, run Command) *Help {
-	return &Help{
+func NewHelp(service string, cli []Command, run Command) *HelpV {
+	return &HelpV{
 		service: service,
 		cli:     cli,
 		run:     run,
 	}
 }
 
-func (h *Help) Name() string {
+func (h *HelpV) Name() string {
 	return "help"
 }
 
-func (h *Help) FlagSet() *flag.FlagSet {
+func (h *HelpV) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("help", flag.ExitOnError)
 }
 
-func (h *Help) Description() string {
+func (h *HelpV) Description() string {
 	return "Displays the help information"
 }
 
-func (h *Help) Usage() string {
+func (h *HelpV) Usage() string {
 	return ""
 }
 
-func (h *Help) Help() {
+func (h *HelpV) Help() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s help <command>\n", h.service)
 	fmt.Println()
@@ -49,7 +49,7 @@ func (h *Help) Help() {
 	}
 }
 
-func (h *Help) Execute(ctx context.Context) error {
+func (h *HelpV) Execute(args ...interface{}) error {
 	if len(os.Args) > 2 {
 		if os.Args[2] == "commands" {
 			h.helpCommands()
@@ -76,9 +76,9 @@ func (h *Help) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (h *Help) usage() {
+func (h *HelpV) usage() {
 	fmt.Println()
-	fmt.Printf("  Usage: %s <command> [options]\n", h.service)
+	fmt.Printf("  Usage: %s [options] <command> [parameters]\n", h.service)
 	fmt.Println()
 
 	fmt.Println("  Commands:")
@@ -88,12 +88,26 @@ func (h *Help) usage() {
 		fmt.Printf("    %-13s %s\n", c.FlagSet().Name(), c.Description())
 	}
 
+	var options bytes.Buffer
+	var count = 0
+
+	fmt.Fprintln(&options)
+	fmt.Fprintln(&options, "  Options:")
+	flag.VisitAll(func(f *flag.Flag) {
+		count++
+		fmt.Fprintf(&options, "    --%-13s %s\n", f.Name, f.Usage)
+	})
+
+	if count > 0 {
+		fmt.Printf(string(options.Bytes()))
+	}
+
 	fmt.Println()
 
 	if h.run != nil {
-		fmt.Println("  Defaults to 'run'.")
+		fmt.Printf("  Defaults to '%s'.\n", h.run.Name())
 		fmt.Println()
-		fmt.Println(" 'run' options:")
+		fmt.Printf("   '%s' options:\n", h.run.Name())
 
 		h.run.FlagSet().VisitAll(func(f *flag.Flag) {
 			fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
@@ -103,15 +117,18 @@ func (h *Help) usage() {
 	}
 }
 
-func (h *Help) helpCommands() {
+func (h *HelpV) helpCommands() {
 	fmt.Println()
 	fmt.Println("  Supported commands:")
 
 	for _, c := range h.cli {
-		fmt.Printf("     %-16s %s\n", c.FlagSet().Name(), c.Usage())
+		fmt.Printf("     %-16s %s\n", c.FlagSet().Name(), c.Description())
 	}
 
 	fmt.Println()
-	fmt.Println("     Defaults to 'run'.")
-	fmt.Println()
+
+	if h.run != nil {
+		fmt.Printf("     Defaults to '%s'.\n", h.run.Name())
+		fmt.Println()
+	}
 }
