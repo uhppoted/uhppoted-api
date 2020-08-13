@@ -204,9 +204,9 @@ func TestConfigWrite(t *testing.T) {
 	bind, broadcast, listen := DefaultIpAddresses()
 
 	expected := fmt.Sprintf(`# SYSTEM
-; bind.address = %s
-; broadcast.address = %s
-; listen.address = %s
+; bind.address = %[1]s
+; broadcast.address = %[2]s
+; listen.address = %[3]s
 ; monitoring.healthcheck.interval = 15s
 ; monitoring.healthcheck.idle = 1m0s
 ; monitoring.healthcheck.ignore = 5m0s
@@ -223,11 +223,11 @@ func TestConfigWrite(t *testing.T) {
 ; rest.tls.client.certificates = true
 ; rest.CORS.enabled = false
 ; rest.auth.enabled = false
-; rest.auth.users = /usr/local/etc/com.github.uhppoted/rest/users
-; rest.auth.groups = /usr/local/etc/com.github.uhppoted/rest/groups
+; rest.auth.users = %[4]s
+; rest.auth.groups = %[5]s
 ; rest.auth.hotp.range = 8
 ; rest.auth.hotp.secrets = 
-; rest.auth.hotp.counters = /usr/local/etc/com.github.uhppoted/rest/counters
+; rest.auth.hotp.counters = %[6]s
 
 # MQTT
 ; mqtt.server.ID = uhppoted
@@ -235,9 +235,9 @@ func TestConfigWrite(t *testing.T) {
 ; mqtt.connection.client.ID = uhppoted-mqttd
 ; mqtt.connection.username = 
 ; mqtt.connection.password = 
-; mqtt.connection.broker.certificate = /usr/local/etc/com.github.uhppoted/mqtt/broker.cert
-; mqtt.connection.client.certificate = /usr/local/etc/com.github.uhppoted/mqtt/client.cert
-; mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/client.key
+; mqtt.connection.broker.certificate = %[7]s
+; mqtt.connection.client.certificate = %[8]s
+; mqtt.connection.client.key = %[9]s
 ; mqtt.topic.root = uhppoted/gateway
 ; mqtt.topic.requests = ./requests
 ; mqtt.topic.replies = ./replies
@@ -247,20 +247,20 @@ func TestConfigWrite(t *testing.T) {
 ; mqtt.alerts.retained = true
 ; mqtt.events.key = events
 ; mqtt.system.key = system
-; mqtt.events.index.filepath = /usr/local/var/com.github.uhppoted/mqtt.events.retrieved
+; mqtt.events.index.filepath = %[10]s
 ; mqtt.permissions.enabled = false
-; mqtt.permissions.users = /usr/local/etc/com.github.uhppoted/mqtt.permissions.users
-; mqtt.permissions.groups = /usr/local/etc/com.github.uhppoted/mqtt.permissions.groups
+; mqtt.permissions.users = %[11]s
+; mqtt.permissions.groups = %[12]s
 ; mqtt.security.HMAC.required = false
 ; mqtt.security.HMAC.key = 
 ; mqtt.security.authentication = HOTP, RSA
 ; mqtt.security.hotp.range = 8
-; mqtt.security.hotp.secrets = /usr/local/etc/com.github.uhppoted/mqtt.hotp.secrets
-; mqtt.security.hotp.counters = /usr/local/var/com.github.uhppoted/mqtt.hotp.counters
-; mqtt.security.rsa.keys = /usr/local/etc/com.github.uhppoted/mqtt/rsa
+; mqtt.security.hotp.secrets = %[13]s
+; mqtt.security.hotp.counters = %[14]s
+; mqtt.security.rsa.keys = %[15]s
 ; mqtt.security.nonce.required = true
-; mqtt.security.nonce.server = /usr/local/var/com.github.uhppoted/mqtt.nonce
-; mqtt.security.nonce.clients = /usr/local/var/com.github.uhppoted/mqtt.nonce.counters
+; mqtt.security.nonce.server = %[16]s
+; mqtt.security.nonce.clients = %[17]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
 
@@ -270,16 +270,16 @@ func TestConfigWrite(t *testing.T) {
 ; aws.region = us-east-1
 
 # HTTPD
-; httpd.auth.local.db = /usr/local/etc/com.github.uhppoted/httpd/auth.json
+; httpd.auth.local.db = %[18]s
 ; httpd.cookie.max-age = 24
 ; httpd.session.expiry = 60m
 ; httpd.http.enabled = false
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
 ; httpd.https.port = 0
-; httpd.tls.ca = /usr/local/etc/com.github.uhppoted/httpd/ca.cert
-; httpd.tls.certificate = /usr/local/etc/com.github.uhppoted/httpd/uhppoted.cert
-; httpd.tls.key = /usr/local/etc/com.github.uhppoted/httpd/uhppoted.key
+; httpd.tls.ca = %[19]s
+; httpd.tls.certificate = %[20]s
+; httpd.tls.key = %[21]s
 ; httpd.tls.client.certificates = false
 
 # OPEN API
@@ -294,7 +294,11 @@ func TestConfigWrite(t *testing.T) {
 # UT0311-L0x.405419896.door.2 = Side Door
 # UT0311-L0x.405419896.door.3 = Garage
 # UT0311-L0x.405419896.door.4 = Workshop
-`, bind.String(), broadcast.String(), listen.String())
+`, bind.String(), broadcast.String(), listen.String(),
+		restUsers, restGroups, restHOTP,
+		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
+		nonceServer, nonceClients,
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey)
 
 	config := NewConfig()
 
@@ -305,7 +309,6 @@ func TestConfigWrite(t *testing.T) {
 	}
 
 	if s := string(b.Bytes()); s != expected {
-		println(s)
 		re := regexp.MustCompile(`(\r)?\n`)
 		p := re.Split(s, -1)
 		q := re.Split(expected, -1)
