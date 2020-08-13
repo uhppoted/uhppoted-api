@@ -41,6 +41,6 @@ build-all: test vet
 release: build-all
 
 debug: build
-	go test ./... -run TestGrantALL
+	go test ./... -run TestConfigWrite
 
 

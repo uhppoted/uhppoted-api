@@ -1,11 +1,15 @@
 package config
 
 import (
-	"github.com/uhppoted/uhppote-core/encoding/conf"
+	"bytes"
+	"fmt"
 	"net"
 	"reflect"
+	"regexp"
 	"testing"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/encoding/conf"
 )
 
 var configuration = []byte(`# SYSTEM
@@ -126,8 +130,7 @@ func TestUnmarshal(t *testing.T) {
 	config := NewConfig()
 	err := conf.Unmarshal(configuration, config)
 	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-		return
+		t.Fatalf("Unexpected error: %v", err)
 	}
 
 	if !reflect.DeepEqual(config.System, expected.System) {
@@ -193,6 +196,138 @@ func TestUnmarshal(t *testing.T) {
 			if d.Doors[3] != "Workshop" {
 				t.Errorf("Expected 'device.door[3]' %s for ID '%v', got:'%s'", "Workshop", 405419896, d.Doors[3])
 			}
+		}
+	}
+}
+
+func TestConfigWrite(t *testing.T) {
+	bind, broadcast, listen := DefaultIpAddresses()
+
+	expected := fmt.Sprintf(`# SYSTEM
+; bind.address = %s
+; broadcast.address = %s
+; listen.address = %s
+; monitoring.healthcheck.interval = 15s
+; monitoring.healthcheck.idle = 1m0s
+; monitoring.healthcheck.ignore = 5m0s
+; monitoring.watchdog.interval = 5s
+
+# REST
+; rest.http.enabled = false
+; rest.http.port = 8080
+; rest.https.enabled = true
+; rest.https.port = 8443
+; rest.tls.key = uhppoted.key
+; rest.tls.certificate = uhppoted.cert
+; rest.tls.ca = ca.cert
+; rest.tls.client.certificates = true
+; rest.CORS.enabled = false
+; rest.auth.enabled = false
+; rest.auth.users = /usr/local/etc/com.github.uhppoted/rest/users
+; rest.auth.groups = /usr/local/etc/com.github.uhppoted/rest/groups
+; rest.auth.hotp.range = 8
+; rest.auth.hotp.secrets = 
+; rest.auth.hotp.counters = /usr/local/etc/com.github.uhppoted/rest/counters
+
+# MQTT
+; mqtt.server.ID = uhppoted
+; mqtt.connection.broker = tcp://127.0.0.1:1883
+; mqtt.connection.client.ID = uhppoted-mqttd
+; mqtt.connection.username = 
+; mqtt.connection.password = 
+; mqtt.connection.broker.certificate = /usr/local/etc/com.github.uhppoted/mqtt/broker.cert
+; mqtt.connection.client.certificate = /usr/local/etc/com.github.uhppoted/mqtt/client.cert
+; mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/client.key
+; mqtt.topic.root = uhppoted/gateway
+; mqtt.topic.requests = ./requests
+; mqtt.topic.replies = ./replies
+; mqtt.topic.events = ./events
+; mqtt.topic.system = ./system
+; mqtt.alerts.qos = 1
+; mqtt.alerts.retained = true
+; mqtt.events.key = events
+; mqtt.system.key = system
+; mqtt.events.index.filepath = /usr/local/var/com.github.uhppoted/mqtt.events.retrieved
+; mqtt.permissions.enabled = false
+; mqtt.permissions.users = /usr/local/etc/com.github.uhppoted/mqtt.permissions.users
+; mqtt.permissions.groups = /usr/local/etc/com.github.uhppoted/mqtt.permissions.groups
+; mqtt.security.HMAC.required = false
+; mqtt.security.HMAC.key = 
+; mqtt.security.authentication = HOTP, RSA
+; mqtt.security.hotp.range = 8
+; mqtt.security.hotp.secrets = /usr/local/etc/com.github.uhppoted/mqtt.hotp.secrets
+; mqtt.security.hotp.counters = /usr/local/var/com.github.uhppoted/mqtt.hotp.counters
+; mqtt.security.rsa.keys = /usr/local/etc/com.github.uhppoted/mqtt/rsa
+; mqtt.security.nonce.required = true
+; mqtt.security.nonce.server = /usr/local/var/com.github.uhppoted/mqtt.nonce
+; mqtt.security.nonce.clients = /usr/local/var/com.github.uhppoted/mqtt.nonce.counters
+; mqtt.security.outgoing.sign = true
+; mqtt.security.outgoing.encrypt = true
+
+# AWS
+; aws.credentials = 
+; aws.profile = default
+; aws.region = us-east-1
+
+# HTTPD
+; httpd.auth.local.db = /usr/local/etc/com.github.uhppoted/httpd/auth.json
+; httpd.cookie.max-age = 24
+; httpd.session.expiry = 60m
+; httpd.http.enabled = false
+; httpd.http.port = 0
+; httpd.https.enabled = true
+; httpd.https.port = 0
+; httpd.tls.ca = /usr/local/etc/com.github.uhppoted/httpd/ca.cert
+; httpd.tls.certificate = /usr/local/etc/com.github.uhppoted/httpd/uhppoted.cert
+; httpd.tls.key = /usr/local/etc/com.github.uhppoted/httpd/uhppoted.key
+; httpd.tls.client.certificates = false
+
+# OPEN API
+# openapi.enabled = false
+# openapi.directory = ./openapi
+
+# DEVICES
+# Example configuration for UTO311-L04 with serial number 405419896
+# UT0311-L0x.405419896.address = 192.168.1.100:60000
+# UT0311-L0x.405419896.rollover = 100000
+# UT0311-L0x.405419896.door.1 = Front Door
+# UT0311-L0x.405419896.door.2 = Side Door
+# UT0311-L0x.405419896.door.3 = Garage
+# UT0311-L0x.405419896.door.4 = Workshop
+`, bind.String(), broadcast.String(), listen.String())
+
+	config := NewConfig()
+
+	var b bytes.Buffer
+
+	if err := config.Write(&b); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if s := string(b.Bytes()); s != expected {
+		println(s)
+		re := regexp.MustCompile(`(\r)?\n`)
+		p := re.Split(s, -1)
+		q := re.Split(expected, -1)
+		N := len(q)
+
+		if N > len(p) {
+			N = len(p)
+		}
+		i := 0
+		for i < N {
+			if p[i] != q[i] {
+				t.Fatalf("Line %d: output from Config.Writer does not match\n   expected:\n%s\n   got:     \n%s\n", i, q[i], p[i])
+			}
+			i++
+		}
+
+		if i < len(p) {
+			t.Fatalf("Line %d: unexpected output from Config.Writer\n   got:\n%s\n", i, p[i])
+		}
+
+		if i < len(q) {
+			t.Fatalf("Line %d: missing from Config.Writer\n   expected:\n%s\n", i, q[i])
 		}
 	}
 }
