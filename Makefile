@@ -3,6 +3,8 @@ DEBUG  ?= --debug
 VERSION = v0.6.x
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 
+.PHONY: bump
+
 all: test      \
 	 benchmark \
      coverage
@@ -39,6 +41,10 @@ build-all: test vet
 	env GOOS=windows GOARCH=amd64       go build ./...
 
 release: build-all
+
+bump:
+	go get -u github.com/uhppoted/uhppote-core
+	go get -u golang.org/x/sys
 
 debug: build
 	go test ./... -run TestConfigWrite
