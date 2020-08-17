@@ -1,9 +1,6 @@
 ## v0.6.x
 
-## IN PROGRESS
-
-- [x] Rework AWS credentials to use SDK
-- [ ] Unit test for config.Write
+### IN PROGRESS
 
 ## TODO
 

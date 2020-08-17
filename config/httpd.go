@@ -5,6 +5,7 @@ import ()
 type HTTPD struct {
 	AuthDB                    string `conf:"auth.local.db"`
 	CookieMaxAge              int    `conf:"cookie.max-age"`
+	LoginExpiry             string `conf:"login.expiry"`
 	SessionExpiry             string `conf:"session.expiry"`
 	HttpEnabled               bool   `conf:"http.enabled"`
 	HttpPort                  uint16 `conf:"http.port"`
@@ -13,19 +14,20 @@ type HTTPD struct {
 	CACertificate             string `conf:"tls.ca"`
 	TLSCertificate            string `conf:"tls.certificate"`
 	TLSKey                    string `conf:"tls.key"`
-	RequireClientCertificates bool   `conf:"tls.client.certificates"`
+	RequireClientCertificate bool   `conf:"tls.client.certificates.required"`
 }
 
 func NewHTTPD() *HTTPD {
 	return &HTTPD{
 		AuthDB:                    httpdAuthDB,
 		CookieMaxAge:              24,
+		LoginExpiry:             "5m",
 		SessionExpiry:             "60m",
 		HttpEnabled:               false,
 		HttpsEnabled:              true,
 		CACertificate:             httpdCACertificate,
 		TLSCertificate:            httpdTLSCertificate,
 		TLSKey:                    httpdTLSKey,
-		RequireClientCertificates: false,
+		RequireClientCertificate: false,
 	}
 }
