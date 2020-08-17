@@ -272,6 +272,7 @@ func TestConfigWrite(t *testing.T) {
 # HTTPD
 ; httpd.auth.local.db = %[18]s
 ; httpd.cookie.max-age = 24
+; httpd.login.expiry = 5m
 ; httpd.session.expiry = 60m
 ; httpd.http.enabled = false
 ; httpd.http.port = 0
@@ -280,7 +281,7 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.tls.ca = %[19]s
 ; httpd.tls.certificate = %[20]s
 ; httpd.tls.key = %[21]s
-; httpd.tls.client.certificates = false
+; httpd.tls.client.certificates.required = false
 
 # OPEN API
 # openapi.enabled = false
