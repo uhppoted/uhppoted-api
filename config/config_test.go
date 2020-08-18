@@ -282,6 +282,7 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.tls.certificate = %[20]s
 ; httpd.tls.key = %[21]s
 ; httpd.tls.client.certificates.required = false
+; httpd.stale-time = 6h0m0s
 
 # OPEN API
 # openapi.enabled = false
