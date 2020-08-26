@@ -270,10 +270,6 @@ func TestConfigWrite(t *testing.T) {
 ; aws.region = us-east-1
 
 # HTTPD
-; httpd.auth.local.db = %[18]s
-; httpd.cookie.max-age = 24
-; httpd.login.expiry = 5m
-; httpd.session.expiry = 60m
 ; httpd.http.enabled = false
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
@@ -282,7 +278,12 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.tls.certificate = %[20]s
 ; httpd.tls.key = %[21]s
 ; httpd.tls.client.certificates.required = false
-; httpd.stale-time = 6h0m0s
+; httpd.security.auth = basic
+; httpd.security.local.db = %[18]s
+; httpd.security.cookie.max-age = 24
+; httpd.security.login.expiry = 5m
+; httpd.security.session.expiry = 60m
+; httpd.security.stale-time = 6h0m0s
 
 # OPEN API
 # openapi.enabled = false
