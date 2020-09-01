@@ -284,6 +284,7 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.security.login.expiry = 5m
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
+; httpd.request.timeout = 5s
 
 # OPEN API
 # openapi.enabled = false

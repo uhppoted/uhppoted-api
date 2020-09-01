@@ -21,6 +21,7 @@ type HTTPD struct {
 		SessionExpiry string        `conf:"session.expiry"`
 		StaleTime     time.Duration `conf:"stale-time"`
 	} `conf:"security"`
+	RequestTimeout time.Duration `conf:"request.timeout"`
 }
 
 func NewHTTPD() *HTTPD {
@@ -46,5 +47,6 @@ func NewHTTPD() *HTTPD {
 			SessionExpiry: "60m",
 			StaleTime:     6 * time.Hour,
 		},
+		RequestTimeout: 5 * time.Second,
 	}
 }
