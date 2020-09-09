@@ -29,6 +29,7 @@ var httpdAuthDB string = filepath.Join(workdir(), "httpd", "auth.json")
 var httpdCACertificate string = filepath.Join(workdir(), "httpd", "ca.cert")
 var httpdTLSCertificate string = filepath.Join(workdir(), "httpd", "uhppoted.cert")
 var httpdTLSKey string = filepath.Join(workdir(), "httpd", "uhppoted.key")
+var httpdDBFile string = filepath.Join(workdir(), "httpd", "memdb", "db.json")
 
 func workdir() string {
 	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)
