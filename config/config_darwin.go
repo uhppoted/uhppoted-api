@@ -25,5 +25,5 @@ const (
 	httpdCACertificate  string = "/usr/local/etc/com.github.uhppoted/httpd/ca.cert"
 	httpdTLSCertificate string = "/usr/local/etc/com.github.uhppoted/httpd/uhppoted.cert"
 	httpdTLSKey         string = "/usr/local/etc/com.github.uhppoted/httpd/uhppoted.key"
-	httpdDBFile         string = "/usr/local/etc/com.github.uhppoted/httpd/memdb/db.json"
+	httpdDBFile         string = "/usr/local/var/com.github.uhppoted/httpd/memdb/db.json"
 )
