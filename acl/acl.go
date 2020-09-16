@@ -8,6 +8,7 @@ import (
 )
 
 type ACL map[uint32]map[uint32]types.Card
+type ACLN map[uint32]map[uint32]types.CardN
 
 type DateRange struct {
 	From types.Date
