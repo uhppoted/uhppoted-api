@@ -71,3 +71,49 @@ func compare(p, q map[uint32]types.Card) Diff {
 
 	return diff
 }
+
+func compareN(p, q map[uint32]types.CardN) DiffN {
+	cards := map[uint32]struct{}{}
+
+	for k, _ := range p {
+		cards[k] = struct{}{}
+	}
+
+	for k, _ := range q {
+		cards[k] = struct{}{}
+	}
+
+	diff := DiffN{
+		Unchanged: []types.CardN{},
+		Added:     []types.CardN{},
+		Updated:   []types.CardN{},
+		Deleted:   []types.CardN{},
+	}
+
+	for k, _ := range cards {
+		u, hasu := p[k]
+		v, hasv := q[k]
+
+		if hasu && hasv {
+			if reflect.DeepEqual(u, v) {
+				diff.Unchanged = append(diff.Unchanged, u)
+			} else {
+				diff.Updated = append(diff.Updated, v)
+			}
+		} else if !hasu && hasv {
+			diff.Added = append(diff.Added, v)
+		} else if hasu && !hasv {
+			diff.Deleted = append(diff.Deleted, u)
+		}
+	}
+
+	for _, list := range [][]types.CardN{
+		diff.Unchanged,
+		diff.Added,
+		diff.Updated,
+		diff.Deleted} {
+		sort.Slice(list, func(i, j int) bool { return list[i].CardNumber < list[j].CardNumber })
+	}
+
+	return diff
+}

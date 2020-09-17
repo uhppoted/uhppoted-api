@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"time"
@@ -30,8 +31,16 @@ func (m *mock) PutCardN(deviceID uint32, card types.Card) (bool, error) {
 	return m.putCard(deviceID, card)
 }
 
+func (m *mock) PutCardX(deviceID uint32, card types.CardN) (bool, error) {
+	return false, fmt.Errorf("PutCardX not implemented")
+}
+
 func (m *mock) DeleteCardN(deviceID uint32, card types.Card) (bool, error) {
 	return m.deleteCard(deviceID, card)
+}
+
+func (m *mock) DeleteCardX(deviceID uint32, card types.CardN) (bool, error) {
+	return false, fmt.Errorf("DeleteCardX not implemented")
 }
 
 var date = func(s string) *types.Date {

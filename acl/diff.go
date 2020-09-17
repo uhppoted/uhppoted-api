@@ -13,6 +13,13 @@ type Diff struct {
 	Deleted   []types.Card
 }
 
+type DiffN struct {
+	Unchanged []types.CardN
+	Updated   []types.CardN
+	Added     []types.CardN
+	Deleted   []types.CardN
+}
+
 type ConsolidatedDiff struct {
 	Unchanged []uint32 `json:"unchanged"`
 	Updated   []uint32 `json:"updated"`
