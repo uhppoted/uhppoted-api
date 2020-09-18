@@ -22,7 +22,10 @@ type HTTPD struct {
 		StaleTime     time.Duration `conf:"stale-time"`
 	} `conf:"security"`
 	RequestTimeout time.Duration `conf:"request.timeout"`
-	DB             struct {
+	System         struct {
+		File string `conf:"file"`
+	} `conf:"system"`
+	DB struct {
 		File string `conf:"file"`
 	} `conf:"db"`
 }
@@ -51,6 +54,11 @@ func NewHTTPD() *HTTPD {
 			StaleTime:     6 * time.Hour,
 		},
 		RequestTimeout: 5 * time.Second,
+		System: struct {
+			File string `conf:"file"`
+		}{
+			File: httpdSysFile,
+		},
 		DB: struct {
 			File string `conf:"file"`
 		}{

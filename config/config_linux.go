@@ -25,5 +25,6 @@ const (
 	httpdCACertificate  string = "/etc/uhppoted/httpd/ca.cert"
 	httpdTLSCertificate string = "/etc/uhppoted/httpd/uhppoted.cert"
 	httpdTLSKey         string = "/etc/uhppoted/httpd/uhppoted.key"
+	httpdSysFile        string = "/var/uhppoted/httpd/sys/system.json"
 	httpdDBFile         string = "/var/uhppoted/httpd/memdb/db.json"
 )

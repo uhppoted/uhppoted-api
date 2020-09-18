@@ -285,7 +285,8 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
-; httpd.db.file = %[22]s
+; httpd.system.file = %[22]s
+; httpd.db.file = %[23]s
 
 # OPEN API
 # openapi.enabled = false
@@ -303,7 +304,7 @@ func TestConfigWrite(t *testing.T) {
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
-		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdDBFile)
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile)
 
 	config := NewConfig()
 
