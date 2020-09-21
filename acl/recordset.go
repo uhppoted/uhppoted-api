@@ -24,7 +24,7 @@ func (e *DuplicateCardError) Error() string {
 func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]types.Card)
+		acl[device.DeviceID] = make(map[uint32]types.CardX)
 	}
 
 	index, err := parseHeader(table.Header, devices)
@@ -32,7 +32,7 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 		return nil, nil, err
 	}
 
-	list := []map[uint32]types.Card{}
+	list := []map[uint32]types.CardX{}
 	for row, record := range table.Records {
 		cards, err := parseRecord(record, index)
 		if err != nil {
@@ -125,9 +125,10 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 				record.to = *c.To
 			}
 
-			for i, door := range c.Doors {
-				if ix := jndex[i]; ix == 0 {
-					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i+1)
+			for i := uint8(1); i <= 4; i++ {
+				door := c.Doors[i]
+				if ix := jndex[i-1]; ix == 0 {
+					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i)
 				} else {
 					record.doors[ix-1] = door
 				}

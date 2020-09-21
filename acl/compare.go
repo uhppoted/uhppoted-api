@@ -26,7 +26,7 @@ func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	return m, nil
 }
 
-func compare(p, q map[uint32]types.Card) Diff {
+func compare(p, q map[uint32]types.CardX) Diff {
 	cards := map[uint32]struct{}{}
 
 	for k, _ := range p {
@@ -38,10 +38,10 @@ func compare(p, q map[uint32]types.Card) Diff {
 	}
 
 	diff := Diff{
-		Unchanged: []types.Card{},
-		Added:     []types.Card{},
-		Updated:   []types.Card{},
-		Deleted:   []types.Card{},
+		Unchanged: []types.CardX{},
+		Added:     []types.CardX{},
+		Updated:   []types.CardX{},
+		Deleted:   []types.CardX{},
 	}
 
 	for k, _ := range cards {
@@ -61,53 +61,7 @@ func compare(p, q map[uint32]types.Card) Diff {
 		}
 	}
 
-	for _, list := range [][]types.Card{
-		diff.Unchanged,
-		diff.Added,
-		diff.Updated,
-		diff.Deleted} {
-		sort.Slice(list, func(i, j int) bool { return list[i].CardNumber < list[j].CardNumber })
-	}
-
-	return diff
-}
-
-func compareN(p, q map[uint32]types.CardN) DiffN {
-	cards := map[uint32]struct{}{}
-
-	for k, _ := range p {
-		cards[k] = struct{}{}
-	}
-
-	for k, _ := range q {
-		cards[k] = struct{}{}
-	}
-
-	diff := DiffN{
-		Unchanged: []types.CardN{},
-		Added:     []types.CardN{},
-		Updated:   []types.CardN{},
-		Deleted:   []types.CardN{},
-	}
-
-	for k, _ := range cards {
-		u, hasu := p[k]
-		v, hasv := q[k]
-
-		if hasu && hasv {
-			if reflect.DeepEqual(u, v) {
-				diff.Unchanged = append(diff.Unchanged, u)
-			} else {
-				diff.Updated = append(diff.Updated, v)
-			}
-		} else if !hasu && hasv {
-			diff.Added = append(diff.Added, v)
-		} else if hasu && !hasv {
-			diff.Deleted = append(diff.Deleted, u)
-		}
-	}
-
-	for _, list := range [][]types.CardN{
+	for _, list := range [][]types.CardX{
 		diff.Unchanged,
 		diff.Added,
 		diff.Updated,

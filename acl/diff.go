@@ -7,17 +7,10 @@ import (
 type SystemDiff map[uint32]Diff
 
 type Diff struct {
-	Unchanged []types.Card
-	Updated   []types.Card
-	Added     []types.Card
-	Deleted   []types.Card
-}
-
-type DiffN struct {
-	Unchanged []types.CardN
-	Updated   []types.CardN
-	Added     []types.CardN
-	Deleted   []types.CardN
+	Unchanged []types.CardX
+	Updated   []types.CardX
+	Added     []types.CardX
+	Deleted   []types.CardX
 }
 
 type ConsolidatedDiff struct {
@@ -35,7 +28,7 @@ func (diff *SystemDiff) Consolidate() *ConsolidatedDiff {
 	}{}
 
 	for _, d := range *diff {
-		lists := [][]types.Card{d.Unchanged, d.Updated, d.Added, d.Deleted}
+		lists := [][]types.CardX{d.Unchanged, d.Updated, d.Added, d.Deleted}
 		for _, l := range lists {
 			for _, card := range l {
 				consolidated[card.CardNumber] = &struct {

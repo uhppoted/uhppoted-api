@@ -9,10 +9,10 @@ import (
 
 func TestMakeFlatFileWithMissingACL(t *testing.T) {
 	acl := ACL{
-		12345: map[uint32]types.Card{
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		12345: map[uint32]types.CardX{
+			65537: types.CardX{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			65538: types.CardX{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
+			65539: types.CardX{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -37,17 +37,17 @@ func TestMakeFlatFileWithMissingACL(t *testing.T) {
 
 func TestMakeFlatFile(t *testing.T) {
 	acl := ACL{
-		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, false, true, false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: []bool{true, false, false, false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: []bool{true, false, false, true}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+		12345: map[uint32]types.CardX{
+			65536: types.CardX{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+			65537: types.CardX{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			65538: types.CardX{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
+			65539: types.CardX{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 		},
-		54321: map[uint32]types.Card{
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: []bool{true, true, false, true}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-03-01"), To: date("2020-10-31"), Doors: []bool{true, false, true, true}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-01-03"), To: date("2020-11-30"), Doors: []bool{false, true, true, true}},
-			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2021-12-31"), Doors: []bool{false, true, false, true}},
+		54321: map[uint32]types.CardX{
+			65537: types.CardX{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: true, 3: false, 4: true}},
+			65538: types.CardX{CardNumber: 65538, From: date("2020-03-01"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: true}},
+			65539: types.CardX{CardNumber: 65539, From: date("2020-01-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: true, 4: true}},
+			65540: types.CardX{CardNumber: 65540, From: date("2019-01-01"), To: date("2021-12-31"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: true}},
 		},
 	}
 

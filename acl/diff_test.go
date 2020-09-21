@@ -16,21 +16,21 @@ func TestConsolidateDiff(t *testing.T) {
 
 	diff := SystemDiff{
 		12345: Diff{
-			Unchanged: []types.Card{
-				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
-				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Unchanged: []types.CardX{
+				types.CardX{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+				types.CardX{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Updated: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+			Updated: []types.CardX{
+				types.CardX{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+				types.CardX{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 			},
-			Added: []types.Card{
-				types.Card{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
-				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Added: []types.CardX{
+				types.CardX{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+				types.CardX{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Deleted: []types.Card{
-				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
-				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Deleted: []types.CardX{
+				types.CardX{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+				types.CardX{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
 		},
 	}
@@ -55,31 +55,31 @@ func TestConsolidateDiffWithMultipleDevices(t *testing.T) {
 
 	diff := SystemDiff{
 		12345: Diff{
-			Unchanged: []types.Card{
-				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Unchanged: []types.CardX{
+				types.CardX{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Updated: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+			Updated: []types.CardX{
+				types.CardX{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 			},
-			Added: []types.Card{
-				types.Card{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Added: []types.CardX{
+				types.CardX{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Deleted: []types.Card{
-				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Deleted: []types.CardX{
+				types.CardX{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
 		},
 		54321: Diff{
-			Unchanged: []types.Card{
-				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Unchanged: []types.CardX{
+				types.CardX{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Updated: []types.Card{
-				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+			Updated: []types.CardX{
+				types.CardX{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 			},
-			Added: []types.Card{
-				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Added: []types.CardX{
+				types.CardX{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Deleted: []types.Card{
-				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Deleted: []types.CardX{
+				types.CardX{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
 		},
 	}
@@ -104,21 +104,21 @@ func TestConsolidateDiffWithAddAndUpdateSameCard(t *testing.T) {
 
 	diff := SystemDiff{
 		12345: Diff{
-			Unchanged: []types.Card{
-				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
-				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Unchanged: []types.CardX{
+				types.CardX{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+				types.CardX{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Updated: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
-				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, false, false}},
+			Updated: []types.CardX{
+				types.CardX{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+				types.CardX{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 			},
-			Added: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
-				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Added: []types.CardX{
+				types.CardX{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+				types.CardX{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
-			Deleted: []types.Card{
-				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
-				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: []bool{false, false, true, false}},
+			Deleted: []types.CardX{
+				types.CardX{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+				types.CardX{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
 			},
 		},
 	}

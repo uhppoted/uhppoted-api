@@ -19,8 +19,7 @@ func GetCard(u device.IDevice, devices []*uhppote.Device, cardID uint32) (map[st
 		}
 
 		if card != nil {
-			for i, d := range card.Doors {
-				ix := uint8(i + 1)
+			for ix, d := range card.Doors {
 				if d {
 					for _, v := range lookup {
 						if v.deviceID == device.DeviceID && v.door == ix {

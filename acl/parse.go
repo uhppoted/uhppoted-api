@@ -105,8 +105,8 @@ loop:
 	return &index, nil
 }
 
-func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
-	cards := make(map[uint32]types.Card, 0)
+func parseRecord(record []string, index *index) (map[uint32]types.CardX, error) {
+	cards := make(map[uint32]types.CardX, 0)
 
 	for k, v := range index.doors {
 		cardno, err := getCardNumber(record, index)
@@ -129,7 +129,7 @@ func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 			return nil, err
 		}
 
-		cards[k] = types.Card{
+		cards[k] = types.CardX{
 			CardNumber: cardno,
 			From:       from,
 			To:         to,
@@ -174,20 +174,19 @@ func getToDate(record []string, index *index) (*types.Date, error) {
 	return &to, nil
 }
 
-func getDoors(record []string, v []int) ([]bool, error) {
-	doors := make([]bool, 4)
+func getDoors(record []string, v []int) (map[uint8]bool, error) {
+	doors := map[uint8]bool{1: false, 2: false, 3: false, 4: false}
 
 	for i, d := range v {
 		if d == 0 {
-			doors[i] = false
 			continue
 		}
 
 		switch field(record, d) {
 		case "Y":
-			doors[i] = true
+			doors[uint8(i+1)] = true
 		case "N":
-			doors[i] = false
+			doors[uint8(i+1)] = false
 		default:
 			return doors, fmt.Errorf("Expected 'Y/N' for door: '%s'", record[d])
 		}

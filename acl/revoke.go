@@ -61,7 +61,7 @@ func revoke(u device.IDevice, deviceID uint32, cardID uint32, doors []uint8) err
 	}
 
 	for _, d := range doors {
-		card.Doors[d-1] = false
+		card.Doors[d] = false
 	}
 
 	if ok, err := u.PutCardN(deviceID, *card); err != nil {
