@@ -63,9 +63,9 @@ func TestPutACL(t *testing.T) {
 
 			return true, nil
 		},
-		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards {
-				if c.CardNumber == card.CardNumber {
+				if c.CardNumber == cardNumber {
 					cards = append(cards[:ix], cards[ix+1:]...)
 					return true, nil
 				}
@@ -144,9 +144,9 @@ func TestPutACLDryRun(t *testing.T) {
 
 			return true, nil
 		},
-		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards {
-				if c.CardNumber == card.CardNumber {
+				if c.CardNumber == cardNumber {
 					cards = append(cards[:ix], cards[ix+1:]...)
 					return true, nil
 				}
@@ -260,9 +260,9 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 			return true, nil
 		},
 
-		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards[deviceID] {
-				if c.CardNumber == card.CardNumber {
+				if c.CardNumber == cardNumber {
 					cards[deviceID] = append(cards[deviceID][:ix], cards[deviceID][ix+1:]...)
 					return true, nil
 				}
@@ -345,9 +345,9 @@ func TestPutACLWithFailures(t *testing.T) {
 
 			return true, nil
 		},
-		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards {
-				if c.CardNumber == card.CardNumber {
+				if c.CardNumber == cardNumber {
 					cards = append(cards[:ix], cards[ix+1:]...)
 					return true, nil
 				}
@@ -430,9 +430,9 @@ func TestPutACLWithErrors(t *testing.T) {
 
 			return true, nil
 		},
-		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards {
-				if c.CardNumber == card.CardNumber {
+				if c.CardNumber == cardNumber {
 					cards = append(cards[:ix], cards[ix+1:]...)
 					return true, nil
 				}
@@ -505,9 +505,9 @@ func TestPutACLWithNoCurrentPermissions(t *testing.T) {
 
 			return true, nil
 		},
-		deleteCard: func(deviceID uint32, card types.Card) (bool, error) {
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards {
-				if c.CardNumber == card.CardNumber {
+				if c.CardNumber == cardNumber {
 					cards = append(cards[:ix], cards[ix+1:]...)
 					return true, nil
 				}

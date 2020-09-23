@@ -11,7 +11,7 @@ type mock struct {
 	getCardByIndex func(uint32, uint32) (*types.Card, error)
 	getCardByID    func(uint32, uint32) (*types.Card, error)
 	putCard        func(uint32, types.Card) (bool, error)
-	deleteCard     func(uint32, types.Card) (bool, error)
+	deleteCard     func(uint32, uint32) (bool, error)
 }
 
 func (m *mock) GetCardsN(deviceID uint32) (uint32, error) {
@@ -30,8 +30,8 @@ func (m *mock) PutCardN(deviceID uint32, card types.Card) (bool, error) {
 	return m.putCard(deviceID, card)
 }
 
-func (m *mock) DeleteCardN(deviceID uint32, card types.Card) (bool, error) {
-	return m.deleteCard(deviceID, card)
+func (m *mock) DeleteCardN(deviceID uint32, cardNumber uint32) (bool, error) {
+	return m.deleteCard(deviceID, cardNumber)
 }
 
 var date = func(s string) *types.Date {
