@@ -78,7 +78,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 	}
 
 	for _, card := range diff.Deleted {
-		if ok, err := u.DeleteCardN(deviceID, card.CardNumber); err != nil {
+		if ok, err := u.DeleteCard(deviceID, card.CardNumber); err != nil {
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else if !ok {

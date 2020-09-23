@@ -30,7 +30,7 @@ func (m *mock) PutCardN(deviceID uint32, card types.Card) (bool, error) {
 	return m.putCard(deviceID, card)
 }
 
-func (m *mock) DeleteCardN(deviceID uint32, cardNumber uint32) (bool, error) {
+func (m *mock) DeleteCard(deviceID uint32, cardNumber uint32) (bool, error) {
 	return m.deleteCard(deviceID, cardNumber)
 }
 

@@ -166,18 +166,18 @@ type DeleteCardResponse struct {
 func (u *UHPPOTED) DeleteCard(request DeleteCardRequest) (*DeleteCardResponse, error) {
 	u.debug("delete-card", fmt.Sprintf("request  %+v", request))
 
-	device := uint32(request.DeviceID)
+	deviceID := uint32(request.DeviceID)
 	cardNo := request.CardNumber
 
-	deleted, err := u.Uhppote.DeleteCard(device, cardNo)
+	deleted, err := u.Uhppote.DeleteCard(deviceID, cardNo)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error deleting card %v from %v (%w)", cardNo, device, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error deleting card %v from %v (%w)", cardNo, deviceID, err))
 	}
 
 	response := DeleteCardResponse{
-		DeviceID:   DeviceID(deleted.SerialNumber),
+		DeviceID:   DeviceID(deviceID),
 		CardNumber: cardNo,
-		Deleted:    deleted.Succeeded,
+		Deleted:    deleted,
 	}
 
 	u.debug("delete-card", fmt.Sprintf("response %+v", response))
