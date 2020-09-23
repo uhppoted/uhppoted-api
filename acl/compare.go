@@ -26,7 +26,7 @@ func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	return m, nil
 }
 
-func compare(p, q map[uint32]types.CardX) Diff {
+func compare(p, q map[uint32]types.Card) Diff {
 	cards := map[uint32]struct{}{}
 
 	for k, _ := range p {
@@ -38,10 +38,10 @@ func compare(p, q map[uint32]types.CardX) Diff {
 	}
 
 	diff := Diff{
-		Unchanged: []types.CardX{},
-		Added:     []types.CardX{},
-		Updated:   []types.CardX{},
-		Deleted:   []types.CardX{},
+		Unchanged: []types.Card{},
+		Added:     []types.Card{},
+		Updated:   []types.Card{},
+		Deleted:   []types.Card{},
 	}
 
 	for k, _ := range cards {
@@ -61,7 +61,7 @@ func compare(p, q map[uint32]types.CardX) Diff {
 		}
 	}
 
-	for _, list := range [][]types.CardX{
+	for _, list := range [][]types.Card{
 		diff.Unchanged,
 		diff.Added,
 		diff.Updated,

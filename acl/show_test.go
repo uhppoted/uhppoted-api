@@ -13,14 +13,14 @@ func TestGetCard(t *testing.T) {
 		"Workshop":   DateRange{From: *date("2020-02-03"), To: *date("2020-11-30")},
 	}
 
-	cards := []types.CardX{
-		types.CardX{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.CardX{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.CardX{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{
-		getCardByID: func(deviceID, cardID uint32) (*types.CardX, error) {
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
 			for _, c := range cards {
 				if c.CardNumber == cardID {
 					return &c, nil
@@ -50,14 +50,14 @@ func TestGetCard(t *testing.T) {
 func TestGetCardWithUnknownCard(t *testing.T) {
 	expected := map[string]DateRange{}
 
-	cards := []types.CardX{
-		types.CardX{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.CardX{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.CardX{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{
-		getCardByID: func(deviceID, cardID uint32) (*types.CardX, error) {
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
 			for _, c := range cards {
 				if c.CardNumber == cardID {
 					return &c, nil
@@ -91,23 +91,23 @@ func TestGetCardWithMultipleDevices(t *testing.T) {
 		"D2":         DateRange{From: *date("2020-01-01"), To: *date("2020-12-31")},
 	}
 
-	cards := map[uint32][]types.CardX{
-		12345: []types.CardX{
-			types.CardX{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.CardX{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-			types.CardX{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+	cards := map[uint32][]types.Card{
+		12345: []types.Card{
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
 		},
 
-		54321: []types.CardX{
-			types.CardX{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
-			types.CardX{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.CardX{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.CardX{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+		54321: []types.Card{
+			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	u := mock{
-		getCardByID: func(deviceID, cardID uint32) (*types.CardX, error) {
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
 			l := cards[deviceID]
 			for _, c := range l {
 				if c.CardNumber == cardID {

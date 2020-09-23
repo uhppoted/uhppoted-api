@@ -13,7 +13,7 @@ import (
 func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]types.CardX)
+		acl[device.DeviceID] = make(map[uint32]types.Card)
 	}
 
 	r := csv.NewReader(f)
@@ -30,7 +30,7 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error
 	}
 
 	line := 0
-	list := []map[uint32]types.CardX{}
+	list := []map[uint32]types.Card{}
 	for {
 		record, err := r.Read()
 		if err == io.EOF {

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type ACL map[uint32]map[uint32]types.CardX
+type ACL map[uint32]map[uint32]types.Card
 
 type DateRange struct {
 	From types.Date

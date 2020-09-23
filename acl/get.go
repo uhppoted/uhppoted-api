@@ -9,7 +9,7 @@ import (
 func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 	acl := make(ACL)
 	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]types.CardX)
+		acl[device.DeviceID] = make(map[uint32]types.Card)
 	}
 
 	for _, device := range devices {
@@ -24,8 +24,8 @@ func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 	return acl, nil
 }
 
-func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.CardX, error) {
-	cards := map[uint32]types.CardX{}
+func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
+	cards := map[uint32]types.Card{}
 
 	N, err := u.GetCardsN(deviceID)
 	if err != nil {

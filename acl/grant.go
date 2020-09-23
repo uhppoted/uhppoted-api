@@ -59,7 +59,7 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 	if err != nil {
 		return err
 	} else if card == nil {
-		card = &types.CardX{
+		card = &types.Card{
 			CardNumber: cardID,
 			From:       &from,
 			To:         &to,
@@ -96,7 +96,7 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 }
 
 func grantAll(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date) error {
-	card := &types.CardX{
+	card := &types.Card{
 		CardNumber: cardID,
 		From:       &from,
 		To:         &to,

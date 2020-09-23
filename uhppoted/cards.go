@@ -88,8 +88,8 @@ type GetCardRequest struct {
 }
 
 type GetCardResponse struct {
-	DeviceID DeviceID    `json:"device-id"`
-	Card     types.CardX `json:"card"`
+	DeviceID DeviceID   `json:"device-id"`
+	Card     types.Card `json:"card"`
 }
 
 func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
@@ -119,12 +119,12 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 
 type PutCardRequest struct {
 	DeviceID DeviceID
-	Card     types.CardX
+	Card     types.Card
 }
 
 type PutCardResponse struct {
-	DeviceID DeviceID    `json:"device-id"`
-	Card     types.CardX `json:"card"`
+	DeviceID DeviceID   `json:"device-id"`
+	Card     types.Card `json:"card"`
 }
 
 func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {

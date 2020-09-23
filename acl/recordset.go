@@ -24,7 +24,7 @@ func (e *DuplicateCardError) Error() string {
 func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]types.CardX)
+		acl[device.DeviceID] = make(map[uint32]types.Card)
 	}
 
 	index, err := parseHeader(table.Header, devices)
@@ -32,7 +32,7 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 		return nil, nil, err
 	}
 
-	list := []map[uint32]types.CardX{}
+	list := []map[uint32]types.Card{}
 	for row, record := range table.Records {
 		cards, err := parseRecord(record, index)
 		if err != nil {

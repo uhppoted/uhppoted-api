@@ -33,7 +33,7 @@ func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, error) {
 	return report, nil
 }
 
-func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.CardX) (*Report, error) {
+func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.CardX) (*R
 	return &report, nil
 }
 
-func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.CardX) (*Report, error) {
+func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
 		return nil, err

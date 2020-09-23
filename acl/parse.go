@@ -105,8 +105,8 @@ loop:
 	return &index, nil
 }
 
-func parseRecord(record []string, index *index) (map[uint32]types.CardX, error) {
-	cards := make(map[uint32]types.CardX, 0)
+func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
+	cards := make(map[uint32]types.Card, 0)
 
 	for k, v := range index.doors {
 		cardno, err := getCardNumber(record, index)
@@ -129,7 +129,7 @@ func parseRecord(record []string, index *index) (map[uint32]types.CardX, error) 
 			return nil, err
 		}
 
-		cards[k] = types.CardX{
+		cards[k] = types.Card{
 			CardNumber: cardno,
 			From:       from,
 			To:         to,
