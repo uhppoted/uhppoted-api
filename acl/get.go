@@ -27,7 +27,7 @@ func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
 func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
 	cards := map[uint32]types.Card{}
 
-	N, err := u.GetCardsN(deviceID)
+	N, err := u.GetCards(deviceID)
 	if err != nil {
 		return cards, err
 	}

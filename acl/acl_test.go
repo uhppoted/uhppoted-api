@@ -14,7 +14,7 @@ type mock struct {
 	deleteCard     func(uint32, uint32) (bool, error)
 }
 
-func (m *mock) GetCardsN(deviceID uint32) (uint32, error) {
+func (m *mock) GetCards(deviceID uint32) (uint32, error) {
 	return m.getCards(deviceID)
 }
 

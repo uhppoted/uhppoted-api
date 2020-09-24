@@ -20,7 +20,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	device := uint32(request.DeviceID)
 
-	N, err := u.Uhppote.GetCardsN(device)
+	N, err := u.Uhppote.GetCards(device)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 	}
@@ -28,8 +28,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 	cards := make([]uint32, 0)
 
 	var index uint32 = 1
-	var records = int(N)
-	for count := 0; count < records; {
+	for count := uint32(0); count < N; {
 		record, err := uhppote.GetCardByIndex(u.Uhppote, device, index)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
