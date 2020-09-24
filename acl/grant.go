@@ -55,7 +55,7 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 		return nil
 	}
 
-	card, err := u.GetCardByIdN(deviceID, cardID)
+	card, err := u.GetCardByID(deviceID, cardID)
 	if err != nil {
 		return err
 	} else if card == nil {

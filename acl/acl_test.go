@@ -22,7 +22,7 @@ func (m *mock) GetCardByIndex(deviceID, index uint32) (*types.Card, error) {
 	return m.getCardByIndex(deviceID, index)
 }
 
-func (m *mock) GetCardByIdN(deviceID, cardID uint32) (*types.Card, error) {
+func (m *mock) GetCardByID(deviceID, cardID uint32) (*types.Card, error) {
 	return m.getCardByID(deviceID, cardID)
 }
 

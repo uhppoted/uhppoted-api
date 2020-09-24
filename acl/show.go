@@ -13,7 +13,7 @@ func GetCard(u device.IDevice, devices []*uhppote.Device, cardID uint32) (map[st
 	}
 
 	for _, device := range devices {
-		card, err := u.GetCardByIdN(device.DeviceID, cardID)
+		card, err := u.GetCardByID(device.DeviceID, cardID)
 		if err != nil {
 			return acl, err
 		}

@@ -53,7 +53,7 @@ func revoke(u device.IDevice, deviceID uint32, cardID uint32, doors []uint8) err
 		return nil
 	}
 
-	card, err := u.GetCardByIdN(deviceID, cardID)
+	card, err := u.GetCardByID(deviceID, cardID)
 	if err != nil {
 		return err
 	} else if card == nil {
