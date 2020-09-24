@@ -86,7 +86,7 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 		card.Doors[d] = true
 	}
 
-	if ok, err := u.PutCardN(deviceID, *card); err != nil {
+	if ok, err := u.PutCard(deviceID, *card); err != nil {
 		return err
 	} else if !ok {
 		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
@@ -103,7 +103,7 @@ func grantAll(u device.IDevice, deviceID uint32, cardID uint32, from, to types.D
 		Doors:      map[uint8]bool{1: true, 2: true, 3: true, 4: true},
 	}
 
-	if ok, err := u.PutCardN(deviceID, *card); err != nil {
+	if ok, err := u.PutCard(deviceID, *card); err != nil {
 		return err
 	} else if !ok {
 		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)

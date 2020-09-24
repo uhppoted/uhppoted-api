@@ -26,7 +26,7 @@ func (m *mock) GetCardByIdN(deviceID, cardID uint32) (*types.Card, error) {
 	return m.getCardByID(deviceID, cardID)
 }
 
-func (m *mock) PutCardN(deviceID uint32, card types.Card) (bool, error) {
+func (m *mock) PutCard(deviceID uint32, card types.Card) (bool, error) {
 	return m.putCard(deviceID, card)
 }
 

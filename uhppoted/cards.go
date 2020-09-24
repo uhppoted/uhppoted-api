@@ -129,20 +129,20 @@ type PutCardResponse struct {
 func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 	u.debug("put-card", fmt.Sprintf("request  %+v", request))
 
-	device := uint32(request.DeviceID)
+	deviceID := uint32(request.DeviceID)
 	card := request.Card
 
-	authorised, err := u.Uhppote.PutCard(device, card)
+	authorised, err := u.Uhppote.PutCard(deviceID, card)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, device, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
 
-	if !authorised.Succeeded {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, device, err))
+	if !authorised {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
 
 	response := PutCardResponse{
-		DeviceID: DeviceID(authorised.SerialNumber),
+		DeviceID: DeviceID(deviceID),
 		Card:     card,
 	}
 

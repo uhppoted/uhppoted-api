@@ -64,7 +64,7 @@ func revoke(u device.IDevice, deviceID uint32, cardID uint32, doors []uint8) err
 		card.Doors[d] = false
 	}
 
-	if ok, err := u.PutCardN(deviceID, *card); err != nil {
+	if ok, err := u.PutCard(deviceID, *card); err != nil {
 		return err
 	} else if !ok {
 		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)

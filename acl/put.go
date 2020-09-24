@@ -56,7 +56,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 	}
 
 	for _, card := range diff.Updated {
-		if ok, err := u.PutCardN(deviceID, card); err != nil {
+		if ok, err := u.PutCard(deviceID, card); err != nil {
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else if !ok {
@@ -67,7 +67,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 	}
 
 	for _, card := range diff.Added {
-		if ok, err := u.PutCardN(deviceID, card); err != nil {
+		if ok, err := u.PutCard(deviceID, card); err != nil {
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else if !ok {
