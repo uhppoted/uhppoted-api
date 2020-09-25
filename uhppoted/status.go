@@ -14,8 +14,8 @@ type Status struct {
 	CardNumber     uint32         `json:"card-number"`
 	Timestamp      types.DateTime `json:"event-timestamp"`
 	Reason         uint8          `json:"event-reason"`
-	DoorState      []bool         `json:"door-states"`
-	DoorButton     []bool         `json:"door-buttons"`
+	DoorState      map[uint8]bool `json:"door-states"`
+	DoorButton     map[uint8]bool `json:"door-buttons"`
 	SystemError    uint8          `json:"system-error"`
 	SystemDateTime types.DateTime `json:"system-datetime"`
 	SequenceId     uint32         `json:"sequence-id"`
