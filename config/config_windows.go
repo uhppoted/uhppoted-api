@@ -31,6 +31,7 @@ var httpdTLSCertificate string = filepath.Join(workdir(), "httpd", "uhppoted.cer
 var httpdTLSKey string = filepath.Join(workdir(), "httpd", "uhppoted.key")
 var httpdSysFile string = filepath.Join(workdir(), "httpd", "sys", "system.json")
 var httpdDBFile string = filepath.Join(workdir(), "httpd", "memdb", "db.json")
+var httpdAuditFile string = filepath.Join(workdir(), "httpd", "audit", "audit.log")
 
 func workdir() string {
 	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)

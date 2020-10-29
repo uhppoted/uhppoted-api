@@ -28,6 +28,9 @@ type HTTPD struct {
 	DB struct {
 		File string `conf:"file"`
 	} `conf:"db"`
+	Audit struct {
+		File string `conf:"file"`
+	} `conf:"audit"`
 }
 
 func NewHTTPD() *HTTPD {
@@ -63,6 +66,11 @@ func NewHTTPD() *HTTPD {
 			File string `conf:"file"`
 		}{
 			File: httpdDBFile,
+		},
+		Audit: struct {
+			File string `conf:"file"`
+		}{
+			File: httpdAuditFile,
 		},
 	}
 }
