@@ -27,5 +27,6 @@ const (
 	httpdTLSKey         string = "/etc/uhppoted/httpd/uhppoted.key"
 	httpdSysFile        string = "/var/uhppoted/httpd/sys/system.json"
 	httpdDBFile         string = "/var/uhppoted/httpd/memdb/db.json"
+	httpdDBRules        string = "/var/uhppoted/httpd/memdb.grl"
 	httpdAuditFile      string = "/var/uhppoted/httpd/audit/audit.log"
 )

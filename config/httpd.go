@@ -26,7 +26,8 @@ type HTTPD struct {
 		File string `conf:"file"`
 	} `conf:"system"`
 	DB struct {
-		File string `conf:"file"`
+		File  string `conf:"file"`
+		Rules string `conf:"rules"`
 	} `conf:"db"`
 	Audit struct {
 		File string `conf:"file"`
@@ -63,9 +64,11 @@ func NewHTTPD() *HTTPD {
 			File: httpdSysFile,
 		},
 		DB: struct {
-			File string `conf:"file"`
+			File  string `conf:"file"`
+			Rules string `conf:"rules"`
 		}{
-			File: httpdDBFile,
+			File:  httpdDBFile,
+			Rules: httpdDBRules,
 		},
 		Audit: struct {
 			File string `conf:"file"`
