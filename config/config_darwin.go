@@ -27,6 +27,7 @@ const (
 	httpdTLSKey         string = "/usr/local/etc/com.github.uhppoted/httpd/uhppoted.key"
 	httpdSysFile        string = "/usr/local/var/com.github.uhppoted/httpd/sys/system.json"
 	httpdDBFile         string = "/usr/local/var/com.github.uhppoted/httpd/memdb/db.json"
-	httpdDBRules        string = "/usr/local/etc/com.github.uhppoted/httpd/memdb.grl"
+	httpdDBACLRules     string = "/usr/local/etc/com.github.uhppoted/httpd/acl.grl"
+	httpdDBCardRules    string = "/usr/local/etc/com.github.uhppoted/httpd/cards.grl"
 	httpdAuditFile      string = "/usr/local/var/com.github.uhppoted/httpd/audit/audit.log"
 )

@@ -31,7 +31,8 @@ var httpdTLSCertificate string = filepath.Join(workdir(), "httpd", "uhppoted.cer
 var httpdTLSKey string = filepath.Join(workdir(), "httpd", "uhppoted.key")
 var httpdSysFile string = filepath.Join(workdir(), "httpd", "sys", "system.json")
 var httpdDBFile string = filepath.Join(workdir(), "httpd", "memdb", "db.json")
-var httpdDBRules string = filepath.Join(workdir(), "httpd", "memdb.grl")
+var httpdDBACLRules string = filepath.Join(workdir(), "httpd", "acl.grl")
+var httpdDBCardRules string = filepath.Join(workdir(), "httpd", "cards.grl")
 var httpdAuditFile string = filepath.Join(workdir(), "httpd", "audit", "audit.log")
 
 func workdir() string {
