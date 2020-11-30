@@ -6,6 +6,35 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
+type GetCardRecordsRequest struct {
+	DeviceID DeviceID
+}
+
+type GetCardRecordsResponse struct {
+	DeviceID DeviceID `json:"device-id"`
+	Cards    uint32   `json:"cards"`
+}
+
+func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecordsResponse, error) {
+	u.debug("get-card-records", fmt.Sprintf("request  %+v", request))
+
+	device := uint32(request.DeviceID)
+
+	N, err := u.Uhppote.GetCards(device)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving number of card from %v (%w)", device, err))
+	}
+
+	response := GetCardRecordsResponse{
+		DeviceID: DeviceID(device),
+		Cards:    N,
+	}
+
+	u.debug("get-card-records", fmt.Sprintf("response %+v", response))
+
+	return &response, nil
+}
+
 type GetCardsRequest struct {
 	DeviceID DeviceID
 }
