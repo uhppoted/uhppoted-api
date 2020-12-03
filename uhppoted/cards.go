@@ -22,7 +22,7 @@ func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecord
 
 	N, err := u.Uhppote.GetCards(device)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving number of card from %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving number of cards from %v (%w)", device, err))
 	}
 
 	response := GetCardRecordsResponse{
