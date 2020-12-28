@@ -3,8 +3,9 @@ package uhppoted
 import (
 	"errors"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 const ROLLOVER = uint32(100000)
@@ -31,64 +32,15 @@ type GetEventResponse struct {
 	Event    Event    `json:"event"`
 }
 
-type DateRange struct {
-	Start *types.DateTime `json:"start,omitempty"`
-	End   *types.DateTime `json:"end,omitempty"`
+type RecordSpecialEventsRequest struct {
+	DeviceID DeviceID
+	Enable   bool
 }
 
-func (d *DateRange) String() string {
-	if d.Start != nil && d.End != nil {
-		return fmt.Sprintf("{ Start:%v, End:%v }", d.Start, d.End)
-	}
-
-	if d.Start != nil {
-		return fmt.Sprintf("{ Start:%v }", d.Start)
-	}
-
-	if d.End != nil {
-		return fmt.Sprintf("{ End:%v }", d.End)
-	}
-
-	return "{}"
-}
-
-type EventRange struct {
-	First *uint32 `json:"first,omitempty"`
-	Last  *uint32 `json:"last,omitempty"`
-}
-
-func (e *EventRange) String() string {
-	return fmt.Sprintf("{ First:%v, Last:%v }", e.First, e.Last)
-}
-
-type EventIndex uint32
-
-func (index EventIndex) increment(rollover uint32) EventIndex {
-	ix := uint32(index)
-
-	if ix < 1 {
-		ix = 1
-	} else if ix >= rollover {
-		ix = 1
-	} else {
-		ix += 1
-	}
-
-	return EventIndex(ix)
-}
-
-func (index EventIndex) decrement(rollover uint32) EventIndex {
-	ix := uint32(index)
-
-	if ix <= 1 {
-		ix = rollover
-	} else if ix > rollover {
-		ix = rollover
-	} else {
-		ix -= 1
-	}
-
-	return EventIndex(ix)
+type RecordSpecialEventsResponse struct {
+	DeviceID DeviceID
+	Enable   bool
+	Updated  bool
 }
 
 type Event struct {
@@ -252,6 +204,28 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 	}
 
 	u.debug("get-event", fmt.Sprintf("response %+v", response))
+
+	return &response, nil
+}
+
+func (u *UHPPOTED) RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error) {
+	u.debug("record-special-events", fmt.Sprintf("request  %+v", request))
+
+	device := uint32(request.DeviceID)
+	enable := request.Enable
+
+	updated, err := u.Uhppote.RecordSpecialEvents(device, enable)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error updating 'record special events' flag for %v (%w)", device, err))
+	}
+
+	response := RecordSpecialEventsResponse{
+		DeviceID: DeviceID(device),
+		Enable:   enable,
+		Updated:  updated,
+	}
+
+	u.debug("record-special-events", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
 }

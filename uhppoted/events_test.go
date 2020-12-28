@@ -55,3 +55,8 @@ func TestDecrementEventIndex(t *testing.T) {
 		}
 	}
 }
+
+func TestRecordSpecialEvents(t *testing.T) {
+	t.Skip()
+	t.Errorf("NOT IMPLEMENTED")
+}
