@@ -3,7 +3,6 @@ package uhppoted
 import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 type GetCardRecordsRequest struct {
@@ -58,7 +57,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	var index uint32 = 1
 	for count := uint32(0); count < N; {
-		record, err := uhppote.GetCardByIndex(u.Uhppote, device, index)
+		record, err := u.Uhppote.GetCardByIndex(device, index)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 		}

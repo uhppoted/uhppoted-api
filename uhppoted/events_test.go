@@ -1,6 +1,8 @@
 package uhppoted
 
 import (
+	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -57,6 +59,81 @@ func TestDecrementEventIndex(t *testing.T) {
 }
 
 func TestRecordSpecialEvents(t *testing.T) {
-	t.Skip()
-	t.Errorf("NOT IMPLEMENTED")
+	request := RecordSpecialEventsRequest{
+		DeviceID: 405419896,
+		Enable:   true,
+	}
+
+	expected := RecordSpecialEventsResponse{
+		DeviceID: 405419896,
+		Enable:   true,
+		Updated:  true,
+	}
+
+	mock := stub{
+		recordSpecialEvents: func(deviceID uint32, enable bool) (bool, error) {
+			if deviceID == 405419896 && enable == true {
+				return true, nil
+			}
+
+			return false, fmt.Errorf("Invalid arguments")
+		},
+	}
+
+	u := UHPPOTED{
+		Uhppote:         &mock,
+		ListenBatchSize: 0,
+		Log:             nil,
+	}
+
+	response, err := u.RecordSpecialEvents(request)
+	if err != nil {
+		t.Fatalf("Unexpected error (%v)", err)
+	}
+
+	if response == nil {
+		t.Fatalf("Invalid response (%v)", response)
+	}
+
+	if !reflect.DeepEqual(*response, expected) {
+		t.Errorf("Incorrected response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	}
+}
+
+func TestRecordSpecialEventsWithFail(t *testing.T) {
+	request := RecordSpecialEventsRequest{
+		DeviceID: 405419896,
+		Enable:   true,
+	}
+
+	expected := RecordSpecialEventsResponse{
+		DeviceID: 405419896,
+		Enable:   true,
+		Updated:  false,
+	}
+
+	mock := stub{
+		recordSpecialEvents: func(deviceID uint32, enable bool) (bool, error) {
+			return false, nil
+		},
+	}
+
+	u := UHPPOTED{
+		Uhppote:         &mock,
+		ListenBatchSize: 0,
+		Log:             nil,
+	}
+
+	response, err := u.RecordSpecialEvents(request)
+	if err != nil {
+		t.Fatalf("Unexpected error (%v)", err)
+	}
+
+	if response == nil {
+		t.Fatalf("Invalid response (%v)", response)
+	}
+
+	if !reflect.DeepEqual(*response, expected) {
+		t.Errorf("Incorrected response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	}
 }

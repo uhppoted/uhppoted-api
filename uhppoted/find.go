@@ -26,8 +26,9 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 
 	wg := sync.WaitGroup{}
 	list := sync.Map{}
+	devices := u.Uhppote.DeviceList()
 
-	for id, _ := range u.Uhppote.Devices {
+	for id, _ := range devices {
 		deviceID := id
 		wg.Add(1)
 		go func() {

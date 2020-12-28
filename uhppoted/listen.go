@@ -64,8 +64,10 @@ const BATCHSIZE = 32
 func (u *UHPPOTED) Listen(handler EventHandler, received *EventMap, q chan os.Signal) {
 	var wg sync.WaitGroup
 
-	for _, d := range u.Uhppote.Devices {
-		deviceID := d.DeviceID
+	devices := u.Uhppote.DeviceList()
+
+	for _, d := range devices {
+		deviceID := d.ID()
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -93,10 +95,11 @@ func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHa
 			return
 		}
 
+		devices := u.Uhppote.DeviceList()
 		rollover := ROLLOVER
-		if d, ok := u.Uhppote.Devices[deviceID]; ok {
-			if d.Rollover != 0 {
-				rollover = d.Rollover
+		if d, ok := devices[deviceID]; ok {
+			if d.RolloverAt() != 0 {
+				rollover = d.RolloverAt()
 			}
 		}
 
@@ -184,6 +187,7 @@ func (u *UHPPOTED) onEvent(e *types.Status, received *EventMap, handler EventHan
 }
 
 func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHandler) (retrieved uint32) {
+	devices := u.Uhppote.DeviceList()
 	batchSize := BATCHSIZE
 	rollover := ROLLOVER
 
@@ -191,9 +195,9 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 		batchSize = u.ListenBatchSize
 	}
 
-	if d, ok := u.Uhppote.Devices[deviceID]; ok {
-		if d.Rollover != 0 {
-			rollover = d.Rollover
+	if d, ok := devices[deviceID]; ok {
+		if d.RolloverAt() != 0 {
+			rollover = d.RolloverAt()
 		}
 	}
 

@@ -57,14 +57,15 @@ type Event struct {
 func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error) {
 	u.debug("get-events", fmt.Sprintf("request  %+v", request))
 
+	devices := u.Uhppote.DeviceList()
 	device := uint32(request.DeviceID)
 	start := request.Start
 	end := request.End
 	rollover := ROLLOVER
 
-	if d, ok := u.Uhppote.Devices[device]; ok {
-		if d.Rollover != 0 {
-			rollover = d.Rollover
+	if d, ok := devices[device]; ok {
+		if d.RolloverAt() != 0 {
+			rollover = d.RolloverAt()
 		}
 	}
 
