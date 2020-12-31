@@ -49,4 +49,5 @@ bump:
 debug: build
 	go test ./... -run TestConfigWrite
 
-
+godoc:
+	godoc -http=:80	-index_interval=60s

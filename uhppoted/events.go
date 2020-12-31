@@ -32,11 +32,13 @@ type GetEventResponse struct {
 	Event    Event    `json:"event"`
 }
 
+// Request definition for record-special-events API
 type RecordSpecialEventsRequest struct {
 	DeviceID DeviceID
 	Enable   bool
 }
 
+// Response definition for record-special-events API
 type RecordSpecialEventsResponse struct {
 	DeviceID DeviceID
 	Enable   bool
@@ -209,6 +211,8 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 	return &response, nil
 }
 
+// Unwraps the request and dispatches the corresponding controller command to enable or disable
+// door open, door close and door button press events for the controller.
 func (u *UHPPOTED) RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error) {
 	u.debug("record-special-events", fmt.Sprintf("request  %+v", request))
 
