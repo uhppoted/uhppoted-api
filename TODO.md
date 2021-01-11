@@ -2,8 +2,6 @@
 
 ### IN PROGRESS
 
-- [x] Implement record-special-events
-
 ## TODO
 
 ### uhppoted-api
