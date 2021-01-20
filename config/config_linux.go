@@ -28,6 +28,7 @@ const (
 	httpdSysFile        string = "/var/uhppoted/httpd/sys/system.json"
 	httpdDBFile         string = "/var/uhppoted/httpd/memdb/db.json"
 	httpdDBACLRules     string = "/var/uhppoted/httpd/acl.grl"
+	httpdDBSystemRules  string = "/var/uhppoted/httpd/system.grl"
 	httpdDBCardRules    string = "/var/uhppoted/httpd/cards.grl"
 	httpdAuditFile      string = "/var/uhppoted/httpd/audit/audit.log"
 )

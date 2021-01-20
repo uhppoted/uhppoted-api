@@ -32,6 +32,7 @@ var httpdTLSKey string = filepath.Join(workdir(), "httpd", "uhppoted.key")
 var httpdSysFile string = filepath.Join(workdir(), "httpd", "sys", "system.json")
 var httpdDBFile string = filepath.Join(workdir(), "httpd", "memdb", "db.json")
 var httpdDBACLRules string = filepath.Join(workdir(), "httpd", "acl.grl")
+var httpdDBSystemRules string = filepath.Join(workdir(), "httpd", "system.grl")
 var httpdDBCardRules string = filepath.Join(workdir(), "httpd", "cards.grl")
 var httpdAuditFile string = filepath.Join(workdir(), "httpd", "audit", "audit.log")
 

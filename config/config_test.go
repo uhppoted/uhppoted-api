@@ -288,8 +288,9 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.system.file = %[22]s
 ; httpd.db.file = %[23]s
 ; httpd.db.rules.acl = %[24]s
-; httpd.db.rules.cards = %[25]s
-; httpd.audit.file = %[26]s
+; httpd.db.rules.system = %[25]s
+; httpd.db.rules.cards = %[26]s
+; httpd.audit.file = %[27]s
 
 # OPEN API
 # openapi.enabled = false
@@ -307,7 +308,7 @@ func TestConfigWrite(t *testing.T) {
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
-		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile, httpdDBACLRules, httpdDBCardRules, httpdAuditFile)
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 
 	config := NewConfig()
 

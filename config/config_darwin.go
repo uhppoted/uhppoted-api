@@ -28,6 +28,7 @@ const (
 	httpdSysFile        string = "/usr/local/var/com.github.uhppoted/httpd/sys/system.json"
 	httpdDBFile         string = "/usr/local/var/com.github.uhppoted/httpd/memdb/db.json"
 	httpdDBACLRules     string = "/usr/local/etc/com.github.uhppoted/httpd/acl.grl"
+	httpdDBSystemRules  string = "/usr/local/etc/com.github.uhppoted/httpd/system.grl"
 	httpdDBCardRules    string = "/usr/local/etc/com.github.uhppoted/httpd/cards.grl"
 	httpdAuditFile      string = "/usr/local/var/com.github.uhppoted/httpd/audit/audit.log"
 )
