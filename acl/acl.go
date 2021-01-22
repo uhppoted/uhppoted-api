@@ -2,9 +2,12 @@ package acl
 
 import (
 	"fmt"
+	"io"
+	"sort"
+	"strings"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"strings"
 )
 
 type ACL map[uint32]map[uint32]types.Card
@@ -32,6 +35,34 @@ type card struct {
 	from       types.Date
 	to         types.Date
 	doors      []bool
+}
+
+func (acl *ACL) Print(w io.Writer) {
+	if acl != nil {
+		devices := []uint32{}
+		for k, _ := range *acl {
+			devices = append(devices, k)
+		}
+
+		sort.SliceStable(devices, func(i, j int) bool { return devices[i] < devices[j] })
+
+		for _, k := range devices {
+			v := (*acl)[k]
+
+			cards := []uint32{}
+			for c, _ := range v {
+				cards = append(cards, c)
+			}
+
+			sort.SliceStable(cards, func(i, j int) bool { return cards[i] < cards[j] })
+
+			fmt.Fprintf(w, "%v\n", k)
+			for _, c := range cards {
+				card := v[c]
+				fmt.Fprintf(w, "  %v %v\n", c, card)
+			}
+		}
+	}
 }
 
 func clean(s string) string {
