@@ -42,11 +42,12 @@ func (h *HelpV) Help() {
 	fmt.Printf("  Usage: %s help <command>\n", h.service)
 	fmt.Println()
 	fmt.Println("  Commands:")
-	fmt.Println("    help          Displays this message")
 
 	for _, c := range h.cli {
 		fmt.Printf("    %-13s %s\n", c.FlagSet().Name(), c.Description())
 	}
+
+	fmt.Println("    help          Displays this message")
 }
 
 func (h *HelpV) Execute(args ...interface{}) error {
@@ -82,11 +83,10 @@ func (h *HelpV) usage() {
 	fmt.Println()
 
 	fmt.Println("  Commands:")
-	fmt.Printf("    help          Displays this message. For help on a specific command use '%s help <command>'\n", h.service)
-
 	for _, c := range h.cli {
 		fmt.Printf("    %-13s %s\n", c.FlagSet().Name(), c.Description())
 	}
+	fmt.Printf("    help          Displays this message. For help on a specific command use '%s help <command>'\n", h.service)
 
 	var options bytes.Buffer
 	var count = 0
