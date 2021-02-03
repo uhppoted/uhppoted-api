@@ -3,12 +3,22 @@ package config
 import ()
 
 type WildApricot struct {
-	CardNumber        string `conf:"card-number"`
-	GroupDisplayOrder string `conf:"groups"`
+	Fields struct {
+		CardNumber string `conf:"card-number"`
+	} `conf:"fields"`
+
+	DisplayOrder struct {
+		Groups string `conf:"groups"`
+		Doors  string `conf:"doors"`
+	} `conf:"display-order"`
 }
 
 func NewWildApricot() *WildApricot {
 	return &WildApricot{
-		CardNumber: "Card Number",
+		Fields: struct {
+			CardNumber string `conf:"card-number"`
+		}{
+			CardNumber: "Card Number",
+		},
 	}
 }

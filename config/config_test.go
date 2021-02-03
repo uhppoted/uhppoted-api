@@ -39,7 +39,7 @@ mqtt.topic.system = sys
 aws.region = us-west-2
 
 # Wild Apricot
-wild-apricot.card-number = Ye Olde Cardde Nymber
+wild-apricot.fields.card-number = Ye Olde Cardde Nymber
 
 # DEVICES
 UT0311-L0x.405419896.address = 192.168.1.100:60000
@@ -76,7 +76,11 @@ func TestDefaultConfig(t *testing.T) {
 		},
 
 		WildApricot: WildApricot{
-			CardNumber: "Card Number",
+			Fields: struct {
+				CardNumber string `conf:"card-number"`
+			}{
+				CardNumber: "Card Number",
+			},
 		},
 	}
 
@@ -95,7 +99,7 @@ func TestDefaultConfig(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(config.WildApricot, expected.WildApricot) {
-		t.Errorf("Incorrect WildApricot default configuration:\nexpected:%+v,\ngot:     %+v", expected.AWS, config.AWS)
+		t.Errorf("Incorrect WildApricot default configuration:\nexpected:%+v,\ngot:     %+v", expected.WildApricot, config.WildApricot)
 	}
 }
 
@@ -138,7 +142,11 @@ func TestUnmarshal(t *testing.T) {
 		},
 
 		WildApricot: WildApricot{
-			CardNumber: "Ye Olde Cardde Nymber",
+			Fields: struct {
+				CardNumber string `conf:"card-number"`
+			}{
+				CardNumber: "Ye Olde Cardde Nymber",
+			},
 		},
 	}
 
@@ -312,8 +320,9 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.audit.file = %[27]s
 
 # Wild Apricot
-; wild-apricot.card-number = Card Number
-; wild-apricot.groups = 
+; wild-apricot.fields.card-number = Card Number
+; wild-apricot.display-order.groups = 
+; wild-apricot.display-order.doors = 
 
 # OPEN API
 # openapi.enabled = false
