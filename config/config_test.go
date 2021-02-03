@@ -38,6 +38,9 @@ mqtt.topic.system = sys
 # AWS
 aws.region = us-west-2
 
+# Wild Apricot
+wild-apricot.card-number = Ye Olde Cardde Nymber
+
 # DEVICES
 UT0311-L0x.405419896.address = 192.168.1.100:60000
 UT0311-L0x.405419896.door.1 = Front Door
@@ -71,6 +74,10 @@ func TestDefaultConfig(t *testing.T) {
 			Profile:     "default",
 			Region:      "us-east-1",
 		},
+
+		WildApricot: WildApricot{
+			CardNumber: "Card Number",
+		},
 	}
 
 	config := NewConfig()
@@ -85,6 +92,10 @@ func TestDefaultConfig(t *testing.T) {
 
 	if !reflect.DeepEqual(config.AWS, expected.AWS) {
 		t.Errorf("Incorrect AWS default configuration:\nexpected:%+v,\ngot:     %+v", expected.AWS, config.AWS)
+	}
+
+	if !reflect.DeepEqual(config.WildApricot, expected.WildApricot) {
+		t.Errorf("Incorrect WildApricot default configuration:\nexpected:%+v,\ngot:     %+v", expected.AWS, config.AWS)
 	}
 }
 
@@ -125,6 +136,10 @@ func TestUnmarshal(t *testing.T) {
 			Profile:     "default",
 			Region:      "us-west-2",
 		},
+
+		WildApricot: WildApricot{
+			CardNumber: "Ye Olde Cardde Nymber",
+		},
 	}
 
 	config := NewConfig()
@@ -163,6 +178,10 @@ func TestUnmarshal(t *testing.T) {
 
 	if !reflect.DeepEqual(config.AWS, expected.AWS) {
 		t.Errorf("Incorrect AWS configuration:\nexpected:%+v,\ngot:     %+v", expected.AWS, config.AWS)
+	}
+
+	if !reflect.DeepEqual(config.WildApricot, expected.WildApricot) {
+		t.Errorf("Incorrect Wild Apricot configuration:\nexpected:%+v,\ngot:     %+v", expected.WildApricot, config.WildApricot)
 	}
 
 	if d, _ := config.Devices[405419896]; d == nil {
