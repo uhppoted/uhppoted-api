@@ -292,6 +292,9 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.db.rules.cards = %[26]s
 ; httpd.audit.file = %[27]s
 
+# Wild Apricot
+; wild-apricot.card-number = Card Number
+
 # OPEN API
 # openapi.enabled = false
 # openapi.directory = ./openapi

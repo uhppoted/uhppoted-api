@@ -46,6 +46,9 @@ const pretty = `# SYSTEM{{range .system}}
 # HTTPD{{range .httpd}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
+# Wild Apricot{{range .wildapricot}}
+{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+
 # OPEN API{{range .openapi}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
@@ -81,6 +84,9 @@ const dump = `# SYSTEM{{range .system}}
 # HTTPD{{range .httpd}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
+# WildApricot{{range .wildapricot}}
+{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+
 # OPEN API{{range .openapi}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
@@ -103,12 +109,13 @@ UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 
 type Config struct {
 	System
-	Devices DeviceMap `conf:"/^UT0311-L0x\\.([0-9]+)\\.(.*)/"`
-	REST    `conf:"rest"`
-	MQTT    `conf:"mqtt"`
-	AWS     `conf:"aws"`
-	HTTPD   `conf:"httpd"`
-	OpenAPI `conf:"openapi"`
+	Devices     DeviceMap `conf:"/^UT0311-L0x\\.([0-9]+)\\.(.*)/"`
+	REST        `conf:"rest"`
+	MQTT        `conf:"mqtt"`
+	AWS         `conf:"aws"`
+	HTTPD       `conf:"httpd"`
+	WildApricot `conf:"wild-apricot"`
+	OpenAPI     `conf:"openapi"`
 }
 
 type System struct {
@@ -136,12 +143,13 @@ func NewConfig() *Config {
 			HealthCheckIgnore:   monitoring.IGNORE,
 			WatchdogInterval:    5 * time.Second,
 		},
-		REST:    *NewREST(),
-		MQTT:    *NewMQTT(),
-		AWS:     *NewAWS(),
-		HTTPD:   *NewHTTPD(),
-		OpenAPI: *NewOpenAPI(),
-		Devices: make(DeviceMap, 0),
+		REST:        *NewREST(),
+		MQTT:        *NewMQTT(),
+		AWS:         *NewAWS(),
+		HTTPD:       *NewHTTPD(),
+		WildApricot: *NewWildApricot(),
+		OpenAPI:     *NewOpenAPI(),
+		Devices:     make(DeviceMap, 0),
 	}
 
 	return &c
@@ -209,22 +217,24 @@ func (c *Config) Read(r io.Reader) error {
 func (c *Config) Write(w io.Writer) error {
 	defc := NewConfig()
 	defv := map[string][]kv{
-		"system":  listify("", &defc.System),
-		"rest":    listify("rest.", &defc.REST),
-		"mqtt":    listify("mqtt.", &defc.MQTT),
-		"aws":     listify("aws.", &defc.AWS),
-		"httpd":   listify("httpd.", &defc.HTTPD),
-		"openapi": listify("openapi.", &defc.OpenAPI),
+		"system":      listify("", &defc.System),
+		"rest":        listify("rest.", &defc.REST),
+		"mqtt":        listify("mqtt.", &defc.MQTT),
+		"aws":         listify("aws.", &defc.AWS),
+		"httpd":       listify("httpd.", &defc.HTTPD),
+		"wildapricot": listify("wild-apricot.", &defc.WildApricot),
+		"openapi":     listify("openapi.", &defc.OpenAPI),
 	}
 
 	config := map[string]interface{}{
-		"system":  listify("", &c.System),
-		"rest":    listify("rest.", &c.REST),
-		"mqtt":    listify("mqtt.", &c.MQTT),
-		"aws":     listify("aws.", &c.AWS),
-		"httpd":   listify("httpd.", &c.HTTPD),
-		"openapi": listify("openapi.", &c.OpenAPI),
-		"devices": c.Devices,
+		"system":      listify("", &c.System),
+		"rest":        listify("rest.", &c.REST),
+		"mqtt":        listify("mqtt.", &c.MQTT),
+		"aws":         listify("aws.", &c.AWS),
+		"httpd":       listify("httpd.", &c.HTTPD),
+		"wildapricot": listify("wild-apricot.", &c.WildApricot),
+		"openapi":     listify("openapi.", &c.OpenAPI),
+		"devices":     c.Devices,
 	}
 
 	for k, l := range defv {
