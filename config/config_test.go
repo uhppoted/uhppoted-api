@@ -313,6 +313,7 @@ func TestConfigWrite(t *testing.T) {
 
 # Wild Apricot
 ; wild-apricot.card-number = Card Number
+; wild-apricot.groups = 
 
 # OPEN API
 # openapi.enabled = false
