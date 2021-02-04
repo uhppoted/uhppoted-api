@@ -95,7 +95,7 @@ func (h *HelpV) usage() {
 	fmt.Fprintln(&options, "  Options:")
 	flag.VisitAll(func(f *flag.Flag) {
 		count++
-		fmt.Fprintf(&options, "    --%-13s %s\n", f.Name, f.Usage)
+		fmt.Fprintf(&options, "    --%-7s %s\n", f.Name, f.Usage)
 	})
 
 	if count > 0 {
