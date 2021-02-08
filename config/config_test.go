@@ -39,7 +39,7 @@ mqtt.topic.system = sys
 aws.region = us-west-2
 
 # Wild Apricot
-wild-apricot.http.client-timeout = 12
+wild-apricot.http.client-timeout = 12s
 wild-apricot.fields.card-number = Ye Olde Cardde Nymber
 
 # DEVICES
@@ -78,9 +78,9 @@ func TestDefaultConfig(t *testing.T) {
 
 		WildApricot: WildApricot{
 			HTTP: struct {
-				Timeout uint `conf:"client-timeout"`
+				ClientTimeout time.Duration `conf:"client-timeout"`
 			}{
-				Timeout: 15,
+				ClientTimeout: 15 * time.Second,
 			},
 
 			Fields: struct {
@@ -150,9 +150,9 @@ func TestUnmarshal(t *testing.T) {
 
 		WildApricot: WildApricot{
 			HTTP: struct {
-				Timeout uint `conf:"client-timeout"`
+				ClientTimeout time.Duration `conf:"client-timeout"`
 			}{
-				Timeout: 12,
+				ClientTimeout: 12 * time.Second,
 			},
 
 			Fields: struct {
@@ -333,7 +333,7 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.audit.file = %[27]s
 
 # Wild Apricot
-; wild-apricot.http.client-timeout = 15
+; wild-apricot.http.client-timeout = 15s
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 

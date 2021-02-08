@@ -1,10 +1,12 @@
 package config
 
-import ()
+import (
+	"time"
+)
 
 type WildApricot struct {
 	HTTP struct {
-		Timeout uint `conf:"client-timeout"`
+		ClientTimeout time.Duration `conf:"client-timeout"`
 	} `conf:"http"`
 
 	Fields struct {
@@ -20,9 +22,9 @@ type WildApricot struct {
 func NewWildApricot() *WildApricot {
 	return &WildApricot{
 		HTTP: struct {
-			Timeout uint `conf:"client-timeout"`
+			ClientTimeout time.Duration `conf:"client-timeout"`
 		}{
-			Timeout: 15,
+			ClientTimeout: 15 * time.Second,
 		},
 
 		Fields: struct {
