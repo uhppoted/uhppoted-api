@@ -24,7 +24,7 @@ func NewWildApricot() *WildApricot {
 		HTTP: struct {
 			ClientTimeout time.Duration `conf:"client-timeout"`
 		}{
-			ClientTimeout: 15 * time.Second,
+			ClientTimeout: 10 * time.Second,
 		},
 
 		Fields: struct {

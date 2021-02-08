@@ -80,7 +80,7 @@ func TestDefaultConfig(t *testing.T) {
 			HTTP: struct {
 				ClientTimeout time.Duration `conf:"client-timeout"`
 			}{
-				ClientTimeout: 15 * time.Second,
+				ClientTimeout: 10 * time.Second,
 			},
 
 			Fields: struct {
@@ -333,7 +333,7 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.audit.file = %[27]s
 
 # Wild Apricot
-; wild-apricot.http.client-timeout = 15s
+; wild-apricot.http.client-timeout = 10s
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 
