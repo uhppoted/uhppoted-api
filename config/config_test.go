@@ -40,6 +40,8 @@ aws.region = us-west-2
 
 # Wild Apricot
 wild-apricot.http.client-timeout = 12s
+wild-apricot.http.retries = 6
+wild-apricot.http.retry-delay = 9s
 wild-apricot.fields.card-number = Ye Olde Cardde Nymber
 
 # DEVICES
@@ -79,8 +81,12 @@ func TestDefaultConfig(t *testing.T) {
 		WildApricot: WildApricot{
 			HTTP: struct {
 				ClientTimeout time.Duration `conf:"client-timeout"`
+				Retries       int           `conf:"retries"`
+				RetryDelay    time.Duration `conf:"retry-delay"`
 			}{
 				ClientTimeout: 10 * time.Second,
+				Retries:       3,
+				RetryDelay:    5 * time.Second,
 			},
 
 			Fields: struct {
@@ -151,8 +157,12 @@ func TestUnmarshal(t *testing.T) {
 		WildApricot: WildApricot{
 			HTTP: struct {
 				ClientTimeout time.Duration `conf:"client-timeout"`
+				Retries       int           `conf:"retries"`
+				RetryDelay    time.Duration `conf:"retry-delay"`
 			}{
 				ClientTimeout: 12 * time.Second,
+				Retries:       6,
+				RetryDelay:    9 * time.Second,
 			},
 
 			Fields: struct {
@@ -334,6 +344,8 @@ func TestConfigWrite(t *testing.T) {
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
+; wild-apricot.http.retries = 3
+; wild-apricot.http.retry-delay = 5s
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 

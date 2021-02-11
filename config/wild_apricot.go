@@ -7,6 +7,8 @@ import (
 type WildApricot struct {
 	HTTP struct {
 		ClientTimeout time.Duration `conf:"client-timeout"`
+		Retries       int           `conf:"retries"`
+		RetryDelay    time.Duration `conf:"retry-delay"`
 	} `conf:"http"`
 
 	Fields struct {
@@ -23,8 +25,12 @@ func NewWildApricot() *WildApricot {
 	return &WildApricot{
 		HTTP: struct {
 			ClientTimeout time.Duration `conf:"client-timeout"`
+			Retries       int           `conf:"retries"`
+			RetryDelay    time.Duration `conf:"retry-delay"`
 		}{
 			ClientTimeout: 10 * time.Second,
+			Retries:       3,
+			RetryDelay:    5 * time.Second,
 		},
 
 		Fields: struct {
