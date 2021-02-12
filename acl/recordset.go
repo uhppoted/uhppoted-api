@@ -8,11 +8,6 @@ import (
 	"sort"
 )
 
-type Table struct {
-	Header  []string
-	Records [][]string
-}
-
 type DuplicateCardError struct {
 	CardNumber uint32
 }
