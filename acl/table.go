@@ -2,12 +2,28 @@ package acl
 
 import (
 	"bytes"
+	"encoding/csv"
 	"fmt"
+	"io"
 )
 
 type Table struct {
 	Header  []string
 	Records [][]string
+}
+
+func (table *Table) ToTSV(f io.Writer) error {
+	w := csv.NewWriter(f)
+	w.Comma = '\t'
+
+	w.Write(table.Header)
+	for _, row := range table.Records {
+		w.Write(row)
+	}
+
+	w.Flush()
+
+	return nil
 }
 
 func (table *Table) MarshalText() []byte {
