@@ -10,11 +10,11 @@ type Table struct {
 	Records [][]string
 }
 
-func (table *Table) MarshalText() ([]byte, error) {
+func (table *Table) MarshalText() []byte {
 	return table.MarshalTextIndent("", " ")
 }
 
-func (table *Table) MarshalTextIndent(indent, gap string) ([]byte, error) {
+func (table *Table) MarshalTextIndent(indent, gap string) []byte {
 	var b bytes.Buffer
 
 	widths := make([]int, len(table.Header))
@@ -50,5 +50,5 @@ func (table *Table) MarshalTextIndent(indent, gap string) ([]byte, error) {
 		fmt.Fprintln(&b)
 	}
 
-	return b.Bytes(), nil
+	return b.Bytes()
 }

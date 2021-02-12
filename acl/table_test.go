@@ -22,10 +22,7 @@ func TestMarshalText(t *testing.T) {
 > Row 4.1   Row 4.2              Row 4.3 
 `
 
-	bytes, err := table.MarshalTextIndent("> ", "  ")
-	if err != nil {
-		t.Fatalf("Unexpected errorr (%v)", err)
-	}
+	bytes := table.MarshalTextIndent("> ", "  ")
 
 	if string(bytes) != expected {
 		t.Errorf("MarshalIndent produced incorrect output:\n  expected:\n%v\n  got:\n%v", []byte(expected), bytes)
