@@ -20,6 +20,7 @@ import (
 type DeviceMap map[uint32]*Device
 
 type Device struct {
+	Name     string
 	Address  *net.UDPAddr
 	Rollover uint32
 	Doors    []string
@@ -53,6 +54,7 @@ const pretty = `# SYSTEM{{range .system}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
 # DEVICES{{range $id,$device := .devices}}
+UT0311-L0x.{{$id}}.name = {{$device.Name}}
 UT0311-L0x.{{$id}}.address = {{$device.Address}}
 UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
 UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
@@ -61,6 +63,7 @@ UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
 UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 {{else}}
 # Example configuration for UTO311-L04 with serial number 405419896
+# UT0311-L0x.405419896.name = D405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
 # UT0311-L0x.405419896.rollover = 100000
 # UT0311-L0x.405419896.door.1 = Front Door
@@ -91,6 +94,7 @@ const dump = `# SYSTEM{{range .system}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
 # DEVICES{{range $id,$device := .devices}}
+UT0311-L0x.{{$id}}.name = {{$device.Name}}
 UT0311-L0x.{{$id}}.address = {{$device.Address}}
 UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
 UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
@@ -99,6 +103,7 @@ UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
 UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 {{else}}
 # Example configuration for UTO311-L04 with serial number 405419896
+# UT0311-L0x.405419896.name = D405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
 # UT0311-L0x.405419896.rollover = 100000
 # UT0311-L0x.405419896.door.1 = Front Door
@@ -318,6 +323,7 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 	if len(f) > 0 {
 		fmt.Fprintf(&s, "# DEVICES\n")
 		for id, device := range f {
+			fmt.Fprintf(&s, "UTO311-L0x.%d.name = %s\n", id, device.Name)
 			fmt.Fprintf(&s, "UTO311-L0x.%d.address = %s\n", id, device.Address)
 			fmt.Fprintf(&s, "UTO311-L0x.%d.rollover = %d\n", id, device.Rollover)
 			for d, door := range device.Doors {
@@ -361,6 +367,9 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 			}
 
 			switch match[2] {
+			case "name":
+				d.Name = value
+
 			case "address":
 				address, err := net.ResolveUDPAddr("udp", value)
 				if err != nil {

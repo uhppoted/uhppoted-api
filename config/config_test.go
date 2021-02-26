@@ -45,6 +45,7 @@ wild-apricot.http.retry-delay = 9s
 wild-apricot.fields.card-number = Ye Olde Cardde Nymber
 
 # DEVICES
+UT0311-L0x.405419896.name = Q405419896
 UT0311-L0x.405419896.address = 192.168.1.100:60000
 UT0311-L0x.405419896.door.1 = Front Door
 UT0311-L0x.405419896.door.2 = Side Door
@@ -116,7 +117,7 @@ func TestDefaultConfig(t *testing.T) {
 	}
 }
 
-func TestUnmarshal(t *testing.T) {
+func TestConfigUnmarshal(t *testing.T) {
 	expected := Config{
 		System: System{
 			BindAddress:         &net.UDPAddr{IP: []byte{192, 168, 1, 100}, Port: 54321, Zone: ""},
@@ -218,6 +219,10 @@ func TestUnmarshal(t *testing.T) {
 	if d, _ := config.Devices[405419896]; d == nil {
 		t.Errorf("Expected 'device' for ID '%v', got:'%v'", 405419896, d)
 	} else {
+		if d.Name != "Q405419896" {
+			t.Errorf("Expected 'device.name' %s for ID '%v', got:'%v'", "Q405419896", 405419896, d.Name)
+		}
+
 		address := net.UDPAddr{
 			IP:   []byte{192, 168, 1, 100},
 			Port: 60000,
@@ -246,6 +251,160 @@ func TestUnmarshal(t *testing.T) {
 			if d.Doors[3] != "Workshop" {
 				t.Errorf("Expected 'device.door[3]' %s for ID '%v', got:'%s'", "Workshop", 405419896, d.Doors[3])
 			}
+		}
+	}
+}
+
+func TestDefaultConfigWrite(t *testing.T) {
+	bind, broadcast, listen := DefaultIpAddresses()
+
+	expected := fmt.Sprintf(`# SYSTEM
+; bind.address = %[1]s
+; broadcast.address = %[2]s
+; listen.address = %[3]s
+; monitoring.healthcheck.interval = 15s
+; monitoring.healthcheck.idle = 1m0s
+; monitoring.healthcheck.ignore = 5m0s
+; monitoring.watchdog.interval = 5s
+
+# REST
+; rest.http.enabled = false
+; rest.http.port = 8080
+; rest.https.enabled = true
+; rest.https.port = 8443
+; rest.tls.key = uhppoted.key
+; rest.tls.certificate = uhppoted.cert
+; rest.tls.ca = ca.cert
+; rest.tls.client.certificates = true
+; rest.CORS.enabled = false
+; rest.auth.enabled = false
+; rest.auth.users = %[4]s
+; rest.auth.groups = %[5]s
+; rest.auth.hotp.range = 8
+; rest.auth.hotp.secrets = 
+; rest.auth.hotp.counters = %[6]s
+
+# MQTT
+; mqtt.server.ID = uhppoted
+; mqtt.connection.broker = tcp://127.0.0.1:1883
+; mqtt.connection.client.ID = uhppoted-mqttd
+; mqtt.connection.username = 
+; mqtt.connection.password = 
+; mqtt.connection.broker.certificate = %[7]s
+; mqtt.connection.client.certificate = %[8]s
+; mqtt.connection.client.key = %[9]s
+; mqtt.topic.root = uhppoted/gateway
+; mqtt.topic.requests = ./requests
+; mqtt.topic.replies = ./replies
+; mqtt.topic.events = ./events
+; mqtt.topic.system = ./system
+; mqtt.alerts.qos = 1
+; mqtt.alerts.retained = true
+; mqtt.events.key = events
+; mqtt.system.key = system
+; mqtt.events.index.filepath = %[10]s
+; mqtt.permissions.enabled = false
+; mqtt.permissions.users = %[11]s
+; mqtt.permissions.groups = %[12]s
+; mqtt.security.HMAC.required = false
+; mqtt.security.HMAC.key = 
+; mqtt.security.authentication = HOTP, RSA
+; mqtt.security.hotp.range = 8
+; mqtt.security.hotp.secrets = %[13]s
+; mqtt.security.hotp.counters = %[14]s
+; mqtt.security.rsa.keys = %[15]s
+; mqtt.security.nonce.required = true
+; mqtt.security.nonce.server = %[16]s
+; mqtt.security.nonce.clients = %[17]s
+; mqtt.security.outgoing.sign = true
+; mqtt.security.outgoing.encrypt = true
+
+# AWS
+; aws.credentials = 
+; aws.profile = default
+; aws.region = us-east-1
+
+# HTTPD
+; httpd.http.enabled = false
+; httpd.http.port = 0
+; httpd.https.enabled = true
+; httpd.https.port = 0
+; httpd.tls.ca = %[19]s
+; httpd.tls.certificate = %[20]s
+; httpd.tls.key = %[21]s
+; httpd.tls.client.certificates.required = false
+; httpd.security.auth = basic
+; httpd.security.local.db = %[18]s
+; httpd.security.cookie.max-age = 24
+; httpd.security.login.expiry = 5m
+; httpd.security.session.expiry = 60m
+; httpd.security.stale-time = 6h0m0s
+; httpd.request.timeout = 5s
+; httpd.system.file = %[22]s
+; httpd.db.file = %[23]s
+; httpd.db.rules.acl = %[24]s
+; httpd.db.rules.system = %[25]s
+; httpd.db.rules.cards = %[26]s
+; httpd.audit.file = %[27]s
+
+# Wild Apricot
+; wild-apricot.http.client-timeout = 10s
+; wild-apricot.http.retries = 3
+; wild-apricot.http.retry-delay = 5s
+; wild-apricot.fields.card-number = Card Number
+; wild-apricot.display-order.groups = 
+; wild-apricot.display-order.doors = 
+
+# OPEN API
+# openapi.enabled = false
+# openapi.directory = ./openapi
+
+# DEVICES
+# Example configuration for UTO311-L04 with serial number 405419896
+# UT0311-L0x.405419896.name = D405419896
+# UT0311-L0x.405419896.address = 192.168.1.100:60000
+# UT0311-L0x.405419896.rollover = 100000
+# UT0311-L0x.405419896.door.1 = Front Door
+# UT0311-L0x.405419896.door.2 = Side Door
+# UT0311-L0x.405419896.door.3 = Garage
+# UT0311-L0x.405419896.door.4 = Workshop
+`, bind.String(), broadcast.String(), listen.String(),
+		restUsers, restGroups, restHOTP,
+		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
+		nonceServer, nonceClients,
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
+
+	config := NewConfig()
+
+	var b bytes.Buffer
+
+	if err := config.Write(&b); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if s := string(b.Bytes()); s != expected {
+		re := regexp.MustCompile(`(\r)?\n`)
+		p := re.Split(s, -1)
+		q := re.Split(expected, -1)
+		N := len(q)
+
+		if N > len(p) {
+			N = len(p)
+		}
+		i := 0
+		for i < N {
+			if p[i] != q[i] {
+				t.Fatalf("Line %d: output from Config.Writer does not match\n   expected:\n%s\n   got:     \n%s\n", i, q[i], p[i])
+			}
+			i++
+		}
+
+		if i < len(p) {
+			t.Fatalf("Line %d: unexpected output from Config.Writer\n   got:\n%s\n", i, p[i])
+		}
+
+		if i < len(q) {
+			t.Fatalf("Line %d: missing from Config.Writer\n   expected:\n%s\n", i, q[i])
 		}
 	}
 }
@@ -355,13 +514,13 @@ func TestConfigWrite(t *testing.T) {
 # openapi.directory = ./openapi
 
 # DEVICES
-# Example configuration for UTO311-L04 with serial number 405419896
-# UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.rollover = 100000
-# UT0311-L0x.405419896.door.1 = Front Door
-# UT0311-L0x.405419896.door.2 = Side Door
-# UT0311-L0x.405419896.door.3 = Garage
-# UT0311-L0x.405419896.door.4 = Workshop
+UT0311-L0x.405419896.name = Z405419896
+UT0311-L0x.405419896.address = 192.168.1.100:60000
+UT0311-L0x.405419896.rollover = 98765
+UT0311-L0x.405419896.door.1 = D1
+UT0311-L0x.405419896.door.2 = D2
+UT0311-L0x.405419896.door.3 = D3
+UT0311-L0x.405419896.door.4 = D4
 `, bind.String(), broadcast.String(), listen.String(),
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
@@ -369,6 +528,19 @@ func TestConfigWrite(t *testing.T) {
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 
 	config := NewConfig()
+
+	config.Devices = DeviceMap{
+		405419896: &Device{
+			Name: "Z405419896",
+			Address: &net.UDPAddr{
+				IP:   []byte{192, 168, 1, 100},
+				Port: 60000,
+				Zone: "",
+			},
+			Rollover: 98765,
+			Doors:    []string{"D1", "D2", "D3", "D4"},
+		},
+	}
 
 	var b bytes.Buffer
 
