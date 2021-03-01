@@ -51,6 +51,7 @@ UT0311-L0x.405419896.door.1 = Front Door
 UT0311-L0x.405419896.door.2 = Side Door
 UT0311-L0x.405419896.door.3 = Garage
 UT0311-L0x.405419896.door.4 = Workshop
+UT0311-L0x.405419896.timezone = France/Paris
 `)
 
 func TestDefaultConfig(t *testing.T) {
@@ -252,6 +253,11 @@ func TestConfigUnmarshal(t *testing.T) {
 				t.Errorf("Expected 'device.door[3]' %s for ID '%v', got:'%s'", "Workshop", 405419896, d.Doors[3])
 			}
 		}
+
+		if d.TimeZone != "France/Paris" {
+			t.Errorf("Expected 'device.timezone' %s for ID '%v', got:'%v'", "France/Paris", 405419896, d.TimeZone)
+		}
+
 	}
 }
 
@@ -368,6 +374,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 # UT0311-L0x.405419896.door.2 = Side Door
 # UT0311-L0x.405419896.door.3 = Garage
 # UT0311-L0x.405419896.door.4 = Workshop
+# UT0311-L0x.405419896.timezone = UTC+2
 `, bind.String(), broadcast.String(), listen.String(),
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
@@ -521,6 +528,7 @@ UT0311-L0x.405419896.door.1 = D1
 UT0311-L0x.405419896.door.2 = D2
 UT0311-L0x.405419896.door.3 = D3
 UT0311-L0x.405419896.door.4 = D4
+UT0311-L0x.405419896.timezone = France/Paris
 `, bind.String(), broadcast.String(), listen.String(),
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
@@ -539,6 +547,7 @@ UT0311-L0x.405419896.door.4 = D4
 			},
 			Rollover: 98765,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
+			TimeZone: "France/Paris",
 		},
 	}
 

@@ -24,6 +24,7 @@ type Device struct {
 	Address  *net.UDPAddr
 	Rollover uint32
 	Doors    []string
+	TimeZone string
 }
 
 type kv struct {
@@ -61,6 +62,7 @@ UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
 UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
 UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
 UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
+UT0311-L0x.{{$id}}.timezone = {{$device.TimeZone}}
 {{else}}
 # Example configuration for UTO311-L04 with serial number 405419896
 # UT0311-L0x.405419896.name = D405419896
@@ -70,6 +72,7 @@ UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 # UT0311-L0x.405419896.door.2 = Side Door
 # UT0311-L0x.405419896.door.3 = Garage
 # UT0311-L0x.405419896.door.4 = Workshop
+# UT0311-L0x.405419896.timezone = UTC+2
 {{end}}`
 
 const dump = `# SYSTEM{{range .system}}
@@ -403,6 +406,9 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 
 			case "door.4":
 				d.Doors[3] = value
+
+			case "timezone":
+				d.TimeZone = value
 			}
 		}
 	}
