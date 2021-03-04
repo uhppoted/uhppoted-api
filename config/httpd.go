@@ -23,7 +23,8 @@ type HTTPD struct {
 	} `conf:"security"`
 	RequestTimeout time.Duration `conf:"request.timeout"`
 	System         struct {
-		File string `conf:"file"`
+		Controllers string `conf:"controllers"`
+		Doors       string `conf:"doors"`
 	} `conf:"system"`
 	DB struct {
 		File  string `conf:"file"`
@@ -63,9 +64,11 @@ func NewHTTPD() *HTTPD {
 		},
 		RequestTimeout: 5 * time.Second,
 		System: struct {
-			File string `conf:"file"`
+			Controllers string `conf:"controllers"`
+			Doors       string `conf:"doors"`
 		}{
-			File: httpdSysFile,
+			Controllers: httpdControllersFile,
+			Doors:       httpdDoorsFile,
 		},
 		DB: struct {
 			File  string `conf:"file"`

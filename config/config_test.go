@@ -346,12 +346,13 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
-; httpd.system.file = %[22]s
-; httpd.db.file = %[23]s
-; httpd.db.rules.acl = %[24]s
-; httpd.db.rules.system = %[25]s
-; httpd.db.rules.cards = %[26]s
-; httpd.audit.file = %[27]s
+; httpd.system.controllers = %[22]s
+; httpd.system.doors = %[23]s
+; httpd.db.file = %[24]s
+; httpd.db.rules.acl = %[25]s
+; httpd.db.rules.system = %[26]s
+; httpd.db.rules.cards = %[27]s
+; httpd.audit.file = %[28]s
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
@@ -379,7 +380,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
-		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 
 	config := NewConfig()
 
@@ -501,12 +502,13 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
-; httpd.system.file = %[22]s
-; httpd.db.file = %[23]s
-; httpd.db.rules.acl = %[24]s
-; httpd.db.rules.system = %[25]s
-; httpd.db.rules.cards = %[26]s
-; httpd.audit.file = %[27]s
+; httpd.system.controllers = %[22]s
+; httpd.system.doors = %[23]s
+; httpd.db.file = %[24]s
+; httpd.db.rules.acl = %[25]s
+; httpd.db.rules.system = %[26]s
+; httpd.db.rules.cards = %[27]s
+; httpd.audit.file = %[28]s
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
@@ -533,7 +535,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
-		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdSysFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 
 	config := NewConfig()
 
