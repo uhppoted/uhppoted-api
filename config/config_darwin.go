@@ -25,7 +25,7 @@ const (
 	httpdCACertificate  string = "/usr/local/etc/com.github.uhppoted/httpd/ca.cert"
 	httpdTLSCertificate string = "/usr/local/etc/com.github.uhppoted/httpd/uhppoted.cert"
 	httpdTLSKey         string = "/usr/local/etc/com.github.uhppoted/httpd/uhppoted.key"
-	httpdSysFile        string = "/usr/local/var/com.github.uhppoted/httpd/sys/system.json"
+	httpdSysFile        string = "/usr/local/var/com.github.uhppoted/httpd/system/system.json"
 	httpdDBFile         string = "/usr/local/var/com.github.uhppoted/httpd/memdb/db.json"
 	httpdDBACLRules     string = "/usr/local/etc/com.github.uhppoted/httpd/acl.grl"
 	httpdDBSystemRules  string = "/usr/local/etc/com.github.uhppoted/httpd/system.grl"
