@@ -1,36 +1,66 @@
 package acl
 
 import (
+	"sync"
+
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, error) {
-	report := map[uint32]Report{}
+func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, []error) {
+	errors := []error{}
+	report := sync.Map{}
+
 	for id, _ := range acl {
-		report[id] = Report{}
+		report.Store(id, Report{
+			Unchanged: []uint32{},
+			Updated:   []uint32{},
+			Added:     []uint32{},
+			Deleted:   []uint32{},
+			Failed:    []uint32{},
+			Errored:   []uint32{},
+			Errors:    []error{},
+		})
 	}
 
-	for id, cards := range acl {
-		var rpt *Report
-		var err error
+	var wg sync.WaitGroup
 
-		if dryrun {
-			rpt, err = fakePutACL(u, id, cards)
-		} else {
-			rpt, err = putACL(u, id, cards)
-		}
+	for k, v := range acl {
+		id := k
+		cards := v
 
-		if rpt != nil {
-			report[id] = *rpt
-		}
+		wg.Add(1)
+		go func() {
+			var rpt *Report
+			var err error
 
-		if err != nil {
-			return report, err
-		}
+			if dryrun {
+				rpt, err = fakePutACL(u, id, cards)
+			} else {
+				rpt, err = putACL(u, id, cards)
+			}
+
+			if rpt != nil {
+				report.Store(id, *rpt)
+			}
+
+			if err != nil {
+				errors = append(errors, err)
+			}
+
+			wg.Done()
+		}()
 	}
 
-	return report, nil
+	wg.Wait()
+
+	r := map[uint32]Report{}
+	report.Range(func(k, v interface{}) bool {
+		r[k.(uint32)] = v.(Report)
+		return true
+	})
+
+	return r, errors
 }
 
 func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {

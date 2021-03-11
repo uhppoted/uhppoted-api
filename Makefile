@@ -47,7 +47,7 @@ bump:
 	go get -u golang.org/x/sys
 
 debug: build
-	go test ./... -run TestConfigWrite
+	go test ./... -run TestPutACLWithConcurrentErrors
 
 godoc:
 	godoc -http=:80	-index_interval=60s
