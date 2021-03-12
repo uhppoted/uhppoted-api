@@ -8,8 +8,9 @@ import (
 )
 
 func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, []error) {
-	errors := []error{}
 	report := sync.Map{}
+	errors := []error{}
+	guard := sync.RWMutex{}
 
 	for id, _ := range acl {
 		report.Store(id, Report{
@@ -45,7 +46,9 @@ func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, []error)
 			}
 
 			if err != nil {
+				guard.Lock()
 				errors = append(errors, err)
+				guard.Unlock()
 			}
 
 			wg.Done()

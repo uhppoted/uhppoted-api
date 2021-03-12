@@ -1,27 +1,49 @@
 package acl
 
 import (
+	"sync"
+
 	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, error) {
-	acl := make(ACL)
-	for _, device := range devices {
-		acl[device.DeviceID] = make(map[uint32]types.Card)
-	}
+func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, []error) {
+	acl := sync.Map{}
+	errors := []error{}
+	guard := sync.RWMutex{}
 
 	for _, device := range devices {
-		cards, err := getACL(u, device.DeviceID)
-		if err != nil {
-			return acl, err
-		}
-
-		acl[device.DeviceID] = cards
+		acl.Store(device.DeviceID, map[uint32]types.Card{})
 	}
 
-	return acl, nil
+	var wg sync.WaitGroup
+
+	for _, d := range devices {
+		device := d
+		wg.Add(1)
+		go func() {
+			if cards, err := getACL(u, device.DeviceID); err != nil {
+				guard.Lock()
+				errors = append(errors, err)
+				guard.Unlock()
+			} else {
+				acl.Store(device.DeviceID, cards)
+			}
+
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+
+	a := make(ACL)
+	acl.Range(func(k, v interface{}) bool {
+		a[k.(uint32)] = v.(map[uint32]types.Card)
+		return true
+	})
+
+	return a, errors
 }
 
 func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
