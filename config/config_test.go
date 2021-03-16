@@ -585,3 +585,70 @@ UT0311-L0x.405419896.timezone = France/Paris
 		}
 	}
 }
+
+func TestConfigValidateWithValidDevice(t *testing.T) {
+	configuration := []byte(`# DEVICES
+UT0311-L0x.405419896.name = Q405419896
+UT0311-L0x.405419896.address = 192.168.1.100:60000
+UT0311-L0x.405419896.door.1 = Front Door
+UT0311-L0x.405419896.door.2 = Side Door
+UT0311-L0x.405419896.door.3 = Garage
+UT0311-L0x.405419896.door.4 = Workshop
+UT0311-L0x.405419896.timezone = France/Paris
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if err := config.Validate(); err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+}
+
+func TestConfigValidateWithInvalidDevice(t *testing.T) {
+	configuration := []byte(`# DEVICES
+UT0311-L0x.405419896.name = Q405419896
+UT0311-L0x.405419896.address = 192.168.1.100:60000
+UT0311-L0x.405419896.door.1 = Front Door
+UT0311-L0x.405419896.door.2 = Side Door
+UT0311-L0x.405419896.door.3 = Garage
+UT0311-L0x.405419896.door.4 = Front Door
+UT0311-L0x.405419896.timezone = France/Paris
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	expected := fmt.Errorf("Door 'Front Door' is defined more than once in configuration")
+
+	err := config.Validate()
+
+	if err.Error() != expected.Error() {
+		t.Errorf("Expected error:%v, got:%v", expected, err)
+	}
+}
+
+func TestConfigValidateWithBlankDoors(t *testing.T) {
+	configuration := []byte(`# DEVICES
+UT0311-L0x.405419896.name = Q405419896
+UT0311-L0x.405419896.address = 192.168.1.100:60000
+UT0311-L0x.405419896.door.1 = 
+UT0311-L0x.405419896.door.2 = 
+UT0311-L0x.405419896.door.3 = 
+UT0311-L0x.405419896.door.4 = 
+UT0311-L0x.405419896.timezone = France/Paris
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if err := config.Validate(); err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+}

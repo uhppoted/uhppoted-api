@@ -202,7 +202,7 @@ func (c *Config) Validate() error {
 		for _, door := range device.Doors {
 			d := strings.ReplaceAll(strings.ToLower(door), " ", "")
 
-			if doors[d] {
+			if d != "" && doors[d] {
 				return fmt.Errorf("Door '%s' is defined more than once in configuration", door)
 			}
 
