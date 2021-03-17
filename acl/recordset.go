@@ -2,10 +2,12 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"sort"
+	"strings"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 type DuplicateCardError struct {
@@ -98,7 +100,9 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 
 		jndex := []int{0, 0, 0, 0}
 		for i, door := range d.Doors {
-			jndex[i] = index[clean(door)]
+			if clean(door) != "" {
+				jndex[i] = index[clean(door)]
+			}
 		}
 
 		for cardno, c := range v {
@@ -122,10 +126,11 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 
 			for i := uint8(1); i <= 4; i++ {
 				door := c.Doors[i]
-				if ix := jndex[i-1]; ix == 0 {
-					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i)
-				} else {
+
+				if ix := jndex[i-1]; ix != 0 {
 					record.doors[ix-1] = door
+				} else if clean(d.Doors[i-1]) != "" {
+					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i)
 				}
 			}
 
@@ -185,7 +190,11 @@ func makeHeader(devices []*uhppote.Device) ([]string, error) {
 	for _, id := range keys {
 		for _, d := range devices {
 			if d.DeviceID == id {
-				header = append(header, d.Doors...)
+				for _, door := range d.Doors {
+					if clean(door) != "" {
+						header = append(header, strings.TrimSpace(door))
+					}
+				}
 			}
 		}
 	}
