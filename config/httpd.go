@@ -37,6 +37,7 @@ type HTTPD struct {
 	Audit struct {
 		File string `conf:"file"`
 	} `conf:"audit"`
+	Retention time.Duration `conf:"retention"`
 }
 
 func NewHTTPD() *HTTPD {
@@ -94,5 +95,6 @@ func NewHTTPD() *HTTPD {
 		}{
 			File: httpdAuditFile,
 		},
+		Retention: 6 * time.Hour,
 	}
 }

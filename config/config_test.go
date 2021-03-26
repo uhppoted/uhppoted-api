@@ -44,6 +44,9 @@ wild-apricot.http.retries = 6
 wild-apricot.http.retry-delay = 9s
 wild-apricot.fields.card-number = Ye Olde Cardde Nymber
 
+# HTTPD
+httpd.retention = 4h45m
+
 # DEVICES
 UT0311-L0x.405419896.name = Q405419896
 UT0311-L0x.405419896.address = 192.168.1.100:60000
@@ -97,6 +100,10 @@ func TestDefaultConfig(t *testing.T) {
 				CardNumber: "Card Number",
 			},
 		},
+
+		HTTPD: HTTPD{
+			Retention: 6 * time.Hour,
+		},
 	}
 
 	config := NewConfig()
@@ -115,6 +122,10 @@ func TestDefaultConfig(t *testing.T) {
 
 	if !reflect.DeepEqual(config.WildApricot, expected.WildApricot) {
 		t.Errorf("Incorrect WildApricot default configuration:\nexpected:%+v,\ngot:     %+v", expected.WildApricot, config.WildApricot)
+	}
+
+	if config.HTTPD.Retention != expected.HTTPD.Retention {
+		t.Errorf("Expected http.retention:'%v', got: '%v'", expected.HTTPD.Retention, config.HTTPD.Retention)
 	}
 }
 
@@ -173,6 +184,10 @@ func TestConfigUnmarshal(t *testing.T) {
 				CardNumber: "Ye Olde Cardde Nymber",
 			},
 		},
+
+		HTTPD: HTTPD{
+			Retention: 285 * time.Minute,
+		},
 	}
 
 	config := NewConfig()
@@ -215,6 +230,10 @@ func TestConfigUnmarshal(t *testing.T) {
 
 	if !reflect.DeepEqual(config.WildApricot, expected.WildApricot) {
 		t.Errorf("Incorrect Wild Apricot configuration:\nexpected:%+v,\ngot:     %+v", expected.WildApricot, config.WildApricot)
+	}
+
+	if config.HTTPD.Retention != expected.HTTPD.Retention {
+		t.Errorf("Incorrect httpd retention:\nexpected:%+v,\ngot:     %+v", expected.HTTPD.Retention, config.HTTPD.Retention)
 	}
 
 	if d, _ := config.Devices[405419896]; d == nil {
@@ -353,6 +372,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.db.rules.system = %[26]s
 ; httpd.db.rules.cards = %[27]s
 ; httpd.audit.file = %[28]s
+; httpd.retention = 6h0m0s
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
@@ -509,6 +529,7 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.db.rules.system = %[26]s
 ; httpd.db.rules.cards = %[27]s
 ; httpd.audit.file = %[28]s
+httpd.retention = 5h30m0s
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
@@ -552,6 +573,8 @@ UT0311-L0x.405419896.timezone = France/Paris
 			TimeZone: "France/Paris",
 		},
 	}
+
+	config.HTTPD.Retention = 330 * time.Minute
 
 	var b bytes.Buffer
 
