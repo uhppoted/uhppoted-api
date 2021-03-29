@@ -327,7 +327,11 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 		fmt.Fprintf(&s, "# DEVICES\n")
 		for id, device := range f {
 			fmt.Fprintf(&s, "UTO311-L0x.%d.name = %s\n", id, device.Name)
-			fmt.Fprintf(&s, "UTO311-L0x.%d.address = %s\n", id, device.Address)
+
+			if device.Address != nil {
+				fmt.Fprintf(&s, "UTO311-L0x.%d.address = %s\n", id, device.Address)
+			}
+
 			fmt.Fprintf(&s, "UTO311-L0x.%d.rollover = %d\n", id, device.Rollover)
 			for d, door := range device.Doors {
 				fmt.Fprintf(&s, "UTO311-L0x.%d.door.%d = %s\n", id, d+1, door)
