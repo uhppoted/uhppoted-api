@@ -55,8 +55,8 @@ const pretty = `# SYSTEM{{range .system}}
 {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
 
 # DEVICES{{range $id,$device := .devices}}
-UT0311-L0x.{{$id}}.name = {{$device.Name}}
-UT0311-L0x.{{$id}}.address = {{$device.Address}}
+UT0311-L0x.{{$id}}.name = {{$device.Name}}{{if $device.Address}}
+UT0311-L0x.{{$id}}.address = {{$device.Address}}{{end}}
 UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
 UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
 UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
