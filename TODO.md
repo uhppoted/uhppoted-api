@@ -4,6 +4,8 @@
 
 ## TODO
 
+1. GetDevices: rename DeviceSummary.Address to IpAddress and use Address for IP+Port
+
 ### uhppoted-api
 
 - [ ] websocket + GraphQL (?)

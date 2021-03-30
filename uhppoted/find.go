@@ -2,16 +2,20 @@ package uhppoted
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
 	"net"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
+// TODO rename Address to IpAddress and use Address for IP:Port
 type DeviceSummary struct {
 	DeviceType string `json:"device-type"`
 	Address    net.IP `json:"ip-address"`
+	Port       int    `json:"port"`
 }
 
 type GetDevicesRequest struct {
@@ -39,6 +43,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 				list.Store(uint32(device.SerialNumber), DeviceSummary{
 					DeviceType: identify(device.SerialNumber),
 					Address:    device.IpAddress,
+					Port:       device.Address.Port,
 				})
 			}
 		}()
@@ -54,6 +59,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 				list.Store(uint32(d.SerialNumber), DeviceSummary{
 					DeviceType: identify(d.SerialNumber),
 					Address:    d.IpAddress,
+					Port:       d.Address.Port,
 				})
 			}
 		}
@@ -88,6 +94,8 @@ type GetDeviceResponse struct {
 	MacAddress types.MacAddress `json:"mac-address"`
 	Version    types.Version    `json:"version"`
 	Date       types.Date       `json:"date"`
+	Address    net.UDPAddr      `json:"address"`
+	TimeZone   *time.Location   `json:"timezone,omitempty"`
 }
 
 func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, error) {
@@ -111,6 +119,8 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 		MacAddress: device.MacAddress,
 		Version:    device.Version,
 		Date:       device.Date,
+		Address:    device.Address,
+		TimeZone:   device.TimeZone,
 	}
 
 	u.debug("get-device", fmt.Sprintf("response %+v", response))
