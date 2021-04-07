@@ -197,16 +197,44 @@ func (c *Config) Load(path string) error {
 }
 
 func (c *Config) Validate() error {
-	doors := make(map[string]bool)
-	for _, device := range c.Devices {
-		for _, door := range device.Doors {
-			d := strings.ReplaceAll(strings.ToLower(door), " ", "")
+	if c != nil {
+		// validate bind.address port
+		port := c.System.BindAddress.Port
 
-			if d != "" && doors[d] {
-				return fmt.Errorf("Door '%s' is defined more than once in configuration", door)
+		if port == 60000 {
+			return fmt.Errorf("port %v is not a valid port for bind.address", port)
+		}
+
+		if port != 0 && port == c.System.BroadcastAddress.Port {
+			return fmt.Errorf("bind.address port (%v) must not be the same as the broadcast.address port", port)
+		}
+
+		if port != 0 && port == c.System.ListenAddress.Port {
+			return fmt.Errorf("bind.address port (%v) must not be the same as the listen.address port", port)
+		}
+
+		// validate broadcast.address port
+		if c.System.BroadcastAddress.Port == 0 {
+			return fmt.Errorf("port %v is not a valid port for broadcast.address", c.System.BroadcastAddress.Port)
+		}
+
+		// validate listen.address port
+		if c.System.ListenAddress.Port == 0 {
+			return fmt.Errorf("port %v is not a valid port for listen.address", c.System.ListenAddress.Port)
+		}
+
+		// check for duplicate doors
+		doors := make(map[string]bool)
+		for _, device := range c.Devices {
+			for _, door := range device.Doors {
+				d := strings.ReplaceAll(strings.ToLower(door), " ", "")
+
+				if d != "" && doors[d] {
+					return fmt.Errorf("Door '%s' is defined more than once in configuration", door)
+				}
+
+				doors[d] = true
 			}
-
-			doors[d] = true
 		}
 	}
 

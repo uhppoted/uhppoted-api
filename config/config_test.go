@@ -624,6 +624,104 @@ UT0311-L0x.405419896.timezone = France/Paris
 	}
 }
 
+func TestConfigValidateWithBindPort6000(t *testing.T) {
+	configuration := []byte(`# SYSTEM
+bind.address = 192.168.1.100:60000
+broadcast.address = 192.168.1.255:60000
+listen.address = 192.168.1.100:60001
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	expected := fmt.Errorf("port 60000 is not a valid port for bind.address")
+
+	err := config.Validate()
+	if err == nil || err.Error() != expected.Error() {
+		t.Errorf("Expected error:%v, got:%v", expected, err)
+	}
+}
+
+func TestConfigValidateWithTheSameBindAndBroadcastPorts(t *testing.T) {
+	configuration := []byte(`# SYSTEM
+bind.address = 192.168.1.100:12345
+broadcast.address = 192.168.1.255:12345
+listen.address = 192.168.1.100:60001
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	expected := fmt.Errorf("bind.address port (12345) must not be the same as the broadcast.address port")
+
+	err := config.Validate()
+	if err == nil || err.Error() != expected.Error() {
+		t.Errorf("Expected error:%v, got:%v", expected, err)
+	}
+}
+
+func TestConfigValidateWithTheSameBindAndListenPorts(t *testing.T) {
+	configuration := []byte(`# SYSTEM
+bind.address = 192.168.1.100:60001
+listen.address = 192.168.1.100:60001
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	expected := fmt.Errorf("bind.address port (60001) must not be the same as the listen.address port")
+
+	err := config.Validate()
+	if err == nil || err.Error() != expected.Error() {
+		t.Errorf("Expected error:%v, got:%v", expected, err)
+	}
+}
+
+func TestConfigValidateWithInvalidBroadcastPort(t *testing.T) {
+	configuration := []byte(`# SYSTEM
+bind.address = 192.168.1.100:0
+broadcast.address = 192.168.1.255:0
+listen.address = 192.168.1.100:60001
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	expected := fmt.Errorf("port 0 is not a valid port for broadcast.address")
+
+	err := config.Validate()
+	if err == nil || err.Error() != expected.Error() {
+		t.Errorf("Expected error:%v, got:%v", expected, err)
+	}
+}
+
+func TestConfigValidateWithInvalidListenPort(t *testing.T) {
+	configuration := []byte(`# SYSTEM
+bind.address = 192.168.1.100:0
+listen.address = 192.168.1.100:0
+`)
+
+	config := NewConfig()
+	if err := conf.Unmarshal(configuration, config); err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	expected := fmt.Errorf("port 0 is not a valid port for listen.address")
+
+	err := config.Validate()
+	if err == nil || err.Error() != expected.Error() {
+		t.Errorf("Expected error:%v, got:%v", expected, err)
+	}
+}
+
 func TestConfigValidateWithValidDevice(t *testing.T) {
 	configuration := []byte(`# DEVICES
 UT0311-L0x.405419896.name = Q405419896
@@ -664,8 +762,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 	expected := fmt.Errorf("Door 'Front Door' is defined more than once in configuration")
 
 	err := config.Validate()
-
-	if err.Error() != expected.Error() {
+	if err == nil || err.Error() != expected.Error() {
 		t.Errorf("Expected error:%v, got:%v", expected, err)
 	}
 }
