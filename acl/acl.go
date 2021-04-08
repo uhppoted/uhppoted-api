@@ -3,6 +3,7 @@ package acl
 import (
 	"fmt"
 	"io"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -66,7 +67,7 @@ func (acl *ACL) Print(w io.Writer) {
 }
 
 func clean(s string) string {
-	return strings.ReplaceAll(strings.ToLower(s), " ", "")
+	return regexp.MustCompile(`[\s\t]+`).ReplaceAllString(strings.ToLower(s), "")
 }
 
 func mapDeviceDoors(devices []*uhppote.Device) (doormap, error) {

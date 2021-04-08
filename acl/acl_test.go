@@ -104,3 +104,11 @@ func TestACLPrintf(t *testing.T) {
 		t.Errorf("Invalid result from ACL.Print\n   expected:\n%s\n   got:\n%s\n", expected, string(b.Bytes()))
 	}
 }
+
+func TestClean(t *testing.T) {
+	s := string([]byte{70, 114, 111, 110, 116, 9})
+
+	if clean(s) != "front" {
+		t.Errorf("Clean did not strip trailing tab from string")
+	}
+}
