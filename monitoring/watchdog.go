@@ -62,7 +62,7 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 	if int64(math.Abs(dt.Seconds())) > DELAY {
 		errors += 1
 		if !w.state.HealthCheck.Alerted {
-			msg := fmt.Sprintf("'health-check' subsystem has not run since %s (%s)", types.DateTime(w.state.Started), dt)
+			msg := fmt.Sprintf("'health-check' subsystem has not run since %v (%v)", types.DateTime(w.state.Started), dt)
 
 			w.log.Printf("ERROR %s", msg)
 			if err := handler.Alert(w, msg); err == nil {

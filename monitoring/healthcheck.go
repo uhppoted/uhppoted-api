@@ -329,14 +329,14 @@ func (h *HealthCheck) checkStatus(id uint32, now time.Time, alerted *alerts, han
 				}
 
 				if !alerted.synchronized {
-					msg := fmt.Sprintf("system time not synchronized: %s (%s)", types.DateTime(t), dt)
+					msg := fmt.Sprintf("system time not synchronized:%v (%v)", types.DateTime(t), dt)
 					if alert(h, handler, id, msg) {
 						alerted.synchronized = true
 					}
 				}
 			} else {
 				if alerted.synchronized {
-					msg := fmt.Sprintf("system time synchronized: %s (%s)", types.DateTime(t), dt)
+					msg := fmt.Sprintf("system time synchronized:%v (%v)", types.DateTime(t), dt)
 					if info(h, handler, id, msg) {
 						alerted.synchronized = false
 					}

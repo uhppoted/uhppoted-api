@@ -6,22 +6,22 @@ import (
 )
 
 type Status struct {
-	EventIndex     uint32         `json:"event-index"`
-	EventType      byte           `json:"event-type"`
-	Granted        bool           `json:"access-granted"`
-	Door           byte           `json:"door"`
-	Direction      uint8          `json:"direction"`
-	CardNumber     uint32         `json:"card-number"`
-	Timestamp      types.DateTime `json:"event-timestamp"`
-	Reason         uint8          `json:"event-reason"`
-	DoorState      map[uint8]bool `json:"door-states"`
-	DoorButton     map[uint8]bool `json:"door-buttons"`
-	SystemError    uint8          `json:"system-error"`
-	SystemDateTime types.DateTime `json:"system-datetime"`
-	SequenceId     uint32         `json:"sequence-id"`
-	SpecialInfo    uint8          `json:"special-info"`
-	RelayState     uint8          `json:"relay-state"`
-	InputState     uint8          `json:"input-state"`
+	EventIndex     uint32          `json:"event-index"`
+	EventType      byte            `json:"event-type"`
+	Granted        bool            `json:"access-granted"`
+	Door           byte            `json:"door"`
+	Direction      uint8           `json:"direction"`
+	CardNumber     uint32          `json:"card-number"`
+	Timestamp      *types.DateTime `json:"event-timestamp,omitempty"`
+	Reason         uint8           `json:"event-reason"`
+	DoorState      map[uint8]bool  `json:"door-states"`
+	DoorButton     map[uint8]bool  `json:"door-buttons"`
+	SystemError    uint8           `json:"system-error"`
+	SystemDateTime types.DateTime  `json:"system-datetime"`
+	SequenceId     uint32          `json:"sequence-id"`
+	SpecialInfo    uint8           `json:"special-info"`
+	RelayState     uint8           `json:"relay-state"`
+	InputState     uint8           `json:"input-state"`
 }
 
 type GetStatusRequest struct {
