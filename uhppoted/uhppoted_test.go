@@ -17,11 +17,11 @@ func (m *stub) DeviceList() map[uint32]*uhppote.Device {
 	return nil
 }
 
-func (m *stub) FindDevices() ([]types.Device, error) {
+func (m *stub) GetDevices() ([]types.Device, error) {
 	return nil, nil
 }
 
-func (m *stub) FindDevice(deviceID uint32) (*types.Device, error) {
+func (m *stub) GetDevice(deviceID uint32) (*types.Device, error) {
 	return nil, nil
 }
 

@@ -26,8 +26,8 @@ var (
 
 type IUhppote interface {
 	DeviceList() map[uint32]*uhppote.Device
-	FindDevices() ([]types.Device, error)
-	FindDevice(deviceID uint32) (*types.Device, error)
+	GetDevices() ([]types.Device, error)
+	GetDevice(deviceID uint32) (*types.Device, error)
 
 	GetTime(serialNumber uint32) (*types.Time, error)
 	SetTime(serialNumber uint32, datetime time.Time) (*types.Time, error)

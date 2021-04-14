@@ -37,7 +37,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			if device, err := u.Uhppote.FindDevice(deviceID); err != nil {
+			if device, err := u.Uhppote.GetDevice(deviceID); err != nil {
 				u.warn("find", fmt.Errorf("get-devices: %v %v", deviceID, err))
 			} else if device != nil {
 				list.Store(uint32(device.SerialNumber), DeviceSummary{
@@ -52,7 +52,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		if devices, err := u.Uhppote.FindDevices(); err != nil {
+		if devices, err := u.Uhppote.GetDevices(); err != nil {
 			u.warn("find", fmt.Errorf("get-devices: %v", err))
 		} else {
 			for _, d := range devices {
@@ -101,7 +101,7 @@ type GetDeviceResponse struct {
 func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, error) {
 	u.debug("get-device", fmt.Sprintf("request  %+v", request))
 
-	device, err := u.Uhppote.FindDevice(uint32(request.DeviceID))
+	device, err := u.Uhppote.GetDevice(uint32(request.DeviceID))
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting device info for %v (%w)", device, err))
 	}
