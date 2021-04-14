@@ -129,7 +129,7 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 func (h *HealthCheck) update(now time.Time) {
 	devices := make(map[uint32]bool)
 
-	found, err := h.uhppote.FindDevices()
+	found, err := h.uhppote.GetDevices()
 	if err != nil {
 		h.log.Printf("WARN  'keep-alive' error: %v", err)
 	}
