@@ -19,6 +19,8 @@ type WildApricot struct {
 		Groups string `conf:"groups"`
 		Doors  string `conf:"doors"`
 	} `conf:"display-order"`
+
+	FacilityCode string `conf:"facility-code"`
 }
 
 func NewWildApricot() *WildApricot {
@@ -38,5 +40,7 @@ func NewWildApricot() *WildApricot {
 		}{
 			CardNumber: "Card Number",
 		},
+
+		FacilityCode: "",
 	}
 }

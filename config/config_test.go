@@ -43,6 +43,7 @@ wild-apricot.http.client-timeout = 12s
 wild-apricot.http.retries = 6
 wild-apricot.http.retry-delay = 9s
 wild-apricot.fields.card-number = Ye Olde Cardde Nymber
+wild-apricot.facility-code = 89
 
 # HTTPD
 httpd.retention = 4h45m
@@ -183,6 +184,8 @@ func TestConfigUnmarshal(t *testing.T) {
 			}{
 				CardNumber: "Ye Olde Cardde Nymber",
 			},
+
+			FacilityCode: "89",
 		},
 
 		HTTPD: HTTPD{
@@ -381,6 +384,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 
+; wild-apricot.facility-code = 
 
 # OPEN API
 # openapi.enabled = false
@@ -538,6 +542,7 @@ httpd.retention = 5h30m0s
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 
+; wild-apricot.facility-code = 
 
 # OPEN API
 # openapi.enabled = false
