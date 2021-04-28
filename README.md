@@ -4,14 +4,16 @@
 
 High level Go API for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand controller boards. 
 
-This module
-abstracts the device level functionality provided by *uhppote-core* to provide the functionality common to *uhppote-cli*, 
-*uhppoted-rest* and *uhppoted-mqtt*.
+This module:
+- Abstracts the device level functionality provided by *uhppote-core* to provide the functionality 
+common to *uhppote-cli*, *uhppoted-rest* and *uhppoted-mqtt*
+- Provides wrapper functions that support for invoking functionality across multiple devices.
 
 ## Releases
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.12   | Additional validation of bind, broadcast and listen ports when loading configuration      |
 | v0.6.10   | Adds configuration options for initial release of `uhppoted-app-wild-apricot`             |
 | v0.6.8    | Maintenance release for version compatibility with `uhppote-core` `v0.6.8`                |
 | v0.6.7    | Implements `record-special-events` for enabling/disabling door events                     |
