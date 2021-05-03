@@ -60,16 +60,16 @@ var deviceB = uhppote.Device{
 
 var aclA = ACL{
 	12345: map[uint32]types.Card{
-		65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	},
 }
 
 var cardsA = []types.Card{
-	types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-	types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-	types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+	types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+	types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+	types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 }
 
 func TestACLPrintf(t *testing.T) {
@@ -85,14 +85,14 @@ func TestACLPrintf(t *testing.T) {
 
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65531: types.Card{CardNumber: 65531, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65532: types.Card{CardNumber: 65532, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-			65533: types.Card{CardNumber: 65533, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+			65531: types.Card{CardNumber: 65531, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65532: types.Card{CardNumber: 65532, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+			65533: types.Card{CardNumber: 65533, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 		},
 		67890: map[uint32]types.Card{
-			65531: types.Card{CardNumber: 65531, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65532: types.Card{CardNumber: 65532, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-			65534: types.Card{CardNumber: 65534, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+			65531: types.Card{CardNumber: 65531, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65532: types.Card{CardNumber: 65532, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+			65534: types.Card{CardNumber: 65534, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 		},
 	}
 

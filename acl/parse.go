@@ -174,8 +174,13 @@ func getToDate(record []string, index *index) (*types.Date, error) {
 	return &to, nil
 }
 
-func getDoors(record []string, v []int) (map[uint8]bool, error) {
-	doors := map[uint8]bool{1: false, 2: false, 3: false, 4: false}
+func getDoors(record []string, v []int) (map[uint8]types.Permission, error) {
+	doors := map[uint8]types.Permission{
+		1: false,
+		2: false,
+		3: false,
+		4: false,
+	}
 
 	for i, d := range v {
 		if d == 0 {

@@ -12,16 +12,16 @@ import (
 func TestPutACL(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
 	}
 
 	report := map[uint32]Report{
@@ -37,9 +37,9 @@ func TestPutACL(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{
@@ -93,16 +93,16 @@ func TestPutACL(t *testing.T) {
 func TestPutACLDryRun(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	report := map[uint32]Report{
@@ -118,9 +118,9 @@ func TestPutACLDryRun(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{
@@ -174,29 +174,29 @@ func TestPutACLDryRun(t *testing.T) {
 func TestPutACLWithMultipleDevices(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: true}},
 		},
 
 		54321: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
-			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: true}},
+			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -224,16 +224,16 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: true, 3: true, 4: true}},
-			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: true, 3: true, 4: true}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: true, 3: true, 4: true}},
+			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: true, 3: true, 4: true}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -303,29 +303,29 @@ func TestPutACLWithConcurrency(t *testing.T) {
 
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: true}},
 		},
 
 		54321: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
-			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: true}},
+			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -353,16 +353,16 @@ func TestPutACLWithConcurrency(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: true, 3: true, 4: true}},
-			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: true, 3: true, 4: true}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: true, 3: true, 4: true}},
+			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: true, 3: true, 4: true}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -430,16 +430,16 @@ func TestPutACLWithConcurrency(t *testing.T) {
 func TestPutACLWithFailures(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
 	}
 
 	report := map[uint32]Report{
@@ -455,9 +455,9 @@ func TestPutACLWithFailures(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{
@@ -522,30 +522,30 @@ func TestPutACLWithConcurrentErrors(t *testing.T) {
 
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: true}},
 		},
 
 		54321: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-05-06"), To: date("2020-10-29"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: true}},
-			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: true}},
+			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -573,16 +573,16 @@ func TestPutACLWithConcurrentErrors(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: true, 3: true, 4: true}},
-			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: true, 3: true, 4: true}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: true, 3: true, 4: true}},
+			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: true, 3: true, 4: true}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: false, 2: true, 3: false, 4: false}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
+			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: false, 2: true, 3: false, 4: false}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
 		},
 	}
 
@@ -663,16 +663,16 @@ func TestPutACLWithConcurrentErrors(t *testing.T) {
 func TestPutACLWithErrors(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 		},
 	}
 
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: true, 2: false, 3: true, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65536, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: true, 4: false}},
 	}
 
 	report := map[uint32]Report{
@@ -688,9 +688,9 @@ func TestPutACLWithErrors(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: false}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]bool{1: true, 2: false, 3: false, 4: true}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: true}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{
@@ -748,12 +748,12 @@ func TestPutACLWithErrors(t *testing.T) {
 func TestPutACLWithNoCurrentPermissions(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-10-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
 		},
 	}
 
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-10-31"), Doors: map[uint8]bool{1: false, 2: false, 3: true, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-03-04"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: true, 4: false}},
 	}
 
 	report := map[uint32]Report{
@@ -769,7 +769,7 @@ func TestPutACLWithNoCurrentPermissions(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]bool{1: false, 2: false, 3: false, 4: false}},
+		types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
 	}
 
 	u := mock{

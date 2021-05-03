@@ -125,7 +125,19 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 			}
 
 			for i := uint8(1); i <= 4; i++ {
-				door := c.Doors[i]
+				door := false
+				switch v := c.Doors[i].(type) {
+				case bool:
+					door = v
+				case int:
+					if v > 0 && v < 255 {
+						door = true
+					}
+				case uint:
+					if v > 0 && v < 255 {
+						door = true
+					}
+				}
 
 				if ix := jndex[i-1]; ix != 0 {
 					record.doors[ix-1] = door

@@ -63,14 +63,31 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 			CardNumber: cardID,
 			From:       &from,
 			To:         &to,
-			Doors:      map[uint8]bool{1: false, 2: false, 3: false, 4: false},
+			Doors: map[uint8]types.Permission{
+				1: false,
+				2: false,
+				3: false,
+				4: false,
+			},
 		}
 	}
 
 	revoked := true
 	for _, d := range card.Doors {
-		if d {
-			revoked = false
+		switch v := d.(type) {
+		case bool:
+			if v {
+				revoked = false
+			}
+		case int:
+			if v > 0 && v < 255 {
+				revoked = false
+			}
+
+		case uint:
+			if v > 0 && v < 255 {
+				revoked = false
+			}
 		}
 	}
 
@@ -100,7 +117,12 @@ func grantAll(u device.IDevice, deviceID uint32, cardID uint32, from, to types.D
 		CardNumber: cardID,
 		From:       &from,
 		To:         &to,
-		Doors:      map[uint8]bool{1: true, 2: true, 3: true, 4: true},
+		Doors: map[uint8]types.Permission{
+			1: true,
+			2: true,
+			3: true,
+			4: true,
+		},
 	}
 
 	if ok, err := u.PutCard(deviceID, *card); err != nil {
