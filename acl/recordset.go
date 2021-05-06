@@ -79,8 +79,6 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 }
 
 func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
-	fmt.Printf(">>>> ACL: %v\n", acl)
-
 	header, err := makeHeader(devices)
 	if err != nil {
 		return nil, err
