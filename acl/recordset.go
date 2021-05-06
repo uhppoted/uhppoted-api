@@ -106,7 +106,6 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 		}
 
 		for cardno, c := range v {
-			fmt.Printf(">>>> CARD: %#v\n", c)
 			record, ok := cards[cardno]
 			if !ok {
 				record = card{
