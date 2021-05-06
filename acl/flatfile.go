@@ -2,8 +2,9 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"io"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 func MakeFlatFile(acl ACL, devices []*uhppote.Device, f io.Writer) error {

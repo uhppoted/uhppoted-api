@@ -79,6 +79,8 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 }
 
 func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
+	fmt.Printf(">>>> ACL: %v\n", acl)
+
 	header, err := makeHeader(devices)
 	if err != nil {
 		return nil, err
@@ -106,13 +108,14 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 		}
 
 		for cardno, c := range v {
+			fmt.Printf(">>>> CARD: %#v\n", c)
 			record, ok := cards[cardno]
 			if !ok {
 				record = card{
 					cardnumber: c.CardNumber,
 					from:       *c.From,
 					to:         *c.To,
-					doors:      make([]bool, len(index)),
+					doors:      make([]types.Permission, len(index)),
 				}
 			}
 
@@ -125,24 +128,66 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 			}
 
 			for i := uint8(1); i <= 4; i++ {
-				door := false
-				switch v := c.Doors[i].(type) {
-				case bool:
-					door = v
-				case int:
-					if v > 0 && v < 255 {
-						door = true
-					}
-				case uint:
-					if v > 0 && v < 255 {
-						door = true
-					}
+				ix := jndex[i-1]
+
+				if ix == 0 && clean(d.Doors[i-1]) != "" {
+					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i)
 				}
 
-				if ix := jndex[i-1]; ix != 0 {
-					record.doors[ix-1] = door
-				} else if clean(d.Doors[i-1]) != "" {
-					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i)
+				if ix != 0 {
+					switch v := c.Doors[i].(type) {
+					case bool:
+						record.doors[ix-1] = v
+
+					case int:
+						switch {
+						case v == 0:
+							record.doors[ix-1] = false
+
+						case v == 1:
+							record.doors[ix-1] = true
+
+						case v > 1 && v < 255:
+							record.doors[ix-1] = types.Permission(v)
+
+						default:
+							record.doors[ix-1] = false
+						}
+
+					case uint:
+						switch {
+						case v == 0:
+							record.doors[ix-1] = false
+
+						case v == 1:
+							record.doors[ix-1] = true
+
+						case v > 1 && v < 255:
+							record.doors[ix-1] = types.Permission(v)
+
+						default:
+							record.doors[ix-1] = false
+						}
+
+					case types.Permission:
+						vv, _ := v.(uint8)
+						switch {
+						case vv == 0:
+							record.doors[ix-1] = false
+
+						case vv == 1:
+							record.doors[ix-1] = true
+
+						case vv > 1 && vv < 255:
+							record.doors[ix-1] = v
+
+						default:
+							record.doors[ix-1] = false
+						}
+
+					default:
+						record.doors[ix-1] = false
+					}
 				}
 			}
 
@@ -167,10 +212,57 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 		}
 
 		for _, d := range c.doors {
-			if d {
-				record = append(record, "Y")
-			} else {
-				record = append(record, "N")
+			switch v := d.(type) {
+			case bool:
+				if v {
+					record = append(record, "Y")
+				} else {
+					record = append(record, "N")
+				}
+
+			case int:
+				switch {
+				case v == 0:
+					record = append(record, "N")
+				case v == 1:
+					record = append(record, "Y")
+				case v > 1 && v < 255:
+					record = append(record, fmt.Sprintf("%v", v))
+				default:
+					record = append(record, "N")
+				}
+
+			case uint:
+				switch {
+				case v == 0:
+					record = append(record, "N")
+				case v == 1:
+					record = append(record, "Y")
+				case v > 1 && v < 255:
+					record = append(record, fmt.Sprintf("%v", v))
+				default:
+					record = append(record, "N")
+				}
+
+			case types.Permission:
+				vv, _ := v.(uint8)
+				switch {
+				case vv == 0:
+					record = append(record, "N")
+				case vv == 1:
+					record = append(record, "Y")
+				case vv > 1 && vv < 255:
+					record = append(record, fmt.Sprintf("%v", v))
+				default:
+					record = append(record, "N")
+				}
+
+			default:
+				if d == nil {
+					record = append(record, "N")
+				} else {
+					record = append(record, "?")
+				}
 			}
 		}
 

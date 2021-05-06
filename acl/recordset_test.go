@@ -212,6 +212,45 @@ func TestMakeTable(t *testing.T) {
 	}
 }
 
+func TestMakeTableWithTimeProfiles(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: false}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]types.Permission{1: true, 2: false, 3: false, 4: 29}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]types.Permission{1: false, 2: false, 3: false, 4: false}},
+		},
+	}
+
+	expected := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
+		Records: [][]string{
+			[]string{"65537", "2020-01-02", "2020-10-31", "Y", "N", "N", "N"},
+			[]string{"65538", "2020-02-03", "2020-11-30", "Y", "N", "N", "29"},
+			[]string{"65539", "2020-03-04", "2020-12-31", "N", "N", "N", "N"},
+		},
+	}
+
+	d := uhppote.Device{
+		DeviceID: 12345,
+		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+	}
+
+	devices := []*uhppote.Device{&d}
+
+	rs, err := MakeTable(acl, devices)
+	if err != nil {
+		t.Fatalf("Unexpected error creating table: %v", err)
+	}
+
+	if rs == nil {
+		t.Fatalf("MakeTable returned invalid result: %v", rs)
+	}
+
+	if !reflect.DeepEqual(*rs, expected) {
+		t.Errorf("Returned incorrect table - expected:\n%+v\ngot:\n%+v\n", expected, *rs)
+	}
+}
+
 func TestMakeTableWithMultipleDevices(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{

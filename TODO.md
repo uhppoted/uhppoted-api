@@ -2,6 +2,11 @@
 
 ### IN PROGRESS
 
+- [ ] Update ACL for time profiles
+- [ ] Update GetCard(s) for time profiles
+- [ ] Update PutCard(s) for time profiles
+- [ ] Implement set/get/clear-time-profile
+
 ## TODO
 
 1. GetDevices: rename DeviceSummary.Address to IpAddress and use Address for IP+Port
