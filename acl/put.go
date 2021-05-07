@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/uhppoted/uhppote-core/device"
@@ -89,24 +90,34 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 	}
 
 	for _, card := range diff.Updated {
-		if ok, err := u.PutCard(deviceID, card); err != nil {
+		if err := validate(u, deviceID, card); err != nil {
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
-		} else if !ok {
-			report.Failed = append(report.Failed, card.CardNumber)
 		} else {
-			report.Updated = append(report.Updated, card.CardNumber)
+			if ok, err := u.PutCard(deviceID, card); err != nil {
+				report.Errored = append(report.Errored, card.CardNumber)
+				report.Errors = append(report.Errors, err)
+			} else if !ok {
+				report.Failed = append(report.Failed, card.CardNumber)
+			} else {
+				report.Updated = append(report.Updated, card.CardNumber)
+			}
 		}
 	}
 
 	for _, card := range diff.Added {
-		if ok, err := u.PutCard(deviceID, card); err != nil {
+		if err := validate(u, deviceID, card); err != nil {
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
-		} else if !ok {
-			report.Failed = append(report.Failed, card.CardNumber)
 		} else {
-			report.Added = append(report.Added, card.CardNumber)
+			if ok, err := u.PutCard(deviceID, card); err != nil {
+				report.Errored = append(report.Errored, card.CardNumber)
+				report.Errors = append(report.Errors, err)
+			} else if !ok {
+				report.Failed = append(report.Failed, card.CardNumber)
+			} else {
+				report.Added = append(report.Added, card.CardNumber)
+			}
 		}
 	}
 
@@ -159,4 +170,18 @@ func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) 
 	}
 
 	return &report, nil
+}
+
+func validate(u device.IDevice, deviceID uint32, card types.Card) error {
+	for _, door := range []uint8{1, 2, 3, 4} {
+		if v, ok := card.Doors[door]; ok && v >= 2 && v <= 254 {
+			if profile, err := u.GetTimeProfile(deviceID, uint8(v)); err != nil {
+				return err
+			} else if profile == nil {
+				return fmt.Errorf("Time profile %v is not defined for %v", v, deviceID)
+			}
+		}
+	}
+
+	return nil
 }
