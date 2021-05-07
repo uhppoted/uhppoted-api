@@ -2,9 +2,11 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"testing"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 func TestParseHeader(t *testing.T) {
@@ -131,5 +133,77 @@ func TestParseHeaderWithInvalidColumn(t *testing.T) {
 		t.Fatalf("Expected error parsing header with invalid column: %+v", *ix)
 	} else if err.Error() != expected.Error() {
 		t.Errorf("Incorrect error message\n   expected: %v\n   got:      %v", expected, err)
+	}
+}
+
+func TestParseRecord(t *testing.T) {
+	ix := index{
+		cardnumber: 1,
+		from:       2,
+		to:         3,
+		doors: map[uint32][]int{
+			12345: []int{6, 5, 7, 4},
+		},
+	}
+
+	record := []string{"8165535", "2021-01-01", "2021-12-31", "Y", "Y", "N", "29", "N", "N", "Y", "Y"}
+
+	expected := map[uint32]types.Card{
+		12345: types.Card{
+			CardNumber: 8165535,
+			From:       date("2021-01-01"),
+			To:         date("2021-12-31"),
+			Doors: map[uint8]int{
+				1: 0,
+				2: 1,
+				3: 29,
+				4: 1,
+			},
+		},
+	}
+
+	cards, err := parseRecord(record, ix)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing valid record - %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Incorrect cards list\n   expected: %v\n   got:      %v", expected, cards)
+	}
+}
+
+func TestParseRecordWithInvalidPermission(t *testing.T) {
+	ix := index{
+		cardnumber: 1,
+		from:       2,
+		to:         3,
+		doors: map[uint32][]int{
+			12345: []int{6, 5, 7, 4},
+		},
+	}
+
+	record := []string{"8165535", "2021-01-01", "2021-12-31", "Y", "Y", "X", "29", "N", "N", "Y", "Y"}
+
+	_, err := parseRecord(record, ix)
+	if err == nil {
+		t.Fatalf("Expected error parsing invalid record, got:%v", err)
+	}
+}
+
+func TestParseRecordWithInvalidTimeProfile(t *testing.T) {
+	ix := index{
+		cardnumber: 1,
+		from:       2,
+		to:         3,
+		doors: map[uint32][]int{
+			12345: []int{6, 5, 7, 4},
+		},
+	}
+
+	record := []string{"8165535", "2021-01-01", "2021-12-31", "Y", "Y", "N", "1", "N", "N", "Y", "Y"}
+
+	_, err := parseRecord(record, ix)
+	if err == nil {
+		t.Fatalf("Expected error parsing invalid record, got:%v", err)
 	}
 }

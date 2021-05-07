@@ -2,11 +2,13 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 func parseHeader(header []string, devices []*uhppote.Device) (*index, error) {
@@ -105,7 +107,7 @@ loop:
 	return &index, nil
 }
 
-func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
+func parseRecord(record []string, index index) (map[uint32]types.Card, error) {
 	cards := make(map[uint32]types.Card, 0)
 
 	for k, v := range index.doors {
@@ -140,7 +142,7 @@ func parseRecord(record []string, index *index) (map[uint32]types.Card, error) {
 	return cards, nil
 }
 
-func getCardNumber(record []string, index *index) (uint32, error) {
+func getCardNumber(record []string, index index) (uint32, error) {
 	f := field(record, index.cardnumber)
 	cardnumber, err := strconv.ParseUint(f, 10, 32)
 	if err != nil {
@@ -150,7 +152,7 @@ func getCardNumber(record []string, index *index) (uint32, error) {
 	return uint32(cardnumber), nil
 }
 
-func getFromDate(record []string, index *index) (*types.Date, error) {
+func getFromDate(record []string, index index) (*types.Date, error) {
 	f := field(record, index.from)
 	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
 	if err != nil {
@@ -162,7 +164,7 @@ func getFromDate(record []string, index *index) (*types.Date, error) {
 	return &from, nil
 }
 
-func getToDate(record []string, index *index) (*types.Date, error) {
+func getToDate(record []string, index index) (*types.Date, error) {
 	f := field(record, index.to)
 	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
 	if err != nil {
@@ -187,13 +189,19 @@ func getDoors(record []string, v []int) (map[uint8]int, error) {
 			continue
 		}
 
-		switch field(record, d) {
-		case "Y":
-			doors[uint8(i+1)] = 1
-		case "N":
+		v := field(record, d)
+		if v == "N" {
 			doors[uint8(i+1)] = 0
-		default:
-			return doors, fmt.Errorf("Expected 'Y/N' for door: '%s'", record[d])
+		} else if v == "Y" {
+			doors[uint8(i+1)] = 1
+		} else if matched, err := regexp.MatchString("[0-9]+", v); matched && err == nil {
+			if profile, _ := strconv.Atoi(v); profile < 2 || profile > 254 {
+				return doors, fmt.Errorf("Invalid time profile (%v) for door %v (valid profiles are in the interval [2..254])", v, record[d])
+			} else {
+				doors[uint8(i+1)] = profile
+			}
+		} else {
+			return doors, fmt.Errorf("Expected 'Y/N/<profile ID>' for door: '%s'", record[d])
 		}
 	}
 

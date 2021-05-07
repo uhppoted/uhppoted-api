@@ -27,6 +27,8 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error
 	index, err := parseHeader(header, devices)
 	if err != nil {
 		return nil, nil, err
+	} else if index == nil {
+		return nil, nil, fmt.Errorf("Invalid TSV header")
 	}
 
 	line := 0
@@ -40,7 +42,7 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error
 		}
 
 		line += 1
-		cards, err := parseRecord(record, index)
+		cards, err := parseRecord(record, *index)
 		if err != nil {
 			return nil, nil, fmt.Errorf("Error parsing TSV - line %d: %w\n", line, err)
 		}

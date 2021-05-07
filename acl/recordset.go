@@ -27,11 +27,13 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 	index, err := parseHeader(table.Header, devices)
 	if err != nil {
 		return nil, nil, err
+	} else if index == nil {
+		return nil, nil, fmt.Errorf("Invalid table header")
 	}
 
 	list := []map[uint32]types.Card{}
 	for row, record := range table.Records {
-		cards, err := parseRecord(record, index)
+		cards, err := parseRecord(record, *index)
 		if err != nil {
 			return nil, nil, fmt.Errorf("Error parsing table - row %d: %w", row+1, err)
 		}
