@@ -352,7 +352,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 	errors := uint(0)
 	warnings := uint(0)
 
-	expected := h.uhppote.ListenAddress
+	expected := h.uhppote.ListenAddr()
 	if expected == nil {
 		return errors, warnings
 	}

@@ -112,7 +112,7 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 					cardnumber: c.CardNumber,
 					from:       *c.From,
 					to:         *c.To,
-					doors:      make([]types.Permission, len(index)),
+					doors:      make([]int, len(index)),
 				}
 			}
 
@@ -132,59 +132,7 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 				}
 
 				if ix != 0 {
-					switch v := c.Doors[i].(type) {
-					case bool:
-						record.doors[ix-1] = v
-
-					case int:
-						switch {
-						case v == 0:
-							record.doors[ix-1] = false
-
-						case v == 1:
-							record.doors[ix-1] = true
-
-						case v > 1 && v < 255:
-							record.doors[ix-1] = types.Permission(v)
-
-						default:
-							record.doors[ix-1] = false
-						}
-
-					case uint:
-						switch {
-						case v == 0:
-							record.doors[ix-1] = false
-
-						case v == 1:
-							record.doors[ix-1] = true
-
-						case v > 1 && v < 255:
-							record.doors[ix-1] = types.Permission(v)
-
-						default:
-							record.doors[ix-1] = false
-						}
-
-					case types.Permission:
-						vv, _ := v.(uint8)
-						switch {
-						case vv == 0:
-							record.doors[ix-1] = false
-
-						case vv == 1:
-							record.doors[ix-1] = true
-
-						case vv > 1 && vv < 255:
-							record.doors[ix-1] = v
-
-						default:
-							record.doors[ix-1] = false
-						}
-
-					default:
-						record.doors[ix-1] = false
-					}
+					record.doors[ix-1] = c.Doors[i]
 				}
 			}
 
@@ -208,58 +156,18 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 			fmt.Sprintf("%s", c.to),
 		}
 
-		for _, d := range c.doors {
-			switch v := d.(type) {
-			case bool:
-				if v {
-					record = append(record, "Y")
-				} else {
-					record = append(record, "N")
-				}
+		for _, v := range c.doors {
+			switch {
+			case v == 0:
+				record = append(record, "N")
 
-			case int:
-				switch {
-				case v == 0:
-					record = append(record, "N")
-				case v == 1:
-					record = append(record, "Y")
-				case v > 1 && v < 255:
-					record = append(record, fmt.Sprintf("%v", v))
-				default:
-					record = append(record, "N")
-				}
+			case v == 1:
+				record = append(record, "Y")
 
-			case uint:
-				switch {
-				case v == 0:
-					record = append(record, "N")
-				case v == 1:
-					record = append(record, "Y")
-				case v > 1 && v < 255:
-					record = append(record, fmt.Sprintf("%v", v))
-				default:
-					record = append(record, "N")
-				}
-
-			case types.Permission:
-				vv, _ := v.(uint8)
-				switch {
-				case vv == 0:
-					record = append(record, "N")
-				case vv == 1:
-					record = append(record, "Y")
-				case vv > 1 && vv < 255:
-					record = append(record, fmt.Sprintf("%v", v))
-				default:
-					record = append(record, "N")
-				}
-
+			case v > 1 && v < 255:
+				record = append(record, fmt.Sprintf("%v", v))
 			default:
-				if d == nil {
-					record = append(record, "N")
-				} else {
-					record = append(record, "?")
-				}
+				record = append(record, "N")
 			}
 		}
 

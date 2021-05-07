@@ -35,7 +35,7 @@ type card struct {
 	cardnumber uint32
 	from       types.Date
 	to         types.Date
-	doors      []types.Permission
+	doors      []int
 }
 
 func (acl *ACL) Print(w io.Writer) {

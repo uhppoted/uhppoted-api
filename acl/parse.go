@@ -174,12 +174,12 @@ func getToDate(record []string, index *index) (*types.Date, error) {
 	return &to, nil
 }
 
-func getDoors(record []string, v []int) (map[uint8]types.Permission, error) {
-	doors := map[uint8]types.Permission{
-		1: false,
-		2: false,
-		3: false,
-		4: false,
+func getDoors(record []string, v []int) (map[uint8]int, error) {
+	doors := map[uint8]int{
+		1: 0,
+		2: 0,
+		3: 0,
+		4: 0,
 	}
 
 	for i, d := range v {
@@ -189,9 +189,9 @@ func getDoors(record []string, v []int) (map[uint8]types.Permission, error) {
 
 		switch field(record, d) {
 		case "Y":
-			doors[uint8(i+1)] = true
+			doors[uint8(i+1)] = 1
 		case "N":
-			doors[uint8(i+1)] = false
+			doors[uint8(i+1)] = 0
 		default:
 			return doors, fmt.Errorf("Expected 'Y/N' for door: '%s'", record[d])
 		}

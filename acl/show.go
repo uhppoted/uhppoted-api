@@ -19,21 +19,17 @@ func GetCard(u device.IDevice, devices []*uhppote.Device, cardID uint32) (map[st
 		}
 
 		if card != nil {
-			for ix, d := range card.Doors {
+			for ix, v := range card.Doors {
 				ok := false
-				switch v := d.(type) {
-				case bool:
-					ok = v
+				switch {
+				case v == 0:
+					ok = false
 
-				case int:
-					if v > 0 && v < 255 {
-						ok = true
-					}
+				case v == 1:
+					ok = true
 
-				case uint:
-					if v > 0 && v < 255 {
-						ok = true
-					}
+				case v >= 2 && v <= 254:
+					ok = true
 				}
 
 				if ok {
