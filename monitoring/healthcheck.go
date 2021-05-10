@@ -140,7 +140,7 @@ func (h *HealthCheck) update(now time.Time) {
 		}
 	}
 
-	for id, _ := range h.uhppote.Devices {
+	for id, _ := range h.uhppote.DeviceList() {
 		devices[id] = true
 	}
 
@@ -170,7 +170,7 @@ func (h *HealthCheck) known(now time.Time, handler MonitoringHandler) (uint, uin
 	errors := uint(0)
 	warnings := uint(0)
 
-	for id, _ := range h.uhppote.Devices {
+	for id, _ := range h.uhppote.DeviceList() {
 		alerted := alerts{
 			missing:      false,
 			unexpected:   false,
@@ -240,7 +240,7 @@ func (h *HealthCheck) unexpected(now time.Time, handler MonitoringHandler) (uint
 			alerted.listener = v.(alerts).listener
 		}
 
-		for id, _ := range h.uhppote.Devices {
+		for id, _ := range h.uhppote.DeviceList() {
 			if id == key {
 				if alerted.unexpected {
 					if alert(h, handler, key.(uint32), "added to configuration") {
@@ -433,7 +433,7 @@ func alert(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message s
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 	known := false
 
-	for id, _ := range h.uhppote.Devices {
+	for id, _ := range h.uhppote.DeviceList() {
 		if deviceID == id {
 			known = true
 		}
