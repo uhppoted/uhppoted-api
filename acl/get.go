@@ -3,12 +3,11 @@ package acl
 import (
 	"sync"
 
-	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, []error) {
+func GetACL(u uhppote.IUHPPOTE, devices []*uhppote.Device) (ACL, []error) {
 	acl := sync.Map{}
 	errors := []error{}
 	guard := sync.RWMutex{}
@@ -46,7 +45,7 @@ func GetACL(u device.IDevice, devices []*uhppote.Device) (ACL, []error) {
 	return a, errors
 }
 
-func getACL(u device.IDevice, deviceID uint32) (map[uint32]types.Card, error) {
+func getACL(u uhppote.IUHPPOTE, deviceID uint32) (map[uint32]types.Card, error) {
 	cards := map[uint32]types.Card{}
 
 	N, err := u.GetCards(deviceID)

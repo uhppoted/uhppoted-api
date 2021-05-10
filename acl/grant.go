@@ -2,14 +2,14 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/device"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"strings"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func Grant(u device.IDevice, devices []*uhppote.Device, cardID uint32, from, to types.Date, doors []string) error {
+func Grant(u uhppote.IUHPPOTE, devices []*uhppote.Device, cardID uint32, from, to types.Date, doors []string) error {
 	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func Grant(u device.IDevice, devices []*uhppote.Device, cardID uint32, from, to 
 	return nil
 }
 
-func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date, doors []uint8) error {
+func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date, doors []uint8) error {
 	if len(doors) == 0 {
 		return nil
 	}
@@ -103,7 +103,7 @@ func grant(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date
 	return nil
 }
 
-func grantAll(u device.IDevice, deviceID uint32, cardID uint32, from, to types.Date) error {
+func grantAll(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date) error {
 	card := &types.Card{
 		CardNumber: cardID,
 		From:       &from,

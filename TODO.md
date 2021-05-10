@@ -3,7 +3,7 @@
 ### IN PROGRESS
 
 - [ ] Update ACL for time profiles
-      - 'put-acl': check for valid time profiles
+      - compare-acl
 
 - [ ] Update GetCard(s) for time profiles
 - [ ] Update PutCard(s) for time profiles

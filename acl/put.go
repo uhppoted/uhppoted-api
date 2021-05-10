@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/uhppoted/uhppote-core/device"
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, []error) {
+func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []error) {
 	report := sync.Map{}
 	errors := []error{}
 	guard := sync.RWMutex{}
@@ -67,7 +67,7 @@ func PutACL(u device.IDevice, acl ACL, dryrun bool) (map[uint32]Report, []error)
 	return r, errors
 }
 
-func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
+func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
 		return nil, err
@@ -135,7 +135,7 @@ func putACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Re
 	return &report, nil
 }
 
-func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
+func fakePutACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
 		return nil, err
@@ -172,7 +172,7 @@ func fakePutACL(u device.IDevice, deviceID uint32, cards map[uint32]types.Card) 
 	return &report, nil
 }
 
-func validate(u device.IDevice, deviceID uint32, card types.Card) error {
+func validate(u uhppote.IUHPPOTE, deviceID uint32, card types.Card) error {
 	for _, door := range []uint8{1, 2, 3, 4} {
 		if v, ok := card.Doors[door]; ok && v >= 2 && v <= 254 {
 			if profile, err := u.GetTimeProfile(deviceID, uint8(v)); err != nil {

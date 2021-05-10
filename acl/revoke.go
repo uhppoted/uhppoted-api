@@ -2,13 +2,13 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/device"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"strings"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func Revoke(u device.IDevice, devices []*uhppote.Device, cardID uint32, doors []string) error {
+func Revoke(u uhppote.IUHPPOTE, devices []*uhppote.Device, cardID uint32, doors []string) error {
 	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func Revoke(u device.IDevice, devices []*uhppote.Device, cardID uint32, doors []
 	return nil
 }
 
-func revoke(u device.IDevice, deviceID uint32, cardID uint32, doors []uint8) error {
+func revoke(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, doors []uint8) error {
 	if len(doors) == 0 {
 		return nil
 	}
