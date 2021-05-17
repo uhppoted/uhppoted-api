@@ -2,6 +2,8 @@ package acl
 
 import (
 	"bytes"
+	"net"
+	"os"
 	"testing"
 	"time"
 
@@ -17,6 +19,46 @@ type mock struct {
 	deleteCard     func(uint32, uint32) (bool, error)
 	deleteCards    func(uint32) (bool, error)
 	getTimeProfile func(uint32, uint8) (*types.TimeProfile, error)
+}
+
+func (m *mock) GetDevices() ([]types.Device, error) {
+	return nil, nil
+}
+
+func (m *mock) GetDevice(deviceID uint32) (*types.Device, error) {
+	return nil, nil
+}
+
+func (m *mock) SetAddress(deviceID uint32, address, mask, gateway net.IP) (*types.Result, error) {
+	return nil, nil
+}
+
+func (m *mock) GetTime(deviceID uint32) (*types.Time, error) {
+	return nil, nil
+}
+
+func (m *mock) SetTime(deviceID uint32, datetime time.Time) (*types.Time, error) {
+	return nil, nil
+}
+
+func (m *mock) GetDoorControlState(deviceID uint32, door byte) (*types.DoorControlState, error) {
+	return nil, nil
+}
+
+func (m *mock) SetDoorControlState(deviceID uint32, door uint8, state uint8, delay uint8) (*types.DoorControlState, error) {
+	return nil, nil
+}
+
+func (m *mock) GetListener(deviceID uint32) (*types.Listener, error) {
+	return nil, nil
+}
+
+func (m *mock) SetListener(deviceID uint32, address net.UDPAddr) (*types.Result, error) {
+	return nil, nil
+}
+
+func (m *mock) GetStatus(deviceID uint32) (*types.Status, error) {
+	return nil, nil
 }
 
 func (m *mock) GetCards(deviceID uint32) (uint32, error) {
@@ -45,6 +87,38 @@ func (m *mock) DeleteCards(deviceID uint32) (bool, error) {
 
 func (m *mock) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
 	return m.getTimeProfile(deviceID, profileID)
+}
+
+func (m *mock) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool, error) {
+	return false, nil
+}
+
+func (m *mock) ClearTimeProfiles(deviceID uint32) (bool, error) {
+	return false, nil
+}
+
+func (m *mock) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
+	return false, nil
+}
+
+func (m *mock) GetEvent(deviceID, index uint32) (*types.Event, error) {
+	return nil, nil
+}
+
+func (m *mock) GetEventIndex(deviceID uint32) (*types.EventIndex, error) {
+	return nil, nil
+}
+
+func (m *mock) SetEventIndex(deviceID, index uint32) (*types.EventIndexResult, error) {
+	return nil, nil
+}
+
+func (m *mock) Listen(listener uhppote.Listener, q chan os.Signal) error {
+	return nil
+}
+
+func (m *mock) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
+	return nil, nil
 }
 
 var date = func(s string) *types.Date {
