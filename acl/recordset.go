@@ -18,7 +18,7 @@ func (e *DuplicateCardError) Error() string {
 	return fmt.Sprintf("%-10v Duplicate card number", e.CardNumber)
 }
 
-func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []error, error) {
+func ParseTable(table *Table, devices []uhppote.Device, strict bool) (*ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
@@ -80,7 +80,7 @@ func ParseTable(table *Table, devices []*uhppote.Device, strict bool) (*ACL, []e
 	return &acl, warnings, nil
 }
 
-func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
+func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 	header, err := makeHeader(devices)
 	if err != nil {
 		return nil, err
@@ -184,7 +184,7 @@ func MakeTable(acl ACL, devices []*uhppote.Device) (*Table, error) {
 	return &rs, nil
 }
 
-func makeHeader(devices []*uhppote.Device) ([]string, error) {
+func makeHeader(devices []uhppote.Device) ([]string, error) {
 	keys := []uint32{}
 	for _, d := range devices {
 		keys = append(keys, d.DeviceID)

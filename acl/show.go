@@ -4,7 +4,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func GetCard(u uhppote.IUHPPOTE, devices []*uhppote.Device, cardID uint32) (map[string]DateRange, error) {
+func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[string]DateRange, error) {
 	acl := map[string]DateRange{}
 	lookup, err := mapDeviceDoors(devices)
 	if err != nil {

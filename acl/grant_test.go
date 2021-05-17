@@ -14,8 +14,8 @@ func TestGrant(t *testing.T) {
 		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -61,12 +61,12 @@ func TestGrant(t *testing.T) {
 }
 
 func TestGrantWithAmbiguousDoors(t *testing.T) {
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"Garage", "D2", "D3", "D4"},
 		},
@@ -88,8 +88,8 @@ func TestGrantWithNewCard(t *testing.T) {
 		types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 1, 3: 1, 4: 0}},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -146,7 +146,7 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 	}
 
-	devices := []*uhppote.Device{&d}
+	devices := []uhppote.Device{d}
 
 	cards := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
@@ -201,12 +201,12 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -272,12 +272,12 @@ func TestGrantALL(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -343,12 +343,12 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -405,8 +405,8 @@ func TestGrantWithNoCurrentPermissions(t *testing.T) {
 		types.Card{CardNumber: 65537, From: date("2020-04-01"), To: date("2020-10-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},

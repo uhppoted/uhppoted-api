@@ -11,7 +11,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func parseHeader(header []string, devices []*uhppote.Device) (*index, error) {
+func parseHeader(header []string, devices []uhppote.Device) (*index, error) {
 	columns := make(map[string]struct {
 		door  string
 		index int

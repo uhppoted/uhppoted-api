@@ -7,7 +7,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func MakeFlatFile(acl ACL, devices []*uhppote.Device, f io.Writer) error {
+func MakeFlatFile(acl ACL, devices []uhppote.Device, f io.Writer) error {
 	t, err := MakeTable(acl, devices)
 	if err != nil {
 		return err

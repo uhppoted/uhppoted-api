@@ -70,7 +70,7 @@ func clean(s string) string {
 	return regexp.MustCompile(`[\s\t]+`).ReplaceAllString(strings.ToLower(s), "")
 }
 
-func mapDeviceDoors(devices []*uhppote.Device) (doormap, error) {
+func mapDeviceDoors(devices []uhppote.Device) (doormap, error) {
 	m := doormap{}
 
 	for _, d := range devices {

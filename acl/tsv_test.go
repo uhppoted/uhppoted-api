@@ -34,7 +34,7 @@ func TestParseTSV(t *testing.T) {
 		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 	}
 
-	devices := []*uhppote.Device{&d}
+	devices := []uhppote.Device{d}
 	r := strings.NewReader(tsv)
 
 	m, warnings, err := ParseTSV(r, devices, true)
@@ -94,7 +94,7 @@ func TestParseTSVWithMultipleDevices(t *testing.T) {
 		Doors:    []string{"D1", "D2", "D3", "D4"},
 	}
 
-	devices := []*uhppote.Device{&d1, &d2}
+	devices := []uhppote.Device{d1, d2}
 	r := strings.NewReader(tsv2)
 
 	m, warnings, err := ParseTSV(r, devices, true)
@@ -153,7 +153,7 @@ func TestParseTSVWithDuplicateCards(t *testing.T) {
 		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 	}
 
-	devices := []*uhppote.Device{&d}
+	devices := []uhppote.Device{d}
 	r := strings.NewReader(tsv)
 
 	m, warnings, err := ParseTSV(r, devices, false)
@@ -201,7 +201,7 @@ func TestParseTSVWithDuplicateCardsAndStrict(t *testing.T) {
 		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 	}
 
-	devices := []*uhppote.Device{&d}
+	devices := []uhppote.Device{d}
 	r := strings.NewReader(tsv)
 
 	_, _, err := ParseTSV(r, devices, true)
@@ -219,12 +219,12 @@ func TestMakeTSVWithMissingACL(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -262,12 +262,12 @@ func TestMakeTSV(t *testing.T) {
 65540	2019-01-01	2021-12-31	N	N	N	N	N	Y	N	Y
 `
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},

@@ -30,8 +30,8 @@ func TestGetCard(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -67,8 +67,8 @@ func TestGetCardWithUnknownCard(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -118,12 +118,12 @@ func TestGetCardWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},

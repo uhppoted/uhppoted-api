@@ -25,8 +25,8 @@ func TestParseTable(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -73,12 +73,12 @@ func TestParseTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -124,8 +124,8 @@ func TestParseTableWithDuplicateCardNumbers(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -160,8 +160,8 @@ func TestParseTableWithDuplicateCardNumbersAndStrict(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -196,7 +196,7 @@ func TestMakeTable(t *testing.T) {
 		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 	}
 
-	devices := []*uhppote.Device{&d}
+	devices := []uhppote.Device{d}
 
 	rs, err := MakeTable(acl, devices)
 	if err != nil {
@@ -235,7 +235,7 @@ func TestMakeTableWithTimeProfiles(t *testing.T) {
 		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 	}
 
-	devices := []*uhppote.Device{&d}
+	devices := []uhppote.Device{d}
 
 	rs, err := MakeTable(acl, devices)
 	if err != nil {
@@ -274,12 +274,12 @@ func TestMakeTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -317,8 +317,8 @@ func TestMakeTableWithBlankDoors(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "", "Workshop"},
 		},
@@ -347,12 +347,12 @@ func TestMakeTableWithMissingACL(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -386,12 +386,12 @@ func TestMakeRecordsetWithMismatchedDates(t *testing.T) {
 			[]string{"65539", "2020-01-03", "2020-12-31", "N", "N", "N", "N", "N", "Y", "Y", "Y"},
 		},
 	}
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -438,12 +438,12 @@ func TestMakeTableWithMismatchedCards(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},

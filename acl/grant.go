@@ -9,7 +9,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func Grant(u uhppote.IUHPPOTE, devices []*uhppote.Device, cardID uint32, from, to types.Date, doors []string) error {
+func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to types.Date, doors []string) error {
 	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err

@@ -8,7 +8,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func Revoke(u uhppote.IUHPPOTE, devices []*uhppote.Device, cardID uint32, doors []string) error {
+func Revoke(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, doors []string) error {
 	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err

@@ -7,7 +7,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func GetACL(u uhppote.IUHPPOTE, devices []*uhppote.Device) (ACL, []error) {
+func GetACL(u uhppote.IUHPPOTE, devices []uhppote.Device) (ACL, []error) {
 	acl := sync.Map{}
 	errors := []error{}
 	guard := sync.RWMutex{}

@@ -21,8 +21,8 @@ func TestParseHeader(t *testing.T) {
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage"}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
@@ -53,12 +53,12 @@ func TestParseHeaderWithMultipleDevices(t *testing.T) {
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D3", "D4"}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -89,12 +89,12 @@ func TestParseHeaderWithMissingColumn(t *testing.T) {
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D4"}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -117,12 +117,12 @@ func TestParseHeaderWithInvalidColumn(t *testing.T) {
 
 	expected := fmt.Errorf("No configured door matches 'D3X'")
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},

@@ -16,12 +16,12 @@ func TestMakeFlatFileWithMissingACL(t *testing.T) {
 		},
 	}
 
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -58,12 +58,12 @@ func TestMakeFlatFile(t *testing.T) {
 65539        2020-01-03  2020-12-31  N           N          N       N         N   Y   Y   Y 
 65540        2019-01-01  2021-12-31  N           N          N       N         N   Y   N   Y 
 `
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},
@@ -105,12 +105,12 @@ func TestMakeFlatFileWithTimeProfiles(t *testing.T) {
 65539        2020-01-03  2020-12-31  N           N          N       N         N   Y   Y   Y 
 65540        2019-01-01  2021-12-31  N           N          N       N         N   Y   N   Y 
 `
-	devices := []*uhppote.Device{
-		&uhppote.Device{
+	devices := []uhppote.Device{
+		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
-		&uhppote.Device{
+		uhppote.Device{
 			DeviceID: 54321,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 		},

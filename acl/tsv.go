@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error, error) {
+func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range devices {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
@@ -89,7 +89,7 @@ func ParseTSV(f io.Reader, devices []*uhppote.Device, strict bool) (ACL, []error
 	return acl, warnings, nil
 }
 
-func MakeTSV(acl ACL, devices []*uhppote.Device, f io.Writer) error {
+func MakeTSV(acl ACL, devices []uhppote.Device, f io.Writer) error {
 	t, err := MakeTable(acl, devices)
 	if err != nil {
 		return err
