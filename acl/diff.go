@@ -97,6 +97,16 @@ func (diff *SystemDiff) Consolidate() *ConsolidatedDiff {
 	}
 }
 
+func (diff *SystemDiff) HasChanges() bool {
+	for _, d := range *diff {
+		if d.HasChanges() {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (d *Diff) HasChanges() bool {
 	if len(d.Updated) > 0 {
 		return true
