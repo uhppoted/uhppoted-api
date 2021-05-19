@@ -11,6 +11,7 @@ import (
 )
 
 type stub struct {
+	getTimeProfile      func(deviceID uint32, profileID uint8) (*types.TimeProfile, error)
 	recordSpecialEvents func(deviceID uint32, enable bool) (bool, error)
 }
 
@@ -87,7 +88,11 @@ func (m *stub) SetDoorControlState(deviceID uint32, door uint8, state uint8, del
 }
 
 func (m *stub) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
-	return nil, nil
+	if m.getTimeProfile != nil {
+		return m.getTimeProfile(deviceID, profileID)
+	}
+
+	return nil, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool, error) {
