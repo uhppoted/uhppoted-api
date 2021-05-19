@@ -121,6 +121,14 @@ func (m *mock) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
 	return nil, nil
 }
 
+func (m *mock) DeviceList() map[uint32]uhppote.Device {
+	return map[uint32]uhppote.Device{}
+}
+
+func (m *mock) ListenAddr() *net.UDPAddr {
+	return nil
+}
+
 var date = func(s string) *types.Date {
 	d, _ := time.ParseInLocation("2006-01-02", s, time.Local)
 	p := types.Date(d)

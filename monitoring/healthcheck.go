@@ -12,7 +12,7 @@ import (
 )
 
 type HealthCheck struct {
-	uhppote    *uhppote.UHPPOTE
+	uhppote    uhppote.IUHPPOTE
 	idleTime   time.Duration
 	ignoreTime time.Duration
 	log        *log.Logger
@@ -48,7 +48,7 @@ type alerts struct {
 	listener     bool
 }
 
-func NewHealthCheck(u *uhppote.UHPPOTE, idleTime, ignoreTime time.Duration, l *log.Logger) HealthCheck {
+func NewHealthCheck(u uhppote.IUHPPOTE, idleTime, ignoreTime time.Duration, l *log.Logger) HealthCheck {
 	return HealthCheck{
 		uhppote:    u,
 		idleTime:   idleTime,
