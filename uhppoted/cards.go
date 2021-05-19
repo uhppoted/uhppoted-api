@@ -19,7 +19,7 @@ func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecord
 
 	device := uint32(request.DeviceID)
 
-	N, err := u.Uhppote.GetCards(device)
+	N, err := u.UHPPOTE.GetCards(device)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving number of cards from %v (%w)", device, err))
 	}
@@ -48,7 +48,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	device := uint32(request.DeviceID)
 
-	N, err := u.Uhppote.GetCards(device)
+	N, err := u.UHPPOTE.GetCards(device)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 	}
@@ -57,7 +57,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	var index uint32 = 1
 	for count := uint32(0); count < N; {
-		record, err := u.Uhppote.GetCardByIndex(device, index)
+		record, err := u.UHPPOTE.GetCardByIndex(device, index)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 		}
@@ -94,7 +94,7 @@ func (u *UHPPOTED) DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse
 
 	deviceID := uint32(request.DeviceID)
 
-	deleted, err := u.Uhppote.DeleteCards(deviceID)
+	deleted, err := u.UHPPOTE.DeleteCards(deviceID)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error deleting cards from %v (%w)", deviceID, err))
 	}
@@ -125,7 +125,7 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 	device := uint32(request.DeviceID)
 	cardID := request.CardNumber
 
-	card, err := u.Uhppote.GetCardByID(device, cardID)
+	card, err := u.UHPPOTE.GetCardByID(device, cardID)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving card %v from %v (%w)", card.CardNumber, device, err))
 	}
@@ -160,7 +160,7 @@ func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 	deviceID := uint32(request.DeviceID)
 	card := request.Card
 
-	authorised, err := u.Uhppote.PutCard(deviceID, card)
+	authorised, err := u.UHPPOTE.PutCard(deviceID, card)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
@@ -196,7 +196,7 @@ func (u *UHPPOTED) DeleteCard(request DeleteCardRequest) (*DeleteCardResponse, e
 	deviceID := uint32(request.DeviceID)
 	cardNo := request.CardNumber
 
-	deleted, err := u.Uhppote.DeleteCard(deviceID, cardNo)
+	deleted, err := u.UHPPOTE.DeleteCard(deviceID, cardNo)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error deleting card %v from %v (%w)", cardNo, deviceID, err))
 	}

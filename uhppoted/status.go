@@ -41,7 +41,7 @@ func (u *UHPPOTED) GetStatus(request GetStatusRequest) (*GetStatusResponse, erro
 	u.debug("get-status", fmt.Sprintf("request  %+v", request))
 
 	device := uint32(request.DeviceID)
-	status, err := u.Uhppote.GetStatus(device)
+	status, err := u.UHPPOTE.GetStatus(device)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving status for %v (%w)", device, err))
 	}

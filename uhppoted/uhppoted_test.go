@@ -2,6 +2,7 @@ package uhppoted
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"time"
 
@@ -13,7 +14,11 @@ type stub struct {
 	recordSpecialEvents func(deviceID uint32, enable bool) (bool, error)
 }
 
-func (m *stub) DeviceList() map[uint32]*uhppote.Device {
+func (m *stub) DeviceList() map[uint32]uhppote.Device {
+	return nil
+}
+
+func (m *stub) ListenAddr() *net.UDPAddr {
 	return nil
 }
 
@@ -25,11 +30,23 @@ func (m *stub) GetDevice(deviceID uint32) (*types.Device, error) {
 	return nil, nil
 }
 
+func (m *stub) SetAddress(deviceID uint32, address, mask, gateway net.IP) (*types.Result, error) {
+	return nil, nil
+}
+
 func (m *stub) GetTime(serialNumber uint32) (*types.Time, error) {
 	return nil, nil
 }
 
 func (m *stub) SetTime(serialNumber uint32, datetime time.Time) (*types.Time, error) {
+	return nil, nil
+}
+
+func (m *stub) GetListener(deviceID uint32) (*types.Listener, error) {
+	return nil, nil
+}
+
+func (m *stub) SetListener(deviceID uint32, address net.UDPAddr) (*types.Result, error) {
 	return nil, nil
 }
 
@@ -69,7 +86,27 @@ func (m *stub) SetDoorControlState(deviceID uint32, door uint8, state uint8, del
 	return nil, nil
 }
 
+func (m *stub) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+	return nil, nil
+}
+
+func (m *stub) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool, error) {
+	return false, nil
+}
+
+func (m *stub) ClearTimeProfiles(deviceID uint32) (bool, error) {
+	return false, nil
+}
+
 func (m *stub) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
+	return nil, nil
+}
+
+func (m *stub) GetEventIndex(deviceID uint32) (*types.EventIndex, error) {
+	return nil, nil
+}
+
+func (m *stub) SetEventIndex(deviceID, index uint32) (*types.EventIndexResult, error) {
 	return nil, nil
 }
 

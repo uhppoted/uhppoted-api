@@ -81,7 +81,7 @@ func TestRecordSpecialEvents(t *testing.T) {
 	}
 
 	u := UHPPOTED{
-		Uhppote:         &mock,
+		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
 		Log:             nil,
 	}
@@ -119,7 +119,7 @@ func TestRecordSpecialEventsWithFail(t *testing.T) {
 	}
 
 	u := UHPPOTED{
-		Uhppote:         &mock,
+		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
 		Log:             nil,
 	}

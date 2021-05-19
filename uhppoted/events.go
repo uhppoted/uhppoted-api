@@ -59,7 +59,7 @@ type Event struct {
 func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error) {
 	u.debug("get-events", fmt.Sprintf("request  %+v", request))
 
-	devices := u.Uhppote.DeviceList()
+	devices := u.UHPPOTE.DeviceList()
 	device := uint32(request.DeviceID)
 	start := request.Start
 	end := request.End
@@ -71,12 +71,12 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 		}
 	}
 
-	f, err := u.Uhppote.GetEvent(device, 0)
+	f, err := u.UHPPOTE.GetEvent(device, 0)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, err))
 	}
 
-	l, err := u.Uhppote.GetEvent(device, 0xffffffff)
+	l, err := u.UHPPOTE.GetEvent(device, 0xffffffff)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, err))
 	}
@@ -108,7 +108,7 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 		if start != nil || end != nil {
 			index := EventIndex(l.Index)
 			for {
-				record, err := u.Uhppote.GetEvent(device, uint32(index))
+				record, err := u.UHPPOTE.GetEvent(device, uint32(index))
 				if err != nil {
 					return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event for index %v from %v (%w)", index, device, err))
 				}
@@ -179,7 +179,7 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 	device := uint32(request.DeviceID)
 	eventID := request.EventID
 
-	record, err := u.Uhppote.GetEvent(device, eventID)
+	record, err := u.UHPPOTE.GetEvent(device, eventID)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event for ID %v from %v (%w)", eventID, device, err))
 	}
@@ -219,7 +219,7 @@ func (u *UHPPOTED) RecordSpecialEvents(request RecordSpecialEventsRequest) (*Rec
 	device := uint32(request.DeviceID)
 	enable := request.Enable
 
-	updated, err := u.Uhppote.RecordSpecialEvents(device, enable)
+	updated, err := u.UHPPOTE.RecordSpecialEvents(device, enable)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error updating 'record special events' flag for %v (%w)", device, err))
 	}

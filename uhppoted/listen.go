@@ -64,7 +64,7 @@ const BATCHSIZE = 32
 func (u *UHPPOTED) Listen(handler EventHandler, received *EventMap, q chan os.Signal) {
 	var wg sync.WaitGroup
 
-	devices := u.Uhppote.DeviceList()
+	devices := u.UHPPOTE.DeviceList()
 
 	for _, d := range devices {
 		deviceID := d.ID()
@@ -84,7 +84,7 @@ func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHa
 	if index, ok := received.retrieved[deviceID]; ok {
 		u.info("listen", fmt.Sprintf("Fetching unretrieved events for device ID %v", deviceID))
 
-		event, err := u.Uhppote.GetEvent(deviceID, 0xffffffff)
+		event, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff)
 		if err != nil {
 			u.warn("listen", fmt.Errorf("Unable to retrieve events for device ID %v (%w)", deviceID, err))
 			return
@@ -95,7 +95,7 @@ func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHa
 			return
 		}
 
-		devices := u.Uhppote.DeviceList()
+		devices := u.UHPPOTE.DeviceList()
 		rollover := ROLLOVER
 		if d, ok := devices[deviceID]; ok {
 			if d.RolloverAt() != 0 {
@@ -145,10 +145,10 @@ func (u *UHPPOTED) listen(handler EventHandler, received *EventMap, q chan os.Si
 		},
 	}
 
-	// NTS: use 'for {..}' because 'for err := u.Uhppote.Listen; ..' only ever executes the
+	// NTS: use 'for {..}' because 'for err := u.UHPPOTE.Listen; ..' only ever executes the
 	//      'Listen' once - on loop initialization
 	for {
-		if err := u.Uhppote.Listen(&l, q); err != nil {
+		if err := u.UHPPOTE.Listen(&l, q); err != nil {
 			u.warn("listen", err)
 
 			delay := 60 * time.Second
@@ -187,7 +187,7 @@ func (u *UHPPOTED) onEvent(e *types.Status, received *EventMap, handler EventHan
 }
 
 func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHandler) (retrieved uint32) {
-	devices := u.Uhppote.DeviceList()
+	devices := u.UHPPOTE.DeviceList()
 	batchSize := BATCHSIZE
 	rollover := ROLLOVER
 
@@ -201,7 +201,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 		}
 	}
 
-	first, err := u.Uhppote.GetEvent(deviceID, 0)
+	first, err := u.UHPPOTE.GetEvent(deviceID, 0)
 	if err != nil {
 		u.warn("listen", fmt.Errorf("Failed to retrieve 'first' event for device %d (%w)", deviceID, err))
 		return
@@ -210,7 +210,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 		return
 	}
 
-	last, err := u.Uhppote.GetEvent(deviceID, 0xffffffff)
+	last, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff)
 	if err != nil {
 		u.warn("listen", fmt.Errorf("Failed to retrieve 'last' event for device %d (%w)", deviceID, err))
 		return
@@ -245,7 +245,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 			return
 		}
 
-		record, err := u.Uhppote.GetEvent(deviceID, uint32(index))
+		record, err := u.UHPPOTE.GetEvent(deviceID, uint32(index))
 		if err != nil {
 			u.warn("listen", fmt.Errorf("Failed to retrieve event for device %d, ID %d (%w)", deviceID, index, err))
 		} else if record == nil {
