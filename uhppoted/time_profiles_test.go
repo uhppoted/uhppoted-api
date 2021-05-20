@@ -22,7 +22,6 @@ func hhmm(s string) *types.HHmm {
 }
 
 func TestGetTimeProfile(t *testing.T) {
-
 	profile := types.TimeProfile{
 		ID:              29,
 		LinkedProfileID: 19,
@@ -71,6 +70,68 @@ func TestGetTimeProfile(t *testing.T) {
 	}
 
 	response, err := u.GetTimeProfile(request)
+	if err != nil {
+		t.Fatalf("Unexpected error (%v)", err)
+	}
+
+	if response == nil {
+		t.Fatalf("Invalid response (%v)", response)
+	}
+
+	if !reflect.DeepEqual(*response, expected) {
+		t.Errorf("Incorrected response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	}
+}
+
+func TestSetTimeProfile(t *testing.T) {
+	profile := types.TimeProfile{
+		ID:              29,
+		LinkedProfileID: 19,
+		From:            date("2021-04-01"),
+		To:              date("2021-12-29"),
+		Weekdays: types.Weekdays{
+			time.Monday:    true,
+			time.Tuesday:   true,
+			time.Wednesday: false,
+			time.Thursday:  true,
+			time.Friday:    false,
+			time.Saturday:  true,
+			time.Sunday:    true,
+		},
+		Segments: types.Segments{
+			1: types.Segment{Start: hhmm("08:30"), End: hhmm("09:45")},
+			2: types.Segment{Start: hhmm("11:35"), End: hhmm("13:15")},
+			3: types.Segment{Start: hhmm("14:01"), End: hhmm("17:59")},
+		},
+	}
+
+	request := SetTimeProfileRequest{
+		DeviceID:    405419896,
+		TimeProfile: profile,
+	}
+
+	expected := SetTimeProfileResponse{
+		DeviceID:    405419896,
+		TimeProfile: profile,
+	}
+
+	mock := stub{
+		setTimeProfile: func(deviceID uint32, profile types.TimeProfile) (bool, error) {
+			if deviceID == 405419896 && profile.ID == 29 {
+				return true, nil
+			}
+
+			return false, fmt.Errorf("Invalid arguments")
+		},
+	}
+
+	u := UHPPOTED{
+		UHPPOTE:         &mock,
+		ListenBatchSize: 0,
+		Log:             nil,
+	}
+
+	response, err := u.SetTimeProfile(request)
 	if err != nil {
 		t.Fatalf("Unexpected error (%v)", err)
 	}

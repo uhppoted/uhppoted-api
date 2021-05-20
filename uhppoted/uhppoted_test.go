@@ -12,6 +12,7 @@ import (
 
 type stub struct {
 	getTimeProfile      func(deviceID uint32, profileID uint8) (*types.TimeProfile, error)
+	setTimeProfile      func(deviceID uint32, profile types.TimeProfile) (bool, error)
 	recordSpecialEvents func(deviceID uint32, enable bool) (bool, error)
 }
 
@@ -96,6 +97,10 @@ func (m *stub) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProf
 }
 
 func (m *stub) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool, error) {
+	if m.setTimeProfile != nil {
+		return m.setTimeProfile(deviceID, profile)
+	}
+
 	return false, nil
 }
 

@@ -163,11 +163,11 @@ func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 
 	authorised, err := u.UHPPOTE.PutCard(deviceID, card)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error writing card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
 
 	if !authorised {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error storing card %v to %v (%w)", card.CardNumber, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Failed to write card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
 
 	response := PutCardResponse{
