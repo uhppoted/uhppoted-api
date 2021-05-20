@@ -55,6 +55,41 @@ func (u *UHPPOTED) SetTimeProfile(request SetTimeProfileRequest) (*SetTimeProfil
 
 	deviceID := request.DeviceID
 	profile := request.TimeProfile
+	linked := profile.LinkedProfileID
+
+	if profile.ID < 2 || profile.ID > 254 {
+		return nil, fmt.Errorf("Invalid time profile ID (%v) - valid range is [1..254]", profile.ID)
+	}
+
+	if linked != 0 {
+		if linked == profile.ID {
+			return nil, fmt.Errorf("Link to self creates circular reference")
+		}
+
+		if p, err := u.UHPPOTE.GetTimeProfile(deviceID, linked); err != nil {
+			return nil, err
+		} else if p == nil {
+			return nil, fmt.Errorf("Linked time profile %v is not defined", linked)
+		}
+
+		profiles := map[uint8]bool{profile.ID: true}
+		links := []uint8{profile.ID}
+		for l := linked; l != 0; {
+			if p, err := u.UHPPOTE.GetTimeProfile(deviceID, l); err != nil {
+				return nil, err
+			} else if p == nil {
+				return nil, fmt.Errorf("Linked time profile %v is not defined", l)
+			} else {
+				links = append(links, p.ID)
+				if profiles[p.ID] {
+					return nil, fmt.Errorf("Linking to time profile %v creates a circular reference (%v)", linked, links)
+				}
+
+				profiles[p.ID] = true
+				l = p.LinkedProfileID
+			}
+		}
+	}
 
 	ok, err := u.UHPPOTE.SetTimeProfile(deviceID, profile)
 	if err != nil {

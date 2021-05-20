@@ -101,7 +101,7 @@ func (m *stub) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool,
 		return m.setTimeProfile(deviceID, profile)
 	}
 
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) ClearTimeProfiles(deviceID uint32) (bool, error) {
