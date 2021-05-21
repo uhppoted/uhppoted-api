@@ -172,3 +172,43 @@ func TestSetTimeProfile(t *testing.T) {
 		t.Errorf("Incorrected response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
 	}
 }
+
+func TestClearTimeProfiles(t *testing.T) {
+	request := ClearTimeProfilesRequest{
+		DeviceID: 405419896,
+	}
+
+	expected := ClearTimeProfilesResponse{
+		DeviceID: 405419896,
+		Cleared:  true,
+	}
+
+	mock := stub{
+		clearTimeProfiles: func(deviceID uint32) (bool, error) {
+			if deviceID == 405419896 {
+				return true, nil
+			}
+
+			return false, fmt.Errorf("Invalid arguments")
+		},
+	}
+
+	u := UHPPOTED{
+		UHPPOTE:         &mock,
+		ListenBatchSize: 0,
+		Log:             nil,
+	}
+
+	response, err := u.ClearTimeProfiles(request)
+	if err != nil {
+		t.Fatalf("Unexpected error (%v)", err)
+	}
+
+	if response == nil {
+		t.Fatalf("Invalid response (%v)", response)
+	}
+
+	if !reflect.DeepEqual(*response, expected) {
+		t.Errorf("Incorrected response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	}
+}

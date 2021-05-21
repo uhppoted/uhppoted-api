@@ -109,3 +109,32 @@ func (u *UHPPOTED) SetTimeProfile(request SetTimeProfileRequest) (*SetTimeProfil
 
 	return &response, nil
 }
+
+type ClearTimeProfilesRequest struct {
+	DeviceID uint32
+}
+
+type ClearTimeProfilesResponse struct {
+	DeviceID DeviceID `json:"device-id"`
+	Cleared  bool     `json:"cleared"`
+}
+
+func (u *UHPPOTED) ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTimeProfilesResponse, error) {
+	u.debug("clear-time-profiles", fmt.Sprintf("request  %+v", request))
+
+	deviceID := request.DeviceID
+
+	cleared, err := u.UHPPOTE.ClearTimeProfiles(deviceID)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error clearing time profiles from %v (%w)", deviceID, err))
+	}
+
+	response := ClearTimeProfilesResponse{
+		DeviceID: DeviceID(deviceID),
+		Cleared:  cleared,
+	}
+
+	u.debug("clear-time-profiles", fmt.Sprintf("response %+v", response))
+
+	return &response, nil
+}
