@@ -5,6 +5,42 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
+type GetTimeProfilesRequest struct {
+	DeviceID uint32
+}
+
+type GetTimeProfilesResponse struct {
+	DeviceID DeviceID            `json:"device-id"`
+	Profiles []types.TimeProfile `json:"time-profiles"`
+}
+
+func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProfilesResponse, error) {
+	u.debug("get-time-profiles", fmt.Sprintf("request  %+v", request))
+
+	deviceID := request.DeviceID
+	profiles := []types.TimeProfile{}
+
+	for i := 2; i <= 254; i++ {
+		profile, err := u.UHPPOTE.GetTimeProfile(deviceID, uint8(i))
+		if err != nil {
+			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving time profile %v from %v (%w)", i, deviceID, err))
+		}
+
+		if profile != nil {
+			profiles = append(profiles, *profile)
+		}
+	}
+
+	response := GetTimeProfilesResponse{
+		DeviceID: DeviceID(deviceID),
+		Profiles: profiles,
+	}
+
+	u.debug("get-time-profiles", fmt.Sprintf("response %+v", response))
+
+	return &response, nil
+}
+
 type GetTimeProfileRequest struct {
 	DeviceID  uint32
 	ProfileID uint8
