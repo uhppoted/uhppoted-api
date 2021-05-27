@@ -8,9 +8,9 @@ import (
 )
 
 func TestGetCard(t *testing.T) {
-	expected := map[string]DateRange{
-		"Front Door": DateRange{From: *date("2020-02-03"), To: *date("2020-11-30")},
-		"Workshop":   DateRange{From: *date("2020-02-03"), To: *date("2020-11-30")},
+	expected := map[string]Permission{
+		"Front Door": Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
+		"Workshop":   Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
 	}
 
 	cards := []types.Card{
@@ -48,7 +48,7 @@ func TestGetCard(t *testing.T) {
 }
 
 func TestGetCardWithUnknownCard(t *testing.T) {
-	expected := map[string]DateRange{}
+	expected := map[string]Permission{}
 
 	cards := []types.Card{
 		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
@@ -85,10 +85,10 @@ func TestGetCardWithUnknownCard(t *testing.T) {
 }
 
 func TestGetCardWithMultipleDevices(t *testing.T) {
-	expected := map[string]DateRange{
-		"Front Door": DateRange{From: *date("2020-02-03"), To: *date("2020-11-30")},
-		"Workshop":   DateRange{From: *date("2020-02-03"), To: *date("2020-11-30")},
-		"D2":         DateRange{From: *date("2020-01-01"), To: *date("2020-12-31")},
+	expected := map[string]Permission{
+		"Front Door": Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
+		"Workshop":   Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
+		"D2":         Permission{From: *date("2020-01-01"), To: *date("2020-12-31")},
 	}
 
 	cards := map[uint32][]types.Card{

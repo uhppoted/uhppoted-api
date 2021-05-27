@@ -13,9 +13,10 @@ import (
 
 type ACL map[uint32]map[uint32]types.Card
 
-type DateRange struct {
-	From types.Date
-	To   types.Date
+type Permission struct {
+	From    types.Date
+	To      types.Date
+	Profile int
 }
 
 type index struct {

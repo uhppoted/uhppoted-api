@@ -4,8 +4,8 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[string]DateRange, error) {
-	acl := map[string]DateRange{}
+func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[string]Permission, error) {
+	acl := map[string]Permission{}
 	lookup, err := mapDeviceDoors(devices)
 	if err != nil {
 		return acl, err
@@ -20,6 +20,8 @@ func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[s
 		if card != nil {
 			for ix, v := range card.Doors {
 				ok := false
+				profile := 0
+
 				switch {
 				case v == 0:
 					ok = false
@@ -29,14 +31,16 @@ func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[s
 
 				case v >= 2 && v <= 254:
 					ok = true
+					profile = v
 				}
 
 				if ok {
 					for _, v := range lookup {
 						if v.deviceID == device.DeviceID && v.door == ix {
-							acl[v.name] = DateRange{
-								From: *card.From,
-								To:   *card.To,
+							acl[v.name] = Permission{
+								From:    *card.From,
+								To:      *card.To,
+								Profile: profile,
 							}
 						}
 					}
