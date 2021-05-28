@@ -50,13 +50,126 @@ func TestGrant(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
 
 	if !reflect.DeepEqual(cards, expected) {
 		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+}
+
+func TestGrantWithTimeProfile(t *testing.T) {
+	expected := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 29, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+	}
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+	}
+
+	u := mock{
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
+			for _, c := range cards {
+				if c.CardNumber == cardID {
+					return &c, nil
+				}
+			}
+			return nil, nil
+		},
+
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+
+		getTimeProfile: func(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+			if profileID == 29 {
+				return &types.TimeProfile{}, nil
+			}
+
+			return nil, nil
+		},
+	}
+
+	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 29, []string{"Garage"})
+	if err != nil {
+		t.Fatalf("Unexpected error invoking 'grant': %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+}
+
+func TestGrantWithUndefinedTimeProfile(t *testing.T) {
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	cards := []types.Card{
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+	}
+
+	u := mock{
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
+			for _, c := range cards {
+				if c.CardNumber == cardID {
+					return &c, nil
+				}
+			}
+			return nil, nil
+		},
+
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+
+		getTimeProfile: func(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+			if profileID == 29 {
+				return &types.TimeProfile{}, nil
+			}
+
+			return nil, nil
+		},
+	}
+
+	if err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 55, []string{"Garage"}); err == nil {
+		t.Fatalf("Expected error invoking 'grant' with undefined time profile, got: %v", err)
 	}
 }
 
@@ -74,7 +187,7 @@ func TestGrantWithAmbiguousDoors(t *testing.T) {
 
 	u := mock{}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage"})
 	if err == nil {
 		t.Fatalf("Expected error invoking 'grant', got '%v'", err)
 	}
@@ -124,7 +237,7 @@ func TestGrantWithNewCard(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65536, *date("2020-01-01"), *date("2020-12-31"), []string{"Side Door", "Garage"})
+	err := Grant(&u, devices, 65536, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Side Door", "Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -177,7 +290,7 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-04-01"), *date("2020-10-31"), []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2020-04-01"), *date("2020-10-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -248,7 +361,7 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), []string{"Garage", "D2"})
+	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage", "D2"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -319,7 +432,7 @@ func TestGrantALL(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-03-02"), *date("2020-10-31"), []string{"ALL"})
+	err := Grant(&u, devices, 65538, *date("2020-03-02"), *date("2020-10-31"), 0, []string{"ALL"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant ALL': %v", err)
 	}
@@ -390,7 +503,7 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), []string{"Garage", "D2X"})
+	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage", "D2X"})
 	if err == nil {
 		t.Errorf("Expected error invoking 'grant' with invalid door")
 	}
@@ -439,7 +552,7 @@ func TestGrantWithNoCurrentPermissions(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65537, *date("2020-04-01"), *date("2020-10-31"), []string{"Garage"})
+	err := Grant(&u, devices, 65537, *date("2020-04-01"), *date("2020-10-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}

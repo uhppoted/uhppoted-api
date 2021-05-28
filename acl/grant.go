@@ -9,7 +9,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to types.Date, doors []string) error {
+func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to types.Date, profile int, doors []string) error {
 	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to
 			}
 		}
 
-		if err := grant(u, d.DeviceID, cardID, from, to, l); err != nil {
+		if err := grant(u, d.DeviceID, cardID, from, to, profile, l); err != nil {
 			return err
 		}
 	}
@@ -50,9 +50,17 @@ func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to
 	return nil
 }
 
-func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date, doors []uint8) error {
+func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date, profileID int, doors []uint8) error {
 	if len(doors) == 0 {
 		return nil
+	}
+
+	if profileID >= 2 && profileID <= 254 {
+		if profile, err := u.GetTimeProfile(deviceID, uint8(profileID)); err != nil {
+			return err
+		} else if profile == nil {
+			return fmt.Errorf("Time profile %v is not defined for %v", profileID, deviceID)
+		}
 	}
 
 	card, err := u.GetCardByID(deviceID, cardID)
@@ -91,7 +99,11 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 	}
 
 	for _, d := range doors {
-		card.Doors[d] = 1
+		if profileID >= 2 && profileID <= 254 {
+			card.Doors[d] = profileID
+		} else {
+			card.Doors[d] = 1
+		}
 	}
 
 	if ok, err := u.PutCard(deviceID, *card); err != nil {
