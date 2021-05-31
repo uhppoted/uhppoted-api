@@ -16,6 +16,7 @@ var configuration = []byte(`# SYSTEM
 bind.address = 192.168.1.100:54321
 broadcast.address = 192.168.1.255:30000
 listen.address = 192.168.1.100:12345
+timeout = 3.75s
 
 monitoring.healthcheck.interval = 31s
 monitoring.healthcheck.idle = 67s
@@ -66,6 +67,7 @@ func TestDefaultConfig(t *testing.T) {
 			BindAddress:         &bind,
 			BroadcastAddress:    &broadcast,
 			ListenAddress:       &listen,
+			Timeout:             2500 * time.Millisecond,
 			HealthCheckInterval: 15 * time.Second,
 			HealthCheckIdle:     60 * time.Second,
 			HealthCheckIgnore:   5 * time.Minute,
@@ -136,6 +138,7 @@ func TestConfigUnmarshal(t *testing.T) {
 			BindAddress:         &net.UDPAddr{IP: []byte{192, 168, 1, 100}, Port: 54321, Zone: ""},
 			BroadcastAddress:    &net.UDPAddr{IP: []byte{192, 168, 1, 255}, Port: 30000, Zone: ""},
 			ListenAddress:       &net.UDPAddr{IP: []byte{192, 168, 1, 100}, Port: 12345, Zone: ""},
+			Timeout:             3750 * time.Millisecond,
 			HealthCheckInterval: 31 * time.Second,
 			HealthCheckIdle:     67 * time.Second,
 			HealthCheckIgnore:   97 * time.Second,
@@ -290,6 +293,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; bind.address = %[1]s
 ; broadcast.address = %[2]s
 ; listen.address = %[3]s
+; timeout = 2.5s
 ; monitoring.healthcheck.interval = 15s
 ; monitoring.healthcheck.idle = 1m0s
 ; monitoring.healthcheck.ignore = 5m0s
@@ -448,6 +452,7 @@ func TestConfigWrite(t *testing.T) {
 ; bind.address = %[1]s
 ; broadcast.address = %[2]s
 ; listen.address = %[3]s
+timeout = %[4]v
 ; monitoring.healthcheck.interval = 15s
 ; monitoring.healthcheck.idle = 1m0s
 ; monitoring.healthcheck.ignore = 5m0s
@@ -464,11 +469,11 @@ func TestConfigWrite(t *testing.T) {
 ; rest.tls.client.certificates = true
 ; rest.CORS.enabled = false
 ; rest.auth.enabled = false
-; rest.auth.users = %[4]s
-; rest.auth.groups = %[5]s
+; rest.auth.users = %[5]s
+; rest.auth.groups = %[6]s
 ; rest.auth.hotp.range = 8
 ; rest.auth.hotp.secrets = 
-; rest.auth.hotp.counters = %[6]s
+; rest.auth.hotp.counters = %[7]s
 
 # MQTT
 ; mqtt.server.ID = uhppoted
@@ -476,9 +481,9 @@ func TestConfigWrite(t *testing.T) {
 ; mqtt.connection.client.ID = uhppoted-mqttd
 ; mqtt.connection.username = 
 ; mqtt.connection.password = 
-; mqtt.connection.broker.certificate = %[7]s
-; mqtt.connection.client.certificate = %[8]s
-; mqtt.connection.client.key = %[9]s
+; mqtt.connection.broker.certificate = %[8]s
+; mqtt.connection.client.certificate = %[9]s
+; mqtt.connection.client.key = %[10]s
 ; mqtt.topic.root = uhppoted/gateway
 ; mqtt.topic.requests = ./requests
 ; mqtt.topic.replies = ./replies
@@ -488,20 +493,20 @@ func TestConfigWrite(t *testing.T) {
 ; mqtt.alerts.retained = true
 ; mqtt.events.key = events
 ; mqtt.system.key = system
-; mqtt.events.index.filepath = %[10]s
+; mqtt.events.index.filepath = %[11]s
 ; mqtt.permissions.enabled = false
-; mqtt.permissions.users = %[11]s
-; mqtt.permissions.groups = %[12]s
+; mqtt.permissions.users = %[12]s
+; mqtt.permissions.groups = %[13]s
 ; mqtt.security.HMAC.required = false
 ; mqtt.security.HMAC.key = 
 ; mqtt.security.authentication = HOTP, RSA
 ; mqtt.security.hotp.range = 8
-; mqtt.security.hotp.secrets = %[13]s
-; mqtt.security.hotp.counters = %[14]s
-; mqtt.security.rsa.keys = %[15]s
+; mqtt.security.hotp.secrets = %[14]s
+; mqtt.security.hotp.counters = %[15]s
+; mqtt.security.rsa.keys = %[16]s
 ; mqtt.security.nonce.required = true
-; mqtt.security.nonce.server = %[16]s
-; mqtt.security.nonce.clients = %[17]s
+; mqtt.security.nonce.server = %[17]s
+; mqtt.security.nonce.clients = %[18]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
 
@@ -515,24 +520,24 @@ func TestConfigWrite(t *testing.T) {
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
 ; httpd.https.port = 0
-; httpd.tls.ca = %[19]s
-; httpd.tls.certificate = %[20]s
-; httpd.tls.key = %[21]s
+; httpd.tls.ca = %[20]s
+; httpd.tls.certificate = %[21]s
+; httpd.tls.key = %[22]s
 ; httpd.tls.client.certificates.required = false
 ; httpd.security.auth = basic
-; httpd.security.local.db = %[18]s
+; httpd.security.local.db = %[19]s
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 5m
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
-; httpd.system.controllers = %[22]s
-; httpd.system.doors = %[23]s
-; httpd.db.file = %[24]s
-; httpd.db.rules.acl = %[25]s
-; httpd.db.rules.system = %[26]s
-; httpd.db.rules.cards = %[27]s
-; httpd.audit.file = %[28]s
+; httpd.system.controllers = %[23]s
+; httpd.system.doors = %[24]s
+; httpd.db.file = %[25]s
+; httpd.db.rules.acl = %[26]s
+; httpd.db.rules.system = %[27]s
+; httpd.db.rules.cards = %[28]s
+; httpd.audit.file = %[29]s
 httpd.retention = 5h30m0s
 
 # Wild Apricot
@@ -565,13 +570,15 @@ UT0311-L0x.405419896.door.2 = D2
 UT0311-L0x.405419896.door.3 = D3
 UT0311-L0x.405419896.door.4 = D4
 UT0311-L0x.405419896.timezone = France/Paris
-`, bind.String(), broadcast.String(), listen.String(),
+`, bind.String(), broadcast.String(), listen.String(), 4500*time.Millisecond,
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 
 	config := NewConfig()
+
+	config.Timeout = 4500 * time.Millisecond
 
 	config.Devices = DeviceMap{
 		405419896: &Device{

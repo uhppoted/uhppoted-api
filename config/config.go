@@ -130,6 +130,7 @@ type System struct {
 	BindAddress         *net.UDPAddr  `conf:"bind.address"`
 	BroadcastAddress    *net.UDPAddr  `conf:"broadcast.address"`
 	ListenAddress       *net.UDPAddr  `conf:"listen.address"`
+	Timeout             time.Duration `conf:"timeout"`
 	HealthCheckInterval time.Duration `conf:"monitoring.healthcheck.interval"`
 	HealthCheckIdle     time.Duration `conf:"monitoring.healthcheck.idle"`
 	HealthCheckIgnore   time.Duration `conf:"monitoring.healthcheck.ignore"`
@@ -146,6 +147,7 @@ func NewConfig() *Config {
 			BindAddress:         &bind,
 			BroadcastAddress:    &broadcast,
 			ListenAddress:       &listen,
+			Timeout:             2500 * time.Millisecond,
 			HealthCheckInterval: 15 * time.Second,
 			HealthCheckIdle:     monitoring.IDLE,
 			HealthCheckIgnore:   monitoring.IGNORE,
