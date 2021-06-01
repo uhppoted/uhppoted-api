@@ -2,16 +2,20 @@
 
 ### IN PROGRESS
 
-- [ ] Update ACL for time profiles
-      - compare-acl
+- [ ] Rename SetTimeProfile to PutTimeProfile for consistency
+- [ ] Rearchitecture UHPPOTED as an interface+implementation
 
-- [ ] Update GetCard(s) for time profiles
-- [ ] Update PutCard(s) for time profiles
-- [ ] Implement set/get/clear-time-profile
+- [x] Update GetCard(s) for time profiles
+- [x] Update PutCard(s) for time profiles
+- [x] Update ACL for time profiles
+- [x] Implement set/get/clear-time-profile
 
 ## TODO
 
-1. GetDevices: rename DeviceSummary.Address to IpAddress and use Address for IP+Port
+1. Rework healthcheck to remove need for IUHPPOTE::DeviceList
+2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr
+3. GetDevices: rename DeviceSummary.Address to IpAddress and use Address for IP+Port
+
 
 ### uhppoted-api
 
