@@ -58,18 +58,18 @@ func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProf
 	return &response, nil
 }
 
-type SetTimeProfilesRequest struct {
+type PutTimeProfilesRequest struct {
 	DeviceID uint32
 	Profiles []types.TimeProfile `json:"profiles"`
 }
 
-type SetTimeProfilesResponse struct {
+type PutTimeProfilesResponse struct {
 	DeviceID DeviceID `json:"device-id"`
 	Warnings []error  `json:"warnings"`
 }
 
-func (u *UHPPOTED) SetTimeProfiles(request SetTimeProfilesRequest) (*SetTimeProfilesResponse, int, error) {
-	u.debug("set-time-profiles", fmt.Sprintf("request  %+v", request))
+func (u *UHPPOTED) PutTimeProfiles(request PutTimeProfilesRequest) (*PutTimeProfilesResponse, int, error) {
+	u.debug("put-time-profiles", fmt.Sprintf("request  %+v", request))
 
 	deviceID := request.DeviceID
 	profiles := request.Profiles
@@ -148,18 +148,15 @@ func (u *UHPPOTED) SetTimeProfiles(request SetTimeProfilesRequest) (*SetTimeProf
 	}
 
 	// ... format response
-	response := SetTimeProfilesResponse{
+	response := PutTimeProfilesResponse{
 		DeviceID: DeviceID(deviceID),
 		Warnings: warnings,
 	}
 
-	u.debug("set-time-profiles", fmt.Sprintf("response %+v", response))
+	u.debug("put-time-profiles", fmt.Sprintf("response %+v", response))
 
 	return &response, http.StatusOK, nil
 }
-
-//	return warnings, nil
-//}
 
 type GetTimeProfileRequest struct {
 	DeviceID  uint32
@@ -196,18 +193,18 @@ func (u *UHPPOTED) GetTimeProfile(request GetTimeProfileRequest) (*GetTimeProfil
 	return &response, nil
 }
 
-type SetTimeProfileRequest struct {
+type PutTimeProfileRequest struct {
 	DeviceID    uint32
 	TimeProfile types.TimeProfile
 }
 
-type SetTimeProfileResponse struct {
+type PutTimeProfileResponse struct {
 	DeviceID    DeviceID          `json:"device-id"`
 	TimeProfile types.TimeProfile `json:"time-profile"`
 }
 
-func (u *UHPPOTED) SetTimeProfile(request SetTimeProfileRequest) (*SetTimeProfileResponse, error) {
-	u.debug("set-time-profile", fmt.Sprintf("request  %+v", request))
+func (u *UHPPOTED) PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfileResponse, error) {
+	u.debug("put-time-profile", fmt.Sprintf("request  %+v", request))
 
 	deviceID := request.DeviceID
 	profile := request.TimeProfile
@@ -256,12 +253,12 @@ func (u *UHPPOTED) SetTimeProfile(request SetTimeProfileRequest) (*SetTimeProfil
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Failed to write time profile %v to %v", profile.ID, deviceID))
 	}
 
-	response := SetTimeProfileResponse{
+	response := PutTimeProfileResponse{
 		DeviceID:    DeviceID(deviceID),
 		TimeProfile: profile,
 	}
 
-	u.debug("set-time-profile", fmt.Sprintf("response %+v", response))
+	u.debug("put-time-profile", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
 }

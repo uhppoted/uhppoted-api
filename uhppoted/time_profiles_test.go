@@ -189,12 +189,12 @@ func TestSetTimeProfile(t *testing.T) {
 		},
 	}
 
-	request := SetTimeProfileRequest{
+	request := PutTimeProfileRequest{
 		DeviceID:    405419896,
 		TimeProfile: profile,
 	}
 
-	expected := SetTimeProfileResponse{
+	expected := PutTimeProfileResponse{
 		DeviceID:    405419896,
 		TimeProfile: profile,
 	}
@@ -223,7 +223,7 @@ func TestSetTimeProfile(t *testing.T) {
 		Log:             nil,
 	}
 
-	response, err := u.SetTimeProfile(request)
+	response, err := u.PutTimeProfile(request)
 	if err != nil {
 		t.Fatalf("Unexpected error (%v)", err)
 	}
