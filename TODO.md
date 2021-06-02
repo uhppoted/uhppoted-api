@@ -2,7 +2,7 @@
 
 ### IN PROGRESS
 
-- [ ] Rename SetTimeProfile to PutTimeProfile for consistency
+- [ ] Rename SetTimeProfile(s) to PutTimeProfile(s) for consistency
 - [ ] Rearchitecture UHPPOTED as an interface+implementation
 
 - [x] Update GetCard(s) for time profiles
@@ -15,7 +15,6 @@
 1. Rework healthcheck to remove need for IUHPPOTE::DeviceList
 2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr
 3. GetDevices: rename DeviceSummary.Address to IpAddress and use Address for IP+Port
-
 
 ### uhppoted-api
 

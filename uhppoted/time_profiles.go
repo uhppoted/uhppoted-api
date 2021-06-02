@@ -11,6 +11,8 @@ import (
 
 type GetTimeProfilesRequest struct {
 	DeviceID uint32
+	From     int
+	To       int
 }
 
 type GetTimeProfilesResponse struct {
@@ -22,9 +24,20 @@ func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProf
 	u.debug("get-time-profiles", fmt.Sprintf("request  %+v", request))
 
 	deviceID := request.DeviceID
+	from := 2
+	to := 254
+
+	if request.From >= 2 && request.From <= 254 {
+		from = request.From
+	}
+
+	if request.To >= 2 && request.To <= 254 {
+		to = request.To
+	}
+
 	profiles := []types.TimeProfile{}
 
-	for i := 2; i <= 254; i++ {
+	for i := from; i <= to; i++ {
 		profile, err := u.UHPPOTE.GetTimeProfile(deviceID, uint8(i))
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving time profile %v from %v (%w)", i, deviceID, err))
