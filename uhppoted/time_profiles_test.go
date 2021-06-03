@@ -15,10 +15,10 @@ func date(s string) *types.Date {
 	return d
 }
 
-func hhmm(s string) *types.HHmm {
+func hhmm(s string) types.HHmm {
 	t, _ := types.HHmmFromString(s)
 
-	return t
+	return *t
 }
 
 func TestGetTimeProfiles(t *testing.T) {

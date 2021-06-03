@@ -308,11 +308,7 @@ func validateTimeProfile(profile types.TimeProfile) error {
 	for _, i := range []uint8{1, 2, 3} {
 		segment := profile.Segments[i]
 
-		if segment.Start != nil && segment.End == nil {
-			return fmt.Errorf("segment %v missing 'End'", i)
-		} else if segment.Start == nil && segment.End != nil {
-			return fmt.Errorf("segment %v missing 'Start'", i)
-		} else if segment.Start != nil && segment.End != nil && segment.End.Before(time.Time(*segment.Start)) {
+		if segment.End.Before(time.Time(segment.Start)) {
 			return fmt.Errorf("segment %v 'End' (%v) is before 'Start' (%v)", i, segment.End, segment.Start)
 		}
 	}

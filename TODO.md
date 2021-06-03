@@ -2,9 +2,10 @@
 
 ### IN PROGRESS
 
-- [ ] Rename SetTimeProfile(s) to PutTimeProfile(s) for consistency
+- [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
 - [ ] Rearchitecture UHPPOTED as an interface+implementation
 
+- [x] Rename SetTimeProfile(s) to PutTimeProfile(s) for consistency
 - [x] Update GetCard(s) for time profiles
 - [x] Update PutCard(s) for time profiles
 - [x] Update ACL for time profiles
