@@ -13,7 +13,7 @@ type MQTT struct {
 	SystemKeyID     string      `conf:"system.key"`
 	EventIDs        string      `conf:"events.index.filepath"`
 	Permissions     Permissions `conf:"permissions"`
-	AuthorizedCards string      `conf:"cards"`
+	Cards           string      `conf:"cards"`
 	HMAC            HMAC        `conf:"security.HMAC"`
 	Authentication  string      `conf:"security.authentication"`
 	HOTP            HOTP        `conf:"security.hotp"`
@@ -133,7 +133,7 @@ func NewMQTT() *MQTT {
 			Users:   mqttUsers,
 			Groups:  mqttGroups,
 		},
-		AuthorizedCards: mqttCards,
-		EventIDs:        eventIDs,
+		Cards:    mqttCards,
+		EventIDs: eventIDs,
 	}
 }
