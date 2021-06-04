@@ -13,6 +13,7 @@ const (
 	mqttClientKey         string = "/usr/local/etc/com.github.uhppoted/mqtt/client.key"
 	mqttUsers             string = "/usr/local/etc/com.github.uhppoted/mqtt.permissions.users"
 	mqttGroups            string = "/usr/local/etc/com.github.uhppoted/mqtt.permissions.groups"
+	mqttCards             string = "/usr/local/etc/com.github.uhppoted/mqtt/cards"
 	hotpSecrets           string = "/usr/local/etc/com.github.uhppoted/mqtt.hotp.secrets"
 	rsaKeyDir             string = "/usr/local/etc/com.github.uhppoted/mqtt/rsa"
 

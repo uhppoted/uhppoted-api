@@ -338,16 +338,17 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.permissions.enabled = false
 ; mqtt.permissions.users = %[11]s
 ; mqtt.permissions.groups = %[12]s
+; mqtt.cards = %[13]s
 ; mqtt.security.HMAC.required = false
 ; mqtt.security.HMAC.key = 
 ; mqtt.security.authentication = HOTP, RSA
 ; mqtt.security.hotp.range = 8
-; mqtt.security.hotp.secrets = %[13]s
-; mqtt.security.hotp.counters = %[14]s
-; mqtt.security.rsa.keys = %[15]s
+; mqtt.security.hotp.secrets = %[14]s
+; mqtt.security.hotp.counters = %[15]s
+; mqtt.security.rsa.keys = %[16]s
 ; mqtt.security.nonce.required = true
-; mqtt.security.nonce.server = %[16]s
-; mqtt.security.nonce.clients = %[17]s
+; mqtt.security.nonce.server = %[17]s
+; mqtt.security.nonce.clients = %[18]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
 
@@ -361,24 +362,24 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
 ; httpd.https.port = 0
-; httpd.tls.ca = %[19]s
-; httpd.tls.certificate = %[20]s
-; httpd.tls.key = %[21]s
+; httpd.tls.ca = %[20]s
+; httpd.tls.certificate = %[21]s
+; httpd.tls.key = %[22]s
 ; httpd.tls.client.certificates.required = false
 ; httpd.security.auth = basic
-; httpd.security.local.db = %[18]s
+; httpd.security.local.db = %[19]s
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 5m
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
-; httpd.system.controllers = %[22]s
-; httpd.system.doors = %[23]s
-; httpd.db.file = %[24]s
-; httpd.db.rules.acl = %[25]s
-; httpd.db.rules.system = %[26]s
-; httpd.db.rules.cards = %[27]s
-; httpd.audit.file = %[28]s
+; httpd.system.controllers = %[23]s
+; httpd.system.doors = %[24]s
+; httpd.db.file = %[25]s
+; httpd.db.rules.acl = %[26]s
+; httpd.db.rules.system = %[27]s
+; httpd.db.rules.cards = %[28]s
+; httpd.audit.file = %[29]s
 ; httpd.retention = 6h0m0s
 
 # Wild Apricot
@@ -406,7 +407,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 # UT0311-L0x.405419896.timezone = UTC+2
 `, bind.String(), broadcast.String(), listen.String(),
 		restUsers, restGroups, restHOTP,
-		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
+		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, mqttCards, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 
@@ -497,16 +498,17 @@ timeout = %[4]v
 ; mqtt.permissions.enabled = false
 ; mqtt.permissions.users = %[12]s
 ; mqtt.permissions.groups = %[13]s
+; mqtt.cards = %[14]s
 ; mqtt.security.HMAC.required = false
 ; mqtt.security.HMAC.key = 
 ; mqtt.security.authentication = HOTP, RSA
 ; mqtt.security.hotp.range = 8
-; mqtt.security.hotp.secrets = %[14]s
-; mqtt.security.hotp.counters = %[15]s
-; mqtt.security.rsa.keys = %[16]s
+; mqtt.security.hotp.secrets = %[15]s
+; mqtt.security.hotp.counters = %[16]s
+; mqtt.security.rsa.keys = %[17]s
 ; mqtt.security.nonce.required = true
-; mqtt.security.nonce.server = %[17]s
-; mqtt.security.nonce.clients = %[18]s
+; mqtt.security.nonce.server = %[18]s
+; mqtt.security.nonce.clients = %[19]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
 
@@ -520,24 +522,24 @@ timeout = %[4]v
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
 ; httpd.https.port = 0
-; httpd.tls.ca = %[20]s
-; httpd.tls.certificate = %[21]s
-; httpd.tls.key = %[22]s
+; httpd.tls.ca = %[21]s
+; httpd.tls.certificate = %[22]s
+; httpd.tls.key = %[23]s
 ; httpd.tls.client.certificates.required = false
 ; httpd.security.auth = basic
-; httpd.security.local.db = %[19]s
+; httpd.security.local.db = %[20]s
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 5m
 ; httpd.security.session.expiry = 60m
 ; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
-; httpd.system.controllers = %[23]s
-; httpd.system.doors = %[24]s
-; httpd.db.file = %[25]s
-; httpd.db.rules.acl = %[26]s
-; httpd.db.rules.system = %[27]s
-; httpd.db.rules.cards = %[28]s
-; httpd.audit.file = %[29]s
+; httpd.system.controllers = %[24]s
+; httpd.system.doors = %[25]s
+; httpd.db.file = %[26]s
+; httpd.db.rules.acl = %[27]s
+; httpd.db.rules.system = %[28]s
+; httpd.db.rules.cards = %[29]s
+; httpd.audit.file = %[30]s
 httpd.retention = 5h30m0s
 
 # Wild Apricot
@@ -572,7 +574,7 @@ UT0311-L0x.405419896.door.4 = D4
 UT0311-L0x.405419896.timezone = France/Paris
 `, bind.String(), broadcast.String(), listen.String(), 4500*time.Millisecond,
 		restUsers, restGroups, restHOTP,
-		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, hotpSecrets, hotpCounters, rsaKeyDir,
+		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, mqttCards, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdAuditFile)
 

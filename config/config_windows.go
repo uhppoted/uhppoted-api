@@ -17,6 +17,7 @@ var mqttClientCertificate string = filepath.Join(workdir(), "mqtt", "client.cert
 var mqttClientKey string = filepath.Join(workdir(), "mqtt", "client.key")
 var mqttUsers string = filepath.Join(workdir(), "mqtt.permissions.users")
 var mqttGroups string = filepath.Join(workdir(), "mqtt.permissions.groups")
+var mqttCards string = filepath.Join(workdir(), "mqtt", "cards")
 var hotpSecrets string = filepath.Join(workdir(), "mqtt.hotp.secrets")
 var rsaKeyDir string = filepath.Join(workdir(), "mqtt", "rsa")
 

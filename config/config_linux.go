@@ -13,6 +13,7 @@ const (
 	mqttClientKey         string = "/etc/uhppoted/mqtt/client.key"
 	mqttUsers             string = "/etc/uhppoted/mqtt.permissions.users"
 	mqttGroups            string = "/etc/uhppoted/mqtt.permissions.groups"
+	mqttCards             string = "/etc/uhppoted/mqtt/cards"
 	hotpSecrets           string = "/etc/uhppoted/mqtt.hotp.secrets"
 	rsaKeyDir             string = "/etc/uhppoted/mqtt/rsa"
 
