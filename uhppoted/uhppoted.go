@@ -12,12 +12,14 @@ const (
 	StatusOK                  = http.StatusOK
 	StatusBadRequest          = http.StatusBadRequest
 	StatusNotFound            = http.StatusNotFound
+	StatusUnauthorized        = http.StatusUnauthorized
 	StatusInternalServerError = http.StatusInternalServerError
 )
 
 var (
 	BadRequest          = errors.New("Bad Request")
 	NotFound            = errors.New("Not Found")
+	Unauthorized        = errors.New("Not Authorized")
 	InternalServerError = errors.New("INTERNAL SERVER ERROR")
 )
 
