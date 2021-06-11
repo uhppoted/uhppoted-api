@@ -1,10 +1,5 @@
 ## v0.7.x
 
-### IN PROGRESS
-
-- [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
-- [ ] Rearchitecture UHPPOTED as an interface+implementation
-
 - [x] Rename SetTimeProfile(s) to PutTimeProfile(s) for consistency
 - [x] Update GetCard(s) for time profiles
 - [x] Update PutCard(s) for time profiles
@@ -12,6 +7,9 @@
 - [x] Implement set/get/clear-time-profile
 
 ## TODO
+
+- [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
+- [ ] Rearchitecture UHPPOTED as an interface+implementation
 
 1. Rework healthcheck to remove need for IUHPPOTE::DeviceList
 2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr

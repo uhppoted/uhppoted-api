@@ -2,17 +2,19 @@
 
 # uhppoted-api
 
-High level Go API for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand controller boards. 
+Higher level Go API for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand controller boards. 
 
 This module:
 - Abstracts the device level functionality provided by *uhppote-core* to provide the functionality 
 common to *uhppote-cli*, *uhppoted-rest* and *uhppoted-mqtt*
 - Provides wrapper functions that support for invoking functionality across multiple devices.
+- Implements an ACL (access control list) API to unify access control across multiple controllers.
 
 ## Releases
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Additional validation of bind, broadcast and listen ports when loading configuration      |
 | v0.6.10   | Adds configuration options for initial release of `uhppoted-app-wild-apricot`             |
 | v0.6.8    | Maintenance release for version compatibility with `uhppote-core` `v0.6.8`                |
@@ -26,6 +28,22 @@ common to *uhppote-cli*, *uhppoted-rest* and *uhppoted-mqtt*
 | v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
 
 ### Building from source
+
+Assuming you have `Go` and `make` installed:
+
+```
+git clone https://github.com/uhppoted/uhppoted-api.git
+cd uhppoted-api
+make build
+```
+
+If you prefer not to use `make`:
+```
+git clone https://github.com/uhppoted/uhppoted-api.git
+cd uhppoted-api
+mkdir bin
+go build -o bin ./...
+```
 
 #### Dependencies
 
