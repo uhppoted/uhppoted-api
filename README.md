@@ -2,6 +2,12 @@
 
 # uhppoted-api
 
+*THIS INCREASINGLY INACCURATELY NAMED REPOSITORY HAS BEEN ARCHIVED AS OF v0.7.0*
+
+_The code has been migrated to [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) and all future development
+will take place in the repository. It will remain in place for the next round of releases until superseded 
+throughout by _uhppoted-lib._
+
 Higher level Go API for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand controller boards. 
 
 This module:
